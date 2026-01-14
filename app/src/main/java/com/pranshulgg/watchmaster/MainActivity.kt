@@ -13,28 +13,35 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.graphics.toColorInt
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.pranshulgg.watchmaster.helpers.PreferencesHelper
 import com.pranshulgg.watchmaster.prefs.AppPrefs
+import com.pranshulgg.watchmaster.prefs.AppPrefs.initPrefs
 import com.pranshulgg.watchmaster.prefs.LocalAppPrefs
 import com.pranshulgg.watchmaster.screens.MainScreen
 import com.pranshulgg.watchmaster.screens.SettingsPage
+import com.pranshulgg.watchmaster.screens.search.SearchScreen
+import com.pranshulgg.watchmaster.screens.search.SearchViewModel
+import com.pranshulgg.watchmaster.screens.search.SearchViewModelFactory
 import com.pranshulgg.watchmaster.ui.theme.WatchMasterTheme
 import com.pranshulgg.watchmaster.utils.NavTransitions
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3ExpressiveApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
-        PreferencesHelper.init(this)
+        initPrefs(this)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             val navController = rememberNavController()
             val currentMotionScheme = motionScheme
             val motionScheme = remember(currentMotionScheme) { currentMotionScheme }
+            val context = LocalContext.current
 
 
             CompositionLocalProvider(
@@ -75,12 +82,22 @@ class MainActivity : ComponentActivity() {
                         composable(
                             "main",
                         ) {
-                            MainScreen(navController)
+                            MainScreen(navController, motionScheme = motionScheme)
                         }
                         composable(
                             "settingsPage",
                         ) {
                             SettingsPage(navController)
+                        }
+                        composable("search") {
+
+                            val viewModel: SearchViewModel = viewModel(
+                                factory = SearchViewModelFactory()
+                            )
+
+                            SearchScreen(
+                                viewModel = viewModel
+                            )
                         }
                     }
                 }

@@ -7,6 +7,7 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MotionScheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TooltipAnchorPosition
@@ -33,6 +34,7 @@ import com.pranshulgg.watchmaster.utils.Symbol
 fun MainScreen(
     navController: NavController,
     viewModel: HomeNavViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
+    motionScheme: MotionScheme
 ) {
 
     val selectedItem = viewModel.selectedItem
@@ -80,7 +82,8 @@ fun MainScreen(
             modifier = Modifier.padding(innerPadding)
         ) {
             when (selectedItem) {
-                0 -> HomeScreen()
+                0 -> HomeTabScreen()
+                1 -> MovieTabScreen(navController, motionScheme)
             }
 
         }
