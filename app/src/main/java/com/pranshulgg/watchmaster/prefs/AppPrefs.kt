@@ -14,7 +14,7 @@ object AppPrefs {
     private val _useDynamicColor = mutableStateOf(false)
 
 
-    fun init(context: Context) {
+    fun initPrefs(context: Context) {
         PreferencesHelper.init(context)
 
         _useExpressive.value =

@@ -1,13 +1,26 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("com.google.devtools.ksp") version "2.3.4"
 }
+val localProps = Properties().apply {
+    val f = rootProject.file("local.properties")
+    if (f.exists()) f.inputStream().use { load(it) }
+}
+
+val tmdbApiKey: String = localProps.getProperty("TMDB_API_KEY")
+    ?: throw GradleException(
+        "TMDB_API_KEY not found! Add it to local.properties in the project root."
+    )
+
 
 android {
     namespace = "com.pranshulgg.watchmaster"
     compileSdk = 36
-
+    android.buildFeatures.buildConfig = true
     defaultConfig {
         applicationId = "com.pranshulgg.watchmaster"
         minSdk = 24
@@ -15,7 +28,10 @@ android {
         versionCode = 1
         versionName = "1.0"
 
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "TMDB_API_KEY", "\"$tmdbApiKey\"")
     }
 
     buildTypes {
@@ -65,5 +81,16 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    implementation(libs.coil.compose)
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.okhttp.logging)
+
+    ksp(libs.room.compiler)
+
 
 }
