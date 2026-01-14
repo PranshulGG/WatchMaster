@@ -12,4 +12,7 @@ data class AppPrefsState(
 
     val isCustomTheme: Boolean,
     val useCustomTheme: (Boolean) -> Unit,
+
+    val useDynamicColor: Boolean,
+    val setDynamicColor: (Boolean) -> Unit
 )
