@@ -60,8 +60,12 @@ fun SettingsPage(navController: NavController) {
                         title = "Use custom color",
                         description = "Select a seed color to generate the theme",
                         checked = prefs.isCustomTheme,
+                        enabled = !prefs.useDynamicColor,
                         onCheckedChange = { checked ->
                             prefs.useCustomTheme(checked)
+                            if (!checked) {
+                                prefs.setThemeColor("#2196f3")
+                            }
                         }
                     ),
                     SettingTile.SwitchTile(
@@ -72,9 +76,10 @@ fun SettingsPage(navController: NavController) {
                         },
                         title = "Dynamic colors",
                         description = "Use wallpaper colors",
-                        checked = useDynamicColor,
+                        checked = prefs.useDynamicColor,
+                        enabled = isAndroid12Plus && !prefs.isCustomTheme,
                         onCheckedChange = { checked ->
-
+                            prefs.setDynamicColor(checked)
                         }
                     ),
                 )
