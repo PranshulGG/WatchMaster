@@ -4,18 +4,29 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TooltipAnchorPosition
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.models.HomeNavViewModel
 import com.pranshulgg.watchmaster.ui.components.BottomNav
+import com.pranshulgg.watchmaster.ui.components.Tooltip
+import com.pranshulgg.watchmaster.utils.Symbol
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class,
+@OptIn(
+    ExperimentalMaterial3ExpressiveApi::class,
     ExperimentalMaterial3Api::class
 )
 @Composable
@@ -32,9 +43,30 @@ fun MainScreen(
     Scaffold(
         topBar = {
             TopAppBar(
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+                ),
                 title = {
                     Text(appBarTitles[selectedItem])
                 },
+                actions = {
+                    Tooltip(
+                        "Settings",
+                        preferredPosition = TooltipAnchorPosition.Below,
+                        spacing = 10.dp
+                    ) {
+                        IconButton(
+                            onClick = { navController.navigate("settingsPage") },
+                            shapes = IconButtonDefaults.shapes()
+                        ) {
+                            Symbol(
+                                R.drawable.settings_24px,
+                                desc = "settings icon",
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+                    }
+                }
             )
         },
         bottomBar = {

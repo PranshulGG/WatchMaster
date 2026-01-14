@@ -5,12 +5,15 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.motionScheme
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.core.graphics.toColorInt
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -18,6 +21,7 @@ import com.pranshulgg.watchmaster.helpers.PreferencesHelper
 import com.pranshulgg.watchmaster.prefs.AppPrefs
 import com.pranshulgg.watchmaster.prefs.LocalAppPrefs
 import com.pranshulgg.watchmaster.screens.MainScreen
+import com.pranshulgg.watchmaster.screens.SettingsPage
 import com.pranshulgg.watchmaster.ui.theme.WatchMasterTheme
 import com.pranshulgg.watchmaster.utils.NavTransitions
 
@@ -37,9 +41,18 @@ class MainActivity : ComponentActivity() {
                 LocalAppPrefs provides AppPrefs.state()
             ) {
                 val prefs = LocalAppPrefs.current
+
+                val appTheme = when (prefs.appTheme) {
+                    "Dark" -> true
+                    "Light" -> false
+                    "System" -> isSystemInDarkTheme()
+                    else -> isSystemInDarkTheme()
+                }
+
                 WatchMasterTheme(
-                    darkTheme = prefs.darkTheme,
-                    useExpressive = prefs.useExpressive
+                    darkTheme = appTheme,
+                    useExpressive = prefs.useExpressive,
+                    seedColor = Color(prefs.themeColor.toColorInt())
                 ) {
                     NavHost(
                         modifier = Modifier.background(MaterialTheme.colorScheme.surface),
@@ -61,10 +74,13 @@ class MainActivity : ComponentActivity() {
                     ) {
                         composable(
                             "main",
-
-                            ) {
+                        ) {
                             MainScreen(navController)
-
+                        }
+                        composable(
+                            "settingsPage",
+                        ) {
+                            SettingsPage(navController)
                         }
                     }
                 }
