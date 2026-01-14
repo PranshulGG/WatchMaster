@@ -10,8 +10,8 @@ object AppPrefs {
     private val _useExpressive = mutableStateOf(true)
     private val _appTheme = mutableStateOf("System")
     private val _themeColor = mutableStateOf("#2196f3")
-
     private val _isCustomTheme = mutableStateOf(false)
+    private val _useDynamicColor = mutableStateOf(false)
 
 
     fun init(context: Context) {
@@ -23,6 +23,8 @@ object AppPrefs {
             PreferencesHelper.getString("app_theme") ?: "System"
         _themeColor.value = PreferencesHelper.getString("theme_color") ?: "#2196f3"
         _isCustomTheme.value = PreferencesHelper.getBool("isCustomTheme") ?: false
+        _useDynamicColor.value = PreferencesHelper.getBool("useDynamicColor") ?: false
+
     }
 
     @Composable
@@ -49,7 +51,13 @@ object AppPrefs {
         useCustomTheme = {
             _isCustomTheme.value = it
             PreferencesHelper.setBool("isCustomTheme", it)
-        }
+        },
 
-    )
+        useDynamicColor = _useDynamicColor.value,
+        setDynamicColor = {
+            _useDynamicColor.value = it
+            PreferencesHelper.setBool("useDynamicColor", it)
+        },
+
+        )
 }
