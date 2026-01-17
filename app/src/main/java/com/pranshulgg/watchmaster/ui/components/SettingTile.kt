@@ -9,9 +9,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.graphics.ColorUtils
 import com.pranshulgg.watchmaster.ui.components.tiles.ActionTile
 import com.pranshulgg.watchmaster.ui.components.tiles.CategoryTile
 import com.pranshulgg.watchmaster.ui.components.tiles.DialogOptionTile
@@ -116,6 +118,9 @@ fun SettingSection(
     noPadding: Boolean = false,
     errorTile: Boolean = false
 ) {
+
+    val itemBgColor = MaterialTheme.colorScheme.surfaceBright
+
     Column(
         modifier = Modifier
             .padding(horizontal = if (noPadding) 0.dp else 16.dp),
@@ -165,7 +170,8 @@ fun SettingSection(
                     headline = tile.title,
                     description = tile.description,
                     leading = tile.leading,
-                    shapes = shape
+                    shapes = shape,
+                    itemBgColor = itemBgColor
                 )
 
                 is SettingTile.CategoryTile -> CategoryTile(
@@ -175,7 +181,8 @@ fun SettingSection(
                     shapes = shape,
                     color = tile.color,
                     iconColor = tile.onColor,
-                    onClick = tile.onClick
+                    onClick = tile.onClick,
+                    itemBgColor = itemBgColor
                 )
 
 
@@ -188,7 +195,8 @@ fun SettingSection(
                     selectedOption = tile.selectedOption,
                     onOptionSelected = tile.onOptionSelected,
                     optionLabel = tile.optionLabel,
-                    dialogTitle = tile.dialogTitle
+                    dialogTitle = tile.dialogTitle,
+                    itemBgColor = itemBgColor
                 )
 
                 is SettingTile.ActionTile -> ActionTile(
@@ -198,7 +206,8 @@ fun SettingSection(
                     shapes = shape,
                     onClick = tile.onClick,
                     colorDesc = tile.colorDesc,
-                    danger = tile.danger
+                    danger = tile.danger,
+                    itemBgColor = itemBgColor
                 )
 
                 is SettingTile.SwitchTile -> SwitchTile(
@@ -208,7 +217,8 @@ fun SettingSection(
                     checked = tile.checked,
                     onCheckedChange = tile.onCheckedChange,
                     shapes = shape,
-                    switchEnabled = tile.enabled
+                    switchEnabled = tile.enabled,
+                    itemBgColor = itemBgColor
                 )
 
                 is SettingTile.SingleSwitchTile -> SingleSwitchTile(
@@ -217,7 +227,8 @@ fun SettingSection(
                     leading = tile.leading,
                     checked = tile.checked,
                     onCheckedChange = tile.onCheckedChange,
-                    switchEnabled = tile.enabled
+                    switchEnabled = tile.enabled,
+                    itemBgColor = itemBgColor
                 )
 
                 is SettingTile.DialogTextFieldTile -> DialogTextFieldTile(
@@ -228,8 +239,8 @@ fun SettingSection(
                     onTextSubmitted = tile.onTextSubmitted,
                     placeholder = tile.placeholder,
                     placeholderTextField = tile.placeholderTextField,
-                    initialText = tile.initialText
-
+                    initialText = tile.initialText,
+                    itemBgColor = itemBgColor
                 )
 
                 is SettingTile.DialogSliderTile -> DialogSliderTile(
@@ -243,8 +254,8 @@ fun SettingSection(
                     steps = tile.steps,
                     labelFormatter = tile.labelFormatter,
                     dialogTitle = tile.dialogTitle,
-                    isDescriptionAsValue = tile.isDescriptionAsValue
-
+                    isDescriptionAsValue = tile.isDescriptionAsValue,
+                    itemBgColor = itemBgColor
                 )
             }
         }

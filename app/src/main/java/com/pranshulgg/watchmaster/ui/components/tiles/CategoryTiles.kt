@@ -27,8 +27,8 @@ fun CategoryTile(
     shapes: RoundedCornerShape,
     color: Color,
     iconColor: Color,
-    onClick: () -> Unit
-
+    onClick: () -> Unit,
+    itemBgColor: Color
 ) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
@@ -40,7 +40,7 @@ fun CategoryTile(
             ),
             leadingContent = { IconContainer(color, icon = leading, iconColor = iconColor) },
             colors = ListItemDefaults.colors(
-                containerColor = MaterialTheme.colorScheme.surfaceContainerLowest
+                containerColor = itemBgColor
             ),
             headlineContent = { Text(headline) },
             supportingContent = {

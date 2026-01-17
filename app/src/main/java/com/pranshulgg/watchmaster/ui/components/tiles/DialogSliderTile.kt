@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
@@ -49,7 +50,8 @@ fun DialogSliderTile(
     shapes: RoundedCornerShape,
     labelFormatter: (Float) -> String = { it.toString() },
     dialogTitle: String,
-    isDescriptionAsValue: Boolean = false
+    isDescriptionAsValue: Boolean = false,
+    itemBgColor: Color
 ) {
     var showDialog by remember { mutableStateOf(false) }
     var sliderValue by remember { mutableStateOf(initialValue) }
@@ -61,7 +63,7 @@ fun DialogSliderTile(
         ListItem(
             modifier = Modifier.clickable { showDialog = true },
             colors = ListItemDefaults.colors(
-                containerColor = MaterialTheme.colorScheme.surfaceContainerLowest
+                containerColor = itemBgColor
             ),
             leadingContent = leading,
             headlineContent = { Text(headline) },
@@ -107,7 +109,7 @@ fun DialogSliderTile(
                     },
                     shapes = ButtonDefaults.shapes()
                 ) {
-                    Text("Save", fontWeight = FontWeight.W600, fontSize = 16.sp)
+                    Text("Save", style = MaterialTheme.typography.labelSmall)
                 }
             },
             dismissButton = {
@@ -115,7 +117,7 @@ fun DialogSliderTile(
                     onClick = { showDialog = false },
                     shapes = ButtonDefaults.shapes()
                 ) {
-                    Text("Cancel", fontWeight = FontWeight.W600, fontSize = 16.sp)
+                    Text("Cancel", style = MaterialTheme.typography.labelSmall)
                 }
 
             }

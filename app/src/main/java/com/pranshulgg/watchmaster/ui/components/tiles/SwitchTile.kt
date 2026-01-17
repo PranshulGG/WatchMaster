@@ -13,7 +13,10 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.ColorUtils
 import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.utils.Symbol
 
@@ -25,8 +28,11 @@ fun SwitchTile(
     description: String? = null,
     leading: @Composable (() -> Unit)? = null,
     shapes: RoundedCornerShape,
-    switchEnabled: Boolean = true
+    switchEnabled: Boolean = true,
+    itemBgColor: Color
 ) {
+
+
     Surface(
         modifier = Modifier.fillMaxWidth(),
         shape = shapes,
@@ -40,7 +46,7 @@ fun SwitchTile(
             },
 
             colors = ListItemDefaults.colors(
-                containerColor = MaterialTheme.colorScheme.surfaceContainerLowest
+                containerColor = itemBgColor
             ),
             leadingContent = leading,
             headlineContent = { Text(headline) },
@@ -90,7 +96,9 @@ fun SingleSwitchTile(
     headline: String,
     description: String? = null,
     leading: @Composable (() -> Unit)? = null,
-    switchEnabled: Boolean = true
+    switchEnabled: Boolean = true,
+    itemBgColor: Color
+
 ) {
 
     Surface(
@@ -135,7 +143,7 @@ fun SingleSwitchTile(
                             Symbol(
                                 R.drawable.close_24px,
                                 size = SwitchDefaults.IconSize,
-                                color = MaterialTheme.colorScheme.surfaceContainerHighest
+                                color = itemBgColor
                             )
 
                         }

@@ -9,13 +9,15 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 
 @Composable
 fun TextTile(
     headline: String,
     description: String? = null,
     leading: @Composable (() -> Unit)? = null,
-    shapes: RoundedCornerShape
+    shapes: RoundedCornerShape,
+    itemBgColor: Color
 ) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
@@ -25,7 +27,7 @@ fun TextTile(
 
             leadingContent = leading,
             colors = ListItemDefaults.colors(
-                containerColor = MaterialTheme.colorScheme.surfaceContainerLowest
+                containerColor = itemBgColor
             ),
             headlineContent = { Text(headline) },
             supportingContent = {

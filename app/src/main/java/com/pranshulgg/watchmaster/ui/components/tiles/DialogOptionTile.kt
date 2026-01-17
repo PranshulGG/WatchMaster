@@ -40,6 +40,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -56,7 +57,8 @@ fun <T> DialogOptionTile(
     optionLabel: (T) -> String = { it.toString() },
     leading: @Composable (() -> Unit)? = null,
     shapes: RoundedCornerShape,
-    dialogTitle: String? = null
+    dialogTitle: String? = null,
+    itemBgColor: Color
 ) {
     var showDialog by remember { mutableStateOf(false) }
 
@@ -70,7 +72,7 @@ fun <T> DialogOptionTile(
             modifier = Modifier
                 .clickable { showDialog = true },
             colors = ListItemDefaults.colors(
-                containerColor = MaterialTheme.colorScheme.surfaceContainerLowest
+                containerColor = itemBgColor
             ),
             leadingContent = leading,
             headlineContent = { Text(headline) },
@@ -113,10 +115,12 @@ fun <T> DialogOptionTile(
                     modifier = Modifier
                         .heightIn(max = 500.dp)
                         .fillMaxWidth()
+
                 ) {
                     LazyColumn(
                         state = listState,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
                     ) {
                         items(options) { option ->
                             Row(
@@ -132,7 +136,7 @@ fun <T> DialogOptionTile(
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(
                                     optionLabel(option),
-                                    fontSize = 15.sp
+                                    style = MaterialTheme.typography.bodyLarge
                                 )
                             }
                         }
@@ -162,12 +166,12 @@ fun <T> DialogOptionTile(
                     }, shapes = ButtonDefaults.shapes()
                 ) {
 
-                    Text("Save", fontWeight = FontWeight.W600, fontSize = 16.sp)
+                    Text("Save", style = MaterialTheme.typography.labelSmall)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDialog = false }, shapes = ButtonDefaults.shapes()) {
-                    Text("Cancel", fontWeight = FontWeight.W600, fontSize = 16.sp)
+                    Text("Cancel", style = MaterialTheme.typography.labelSmall)
                 }
             }
         )
