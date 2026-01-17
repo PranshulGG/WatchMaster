@@ -5,5 +5,7 @@ data class SearchItem(
     val mediaType: String,
     val title: String,
     val overview: String?,
-    val posterPath: String?
+    val posterPath: String?,
+    val genreIds: List<Int>? = null,
+    val releaseDate: String? = null,
 )
