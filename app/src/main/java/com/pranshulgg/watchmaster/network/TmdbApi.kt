@@ -1,5 +1,6 @@
 package com.pranshulgg.watchmaster.network
 
+import com.google.gson.annotations.SerializedName
 import retrofit2.http.GET
 import retrofit2.http.Query
 import retrofit2.Response
@@ -25,8 +26,28 @@ data class TmdbResult(
     val name: String?,
     val overview: String?,
     val poster_path: String?,
-    val release_date: String?,
-    val first_air_date: String?
+    val profile_path: String?,
+    val known_for: List<KnownFor>?,
+    @SerializedName("genre_ids")
+    val genreIds: List<Int>?,
+    @SerializedName("release_date")
+    val releaseDate: String?,
+    @SerializedName("first_air_date")
+    val firstAirDate: String?
+)
+
+data class KnownFor(
+    val title: String?,
+    val name: String?,
+    val poster_path: String?,
+    @SerializedName("genre_ids")
+    val genreIds: List<Int>?,
+
+    @SerializedName("release_date")
+    val releaseDate: String?,
+
+    @SerializedName("first_air_date")
+    val firstAirDate: String?
 )
 
 interface TmdbApi {
