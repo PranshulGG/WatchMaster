@@ -17,7 +17,7 @@ fun HomeTabScreen(
     val prefs = LocalAppPrefs.current
 
     Scaffold(
-        containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+        containerColor = MaterialTheme.colorScheme.surfaceContainer,
     ) { innerPadding ->
 
         Column(modifier = Modifier.padding(innerPadding)) {

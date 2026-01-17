@@ -46,7 +46,7 @@ fun MainScreen(
         topBar = {
             TopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+                    containerColor = MaterialTheme.colorScheme.surfaceContainer
                 ),
                 title = {
                     Text(appBarTitles[selectedItem])
