@@ -1,5 +1,6 @@
 package com.pranshulgg.watchmaster.screens
 
+import android.content.Context
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -17,9 +18,20 @@ import androidx.compose.ui.unit.sp
 import com.pranshulgg.watchmaster.utils.Symbol
 import kotlinx.coroutines.launch
 import androidx.compose.animation.scaleOut
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme.motionScheme
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.pranshulgg.watchmaster.R
+import com.pranshulgg.watchmaster.data.getGenreNames
+import com.pranshulgg.watchmaster.data.local.WatchMasterDatabase
+import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
+import com.pranshulgg.watchmaster.data.repository.WatchlistRepository
+import com.pranshulgg.watchmaster.models.WatchlistViewModel
+import com.pranshulgg.watchmaster.models.WatchlistViewModelFactory
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -28,12 +40,14 @@ fun MovieTabScreen(navController: NavController, motionScheme: MotionScheme) {
     val tabs = listOf("Watchlist", "Watching", "Finished")
     val pagerState = rememberPagerState { tabs.size }
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+
 
     Scaffold(
-        containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+        containerColor = MaterialTheme.colorScheme.surfaceContainer,
         topBar = {
             PrimaryTabRow(
-                containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                containerColor = MaterialTheme.colorScheme.surfaceContainer,
                 selectedTabIndex = pagerState.currentPage
             ) {
                 tabs.forEachIndexed { index, title ->
@@ -44,7 +58,7 @@ fun MovieTabScreen(navController: NavController, motionScheme: MotionScheme) {
                                 pagerState.animateScrollToPage(index)
                             }
                         },
-                        text = { Text(title, fontSize = 17.sp) }
+                        text = { Text(title) }
                     )
                 }
             }
@@ -62,7 +76,7 @@ fun MovieTabScreen(navController: NavController, motionScheme: MotionScheme) {
                     animationSpec = motionScheme.defaultSpatialSpec()
                 ) + fadeOut(),
             ) {
-                ExtendedFloatingActionButton(
+                SmallExtendedFloatingActionButton(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     elevation = FloatingActionButtonDefaults.elevation(
                         0.dp,
@@ -92,7 +106,7 @@ fun MovieTabScreen(navController: NavController, motionScheme: MotionScheme) {
                 .fillMaxSize()
         ) { page ->
             when (page) {
-                0 -> WatchlistMovies()
+                0 -> WatchlistMovies(context)
                 1 -> WatchingMovies()
                 2 -> FinishedMovies()
             }
@@ -101,8 +115,36 @@ fun MovieTabScreen(navController: NavController, motionScheme: MotionScheme) {
 }
 
 @Composable
-fun WatchlistMovies() {
-    Text("Movies you want to watch 👀", modifier = Modifier.padding(16.dp))
+fun WatchlistMovies(context: Context) {
+    val db = WatchMasterDatabase.getInstance(context)
+    val repository = WatchlistRepository(db.watchlistDao())
+
+    val viewModel: WatchlistViewModel = viewModel(
+        factory = WatchlistViewModelFactory(repository)
+    )
+
+    val items by viewModel.watchlist.collectAsState()
+
+    if (items.isEmpty()) {
+        Text("No movies yet 👀")
+        return
+    }
+
+    LazyColumn {
+        items(items) { item ->
+            WatchlistRow(item)
+        }
+    }
+}
+
+
+@Composable
+fun WatchlistRow(item: WatchlistItemEntity) {
+    Text(
+        text = getGenreNames(item.genreIds ?: emptyList()).joinToString(", "),
+        fontSize = 18.sp,
+        fontWeight = FontWeight.Bold
+    )
 }
 
 @Composable
