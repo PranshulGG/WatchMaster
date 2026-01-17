@@ -47,7 +47,6 @@ private val LightColorScheme = lightColorScheme(
 @Composable
 fun WatchMasterTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
     seedColor: Color = Color.Green,
     useExpressive: Boolean = true,
     dynamicColor: Boolean = true,
@@ -64,7 +63,7 @@ fun WatchMasterTheme(
                 seedColor = seedColor,
                 isDark = darkTheme,
                 specVersion = ColorSpec.SpecVersion.SPEC_2025,
-                style = if (useExpressive) PaletteStyle.Expressive else PaletteStyle.TonalSpot
+                style = if (useExpressive) PaletteStyle.Expressive else PaletteStyle.TonalSpot,
             )
         }
     }
@@ -79,7 +78,7 @@ fun WatchMasterTheme(
 
     MaterialExpressiveTheme(
         colorScheme = colorScheme,
-        typography = Typography,
+        typography = AppTypography,
         motionScheme = MotionScheme.expressive(),
         content = content
     )
