@@ -21,16 +21,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.graphics.shapes.RoundedPolygon
+import com.pranshulgg.watchmaster.ui.theme.RobotoFlexWide
 import com.pranshulgg.watchmaster.utils.Symbol
 
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun EmptyContainerPlaceholder(icon: Int, text: String) {
+fun EmptyContainerPlaceholder(icon: Int, text: String, description: String = "") {
 
     Column(
         modifier = Modifier
@@ -44,17 +46,30 @@ fun EmptyContainerPlaceholder(icon: Int, text: String) {
             modifier = Modifier
                 .height(160.dp)
                 .width(160.dp),
-            color = MaterialTheme.colorScheme.primaryContainer
+            color = MaterialTheme.colorScheme.surfaceBright
         ) {
 
-            Box (modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
 
-                Symbol(icon, size = 76.dp, color = MaterialTheme.colorScheme.onPrimaryContainer)
+                Symbol(icon, size = 76.dp, color = MaterialTheme.colorScheme.primary)
             }
         }
 
         Spacer(Modifier.height(16.dp))
-        Text(text, fontSize = 24.sp, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
+        Text(
+            text,
+            fontSize = 24.sp,
+            color = MaterialTheme.colorScheme.onSurface,
+            fontFamily = RobotoFlexWide,
+        )
+        if (description != "") {
+            Spacer(Modifier.height(5.dp))
+            Text(
+                description,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontSize = 16.sp
+            )
+        }
     }
 
 }

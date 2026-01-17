@@ -50,7 +50,7 @@ fun BottomNav(selectedItem: Int, onItemSelected: (Int) -> Unit) {
                     onItemSelected(index)
                 },
                 selected = selectedItem == index,
-                label = { Text(labelList, fontSize = 14.sp) },
+                label = { Text(labelList, style = MaterialTheme.typography.labelLarge) },
                 icon = {
                     Icon(
                         painter = painterResource(if (selectedItem == index) selectedIcons[index] else unSelectedIcons[index]),

@@ -34,10 +34,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateValueAsState
 import androidx.compose.animation.core.TwoWayConverter
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.clipToBounds
@@ -133,6 +135,10 @@ fun SelectableThemeColors(onThemeColorChanged: (String) -> Unit) {
                             currentSelectedColor = hex
                             onThemeColorChanged(hex)
                         },
+                    border = BorderStroke(
+                        width = 1.dp,
+                        color = MaterialTheme.colorScheme.outlineVariant
+                    ),
                     color = Color(hex.toColorInt()),
                     shape = if (isSelected)
                         MaterialShapes.Cookie4Sided.toShape()
