@@ -62,8 +62,8 @@ class MainActivity : ComponentActivity() {
                     seedColor = Color(prefs.themeColor.toColorInt())
                 ) {
                     NavHost(
-                        modifier = Modifier.background(MaterialTheme.colorScheme.surface),
-                        navController = navController, startDestination = "main",
+                        modifier = Modifier.background(MaterialTheme.colorScheme.surfaceContainer),
+                        navController = navController, startDestination = "search",
                         enterTransition = {
                             NavTransitions.enter(motionScheme)
                         },
@@ -92,11 +92,12 @@ class MainActivity : ComponentActivity() {
                         composable("search") {
 
                             val viewModel: SearchViewModel = viewModel(
-                                factory = SearchViewModelFactory()
+                                factory = SearchViewModelFactory(context)
                             )
 
                             SearchScreen(
-                                viewModel = viewModel
+                                viewModel = viewModel,
+                                navController
                             )
                         }
                     }
