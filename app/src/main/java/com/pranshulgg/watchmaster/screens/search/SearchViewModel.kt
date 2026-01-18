@@ -34,7 +34,7 @@ class SearchViewModel(
             mediaType = "tv",
             releaseDate = "1978-05-17",
             genreIds = listOf(10759, 10765),
-            overview = ""
+            overview = "Follow the exploits of motorcycle racer turned super hero Takuya Yamashiro, as he slings and swings, battling the evil Iron Cross Army along the way."
         ),
         SearchItem(
             id = 888,
@@ -79,10 +79,10 @@ class SearchViewModel(
     )
 
 
-    init {
-        results = mockResults
-        loading = false
-    }
+//    init {
+//        results = mockResults
+//        loading = false
+//    }
 
     fun search() {
         if (query.isBlank()) return
