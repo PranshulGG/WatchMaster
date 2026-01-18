@@ -37,9 +37,7 @@ fun ActionBottomSheet(
         ModalBottomSheet(
             sheetState = sheetState,
             onDismissRequest = onCancel,
-            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-
-            ) {
+        ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
