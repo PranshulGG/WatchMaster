@@ -43,7 +43,7 @@ fun SearchRow(
     item: SearchItem,
     index: Int,
     results: List<SearchItem>,
-    onClick: () -> Unit,
+    onAddToWatchlist: () -> Unit,
 ) {
 
     val isFirst = index == 0
@@ -63,7 +63,7 @@ fun SearchRow(
         shape = shape,
         modifier = Modifier
             .clip(shape)
-            .clickable { onClick() }
+            .clickable { onAddToWatchlist() }
     ) {
         Row(
             modifier = Modifier
