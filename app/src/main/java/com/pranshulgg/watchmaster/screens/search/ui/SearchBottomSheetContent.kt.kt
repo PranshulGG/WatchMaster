@@ -62,9 +62,10 @@ fun SearchBottomSheetContent(
             leadingIcon = {
                 Box(Modifier.padding(start = 6.dp)) {
                     IconButton(
+
                         onClick = {
                             focusRequester.requestFocus()
-                        }
+                        },
                     ) {
                         Symbol(
                             R.drawable.search_24px,
