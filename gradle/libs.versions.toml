@@ -10,9 +10,8 @@ activityCompose = "1.12.2"
 composeBom = "2026.01.00"
 material3 = "1.5.0-alpha12"
 navigationCompose = "2.9.6"
-materialKolor = "4.0.5"
-androidxMaterial3 = "1.4.0"
-foundationLayout = "1.10.0"
+materialKolor = "4.1.0"
+foundationLayout = "1.10.1"
 coil = "2.7.0"
 coroutines = "1.10.2"
 room = "2.8.4"
@@ -37,7 +36,6 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 materialKolor = { module = "com.materialkolor:material-kolor", version.ref = "materialKolor" }
-androidx-compose-material3-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "androidxMaterial3" }
 androidx-foundation-layout = { group = "androidx.compose.foundation", name = "foundation-layout", version.ref = "foundationLayout" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
