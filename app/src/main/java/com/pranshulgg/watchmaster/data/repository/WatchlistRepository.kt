@@ -1,12 +1,17 @@
 package com.pranshulgg.watchmaster.data.repository
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.pranshulgg.watchmaster.data.local.dao.WatchlistDao
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
+import com.pranshulgg.watchmaster.model.WatchStatus
 import com.pranshulgg.watchmaster.screens.search.SearchItem
+import java.time.Instant
 
 class WatchlistRepository(
     private val dao: WatchlistDao
 ) {
+
     suspend fun addFromSearch(item: SearchItem) {
         dao.insert(
             WatchlistItemEntity(
@@ -16,10 +21,49 @@ class WatchlistRepository(
                 overview = item.overview,
                 posterPath = item.posterPath,
                 genreIds = item.genreIds,
-                releaseDate = item.releaseDate
+                releaseDate = item.releaseDate,
+                addedDate = Instant.now(),
+                avgRating = item.avg_rating
             )
         )
     }
 
     fun getWatchlist() = dao.getAll()
+
+    suspend fun markStarted(id: Long) {
+        dao.updateStatus(
+            id = id,
+            status = WatchStatus.WATCHING,
+            started = Instant.now()
+        )
+    }
+
+    suspend fun markFinished(id: Long) {
+        dao.updateStatus(
+            id = id,
+            status = WatchStatus.FINISHED,
+            finished = Instant.now()
+        )
+    }
+
+    suspend fun markInterrupted(id: Long) {
+        dao.updateStatus(
+            id = id,
+            status = WatchStatus.INTERRUPTED,
+            interruptedAt = Instant.now()
+        )
+    }
+
+    suspend fun markWantToWatch(id: Long) {
+        dao.updateStatus(
+            id = id,
+            status = WatchStatus.WANT_TO_WATCH
+        )
+    }
+
+    suspend fun deleteItem(id: Long) = dao.deleteById(id)
+
+    suspend fun deleteFinishedItems() = dao.deleteFinished()
+
+    suspend fun itemExists(id: Long): Boolean = dao.exists(id)
 }
