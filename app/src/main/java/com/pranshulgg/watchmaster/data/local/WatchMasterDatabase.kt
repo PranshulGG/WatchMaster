@@ -8,12 +8,18 @@ import com.pranshulgg.watchmaster.data.local.dao.WatchlistDao
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 import com.pranshulgg.watchmaster.data.local.converters.GenreIdsConverter
 import androidx.room.Room
+import com.pranshulgg.watchmaster.data.local.converters.InstantConverters
+import com.pranshulgg.watchmaster.data.local.converters.WatchStatusConverter
 
 @Database(
     entities = [WatchlistItemEntity::class],
-    version = 1
+    version = 5
 )
-@TypeConverters(GenreIdsConverter::class)
+@TypeConverters(
+    GenreIdsConverter::class,
+    InstantConverters::class,
+    WatchStatusConverter::class
+)
 abstract class WatchMasterDatabase : RoomDatabase() {
 
     abstract fun watchlistDao(): WatchlistDao
