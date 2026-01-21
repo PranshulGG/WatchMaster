@@ -10,6 +10,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
 import com.pranshulgg.watchmaster.BuildConfig
+import retrofit2.http.Url
 import java.util.concurrent.TimeUnit
 
 data class MultiSearchResponse(
@@ -28,18 +29,26 @@ data class TmdbResult(
     val poster_path: String?,
     val profile_path: String?,
     val known_for: List<KnownFor>?,
+    @SerializedName("original_language")
+    val originalLanguage: String?,
     @SerializedName("genre_ids")
     val genreIds: List<Int>?,
     @SerializedName("release_date")
     val releaseDate: String?,
     @SerializedName("first_air_date")
-    val firstAirDate: String?
+    val firstAirDate: String?,
+
+    val vote_average: Double,
 )
 
 data class KnownFor(
     val title: String?,
     val name: String?,
     val poster_path: String?,
+
+    @SerializedName("original_language")
+    val originalLanguage: String?,
+
     @SerializedName("genre_ids")
     val genreIds: List<Int>?,
 
@@ -50,9 +59,11 @@ data class KnownFor(
     val firstAirDate: String?
 )
 
+
 interface TmdbApi {
-    @GET("search/multi")
-    suspend fun multiSearch(
+    @GET
+    suspend fun search(
+        @Url url: String,
         @Query("query") query: String,
         @Query("page") page: Int = 1,
         @Query("include_adult") includeAdult: Boolean = false,
