@@ -8,4 +8,6 @@ data class SearchItem(
     val posterPath: String?,
     val genreIds: List<Int>? = null,
     val releaseDate: String? = null,
+    val originalLanguage: String? = "English",
+    val avg_rating: Double? = null
 )
