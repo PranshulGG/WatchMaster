@@ -1,12 +1,15 @@
 package com.pranshulgg.watchmaster.screens.search
 
+import android.graphics.Movie
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
@@ -50,11 +53,16 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.pranshulgg.watchmaster.R
-import com.pranshulgg.watchmaster.screens.search.ui.AddToWatchlistSheetContent
+import com.pranshulgg.watchmaster.helpers.provideWatchlistRepository
+import com.pranshulgg.watchmaster.model.SearchType
+import com.pranshulgg.watchmaster.models.WatchlistViewModel
+import com.pranshulgg.watchmaster.models.WatchlistViewModelFactory
+import com.pranshulgg.watchmaster.screens.search.ui.AddToWatchlistDialogContent
 import com.pranshulgg.watchmaster.screens.search.ui.SearchBottomSheetContent
 import com.pranshulgg.watchmaster.screens.search.ui.SearchRow
 import com.pranshulgg.watchmaster.ui.components.ActionBottomSheet
 import com.pranshulgg.watchmaster.ui.components.EmptyContainerPlaceholder
+import com.pranshulgg.watchmaster.ui.snackbar.SnackbarManager
 import com.pranshulgg.watchmaster.utils.NavigateUpBtn
 import kotlinx.coroutines.launch
 
@@ -66,19 +74,26 @@ import kotlinx.coroutines.launch
 @Composable
 fun SearchScreen(
     viewModel: SearchViewModel = viewModel(factory = SearchViewModelFactory(LocalContext.current)),
-    navController: NavController
+    navController: NavController,
+    type: SearchType
 ) {
     val query = viewModel.query
     val results = viewModel.results
     val loading = viewModel.loading
 
-
+    val scope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     val selectedItem = remember { mutableStateOf<SearchItem?>(null) }
     val showDialog = rememberSaveable { mutableStateOf(false) }
+
+    val repositoryWatchList = provideWatchlistRepository(LocalContext.current)
+
+    val viewModelWatchList: WatchlistViewModel = viewModel(
+        factory = WatchlistViewModelFactory(repositoryWatchList)
+    )
 
     BottomSheetScaffold(
         containerColor = MaterialTheme.colorScheme.surfaceContainer,
@@ -96,7 +111,7 @@ fun SearchScreen(
             )
         },
         sheetContent = {
-            SearchBottomSheetContent(viewModel, query, focusRequester, focusManager)
+            SearchBottomSheetContent(viewModel, query, focusRequester, focusManager, type)
         },
         sheetPeekHeight = 100.dp,
         sheetDragHandle = null,
@@ -118,15 +133,15 @@ fun SearchScreen(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
-                        LoadingIndicator()
+                        LoadingIndicator(modifier = Modifier.size(60.dp))
                     }
                 }
 
                 results.isEmpty() -> {
                     EmptyContainerPlaceholder(
                         R.drawable.search_24px,
-                        "Search movies",
-                        description = "Search through the movie database"
+                        if (type == SearchType.MOVIE) "Search movies" else "Search tv series",
+                        description = "Search through the database"
                     )
                 }
 
@@ -137,9 +152,17 @@ fun SearchScreen(
                     ) {
                         itemsIndexed(results) { index, item ->
                             SearchRow(item, index, results, onAddToWatchlist = {
-                                selectedItem.value = item
-                                showDialog.value = true
-                            })
+                                scope.launch {
+                                    if (viewModelWatchList.exists(item.id)) {
+                                        SnackbarManager.show("Already in watchlist")
+                                    } else {
+                                        selectedItem.value = item
+                                        showDialog.value = true
+                                    }
+                                }
+                            }
+                            )
+
                             if (index == results.lastIndex) {
                                 Spacer(Modifier.height(32.dp))
                             }
@@ -151,46 +174,35 @@ fun SearchScreen(
         }
     }
 
-//    ActionBottomSheet(
-//        sheetState = addToWatchlistSheetState,
-//        onCancel = {
-//            scope.launch { addToWatchlistSheetState.hide() }
-//            selectedItem.value = null
-//        },
-//        onConfirm = {
-//            selectedItem.value?.let {
-//                viewModel.addToWatchlist(it)
-//            }
-//            scope.launch { addToWatchlistSheetState.hide() }
-//            selectedItem.value = null
-//
-//        },
-//        confirmText = "Save to watchlist"
-//    ) {
-//
-//        selectedItem.value?.let { item ->
-//            AddToWatchlistSheetContent(item)
-//        }
-//
-//    }
+
+    val closeDialog = {
+        showDialog.value = false
+        selectedItem.value = null
+    }
 
     if (showDialog.value && selectedItem.value != null) {
         Dialog(
             onDismissRequest = {
-                showDialog.value = false
-                selectedItem.value = null
+                closeDialog()
             }
         ) {
 
             Surface(
                 modifier = Modifier
-                    .width(300.dp),
+                    .width(300.dp)
+                    .heightIn(max = 500.dp),
                 shape = RoundedCornerShape(26.dp),
                 color = MaterialTheme.colorScheme.surfaceContainerHigh,
                 shadowElevation = 6.dp
             ) {
-                AddToWatchlistSheetContent(
-                    item = selectedItem.value!!
+                AddToWatchlistDialogContent(
+                    item = selectedItem.value!!,
+                    onCancel = { closeDialog() },
+                    onConfirm = {
+                        viewModel.addToWatchlist(selectedItem.value!!)
+                        SnackbarManager.show("Added to watchlist")
+                        closeDialog()
+                    }
                 )
             }
         }

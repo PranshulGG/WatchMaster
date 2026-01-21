@@ -1,12 +1,15 @@
 package com.pranshulgg.watchmaster.screens.search.ui
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -36,7 +39,9 @@ import coil.compose.rememberAsyncImagePainter
 import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.data.getGenreNames
 import com.pranshulgg.watchmaster.screens.search.SearchItem
+import com.pranshulgg.watchmaster.ui.components.PosterPlaceholder
 import com.pranshulgg.watchmaster.utils.Symbol
+import java.util.Locale
 
 @Composable
 fun SearchRow(
@@ -46,10 +51,12 @@ fun SearchRow(
     onAddToWatchlist: () -> Unit,
 ) {
 
+    val isOnly = results.singleOrNull() == item
     val isFirst = index == 0
     val isLast = index == results.lastIndex
 
     val shape = when {
+        isOnly -> RoundedCornerShape(18.dp)
         isFirst -> RoundedCornerShape(topStart = 18.dp, topEnd = 18.dp)
         isLast -> RoundedCornerShape(bottomStart = 18.dp, bottomEnd = 18.dp)
         else -> RoundedCornerShape(0.dp)
@@ -58,6 +65,8 @@ fun SearchRow(
     val poster = item.posterPath?.let {
         "https://image.tmdb.org/t/p/w154$it"
     }
+
+
 
     Surface(
         shape = shape,
@@ -71,9 +80,8 @@ fun SearchRow(
                 .padding(vertical = 10.dp, horizontal = 18.dp),
             horizontalArrangement = Arrangement.spacedBy(
                 space = 12.dp,
-                alignment = Alignment.CenterHorizontally
             ),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.Top
         ) {
             Box(
                 modifier = Modifier
@@ -81,19 +89,24 @@ fun SearchRow(
                     .clip(RoundedCornerShape(16.dp)),
                 contentAlignment = Alignment.Center
             ) {
-                val painter = rememberAsyncImagePainter(model = poster)
+                if (!poster.isNullOrBlank()) {
+                    val painter = rememberAsyncImagePainter(model = poster)
 
-                Image(
-                    painter = painter,
-                    contentDescription = "",
-                    modifier = Modifier.matchParentSize()
-                )
-
-                if (painter.state is AsyncImagePainter.State.Loading) {
-                    CircularProgressIndicator(
-                        strokeWidth = 2.dp,
-                        modifier = Modifier.size(24.dp)
+                    Image(
+                        painter = painter,
+                        contentDescription = null,
+                        modifier = Modifier.matchParentSize(),
+                        contentScale = ContentScale.Crop
                     )
+
+                    if (painter.state is AsyncImagePainter.State.Loading) {
+                        CircularProgressIndicator(
+                            strokeWidth = 2.dp,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                } else {
+                    PosterPlaceholder()
                 }
             }
             Column(
@@ -106,13 +119,12 @@ fun SearchRow(
                     shape = CircleShape,
                 ) {
                     Text(
-                        item.mediaType.replaceFirstChar { it.uppercase() },
+                        isoToName(item.originalLanguage ?: "en"),
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
                         style = MaterialTheme.typography.labelLarge,
                         color = MaterialTheme.colorScheme.onSecondaryContainer
                     )
                 }
-                Spacer(Modifier.height(5.dp))
                 Text(
                     text = item.title,
                     fontWeight = FontWeight.W900,
@@ -123,12 +135,19 @@ fun SearchRow(
                 )
                 Spacer(Modifier.height(5.dp))
                 Text(
-                    "${item.releaseDate?.take(4) ?: "No date"} • ${
-                        if (item.genreIds != null) getGenreNames(item.genreIds).joinToString(
-                            ", "
-                        ) else {
+                    "${
+                        if (item.releaseDate == "" || item.releaseDate == null) {
+                            "No date"
+                        } else {
+                            item.releaseDate.take(4)
+                        }
+                    } • ${
+                        if (!item.genreIds.isNullOrEmpty()) {
+                            getGenreNames(item.genreIds).joinToString(", ")
+                        } else {
                             "No genre found"
                         }
+
                     }",
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     lineHeight = TextUnit(16f, TextUnitType.Sp),
@@ -152,7 +171,7 @@ fun SearchRow(
                         )
                         Spacer(Modifier.width(3.dp))
                         Text(
-                            "8.5",
+                            "%.1f".format(item.avg_rating),
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Bold
@@ -162,4 +181,11 @@ fun SearchRow(
             }
         }
     }
+}
+
+
+fun isoToName(code: String): String {
+    val locale = Locale.forLanguageTag(code)
+    val name = locale.getDisplayLanguage(Locale.ENGLISH)
+    return name.ifBlank { code }
 }
