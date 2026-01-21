@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pranshulgg.watchmaster.data.repository.WatchlistRepository
+import com.pranshulgg.watchmaster.model.SearchType
 import kotlinx.coroutines.launch
 
 class SearchViewModel(
@@ -29,20 +30,20 @@ class SearchViewModel(
     private val mockResults = listOf(
         SearchItem(
             id = 2640,
-            title = "Japanese Spiderman",
-            posterPath = "/w5pTlusOFWrOib6XX3iCMjHSzB1.jpg",
+            title = "Crayon Shin-chan: Fast Asleep! Dreaming World Big Assault!",
+            posterPath = "/xgHTpx8dywe3QTd5iuKuB0g3SNv.jpg",
             mediaType = "tv",
             releaseDate = "1978-05-17",
-            genreIds = listOf(10759, 10765),
-            overview = "Follow the exploits of motorcycle racer turned super hero Takuya Yamashiro, as he slings and swings, battling the evil Iron Cross Army along the way."
+            genreIds = listOf(),
+            overview = "One night, the Nohara family were enjoying a pleasant dream, when suddenly a big fish appeared in their dreams and ate them. The next morning, Hiroshi read in the newspaper that everybody in another town had the same nightmare as him, but it seemed to have ended. But Hiroshi also heard the same dream from Misae, Shinnosuke, Himawari and even Shiro. They were surprised and thought if the same thing is happening in Kasukabe too. In kindergarten, on telling others about his nightmare, Shinnosuke was surprised to know that everybody too had the same dream. Then a mysterious girl named Saki was transferred to Futaba Kindergarten and joined Shinnosuke's class. Everyone in the class, including the rather inactive Bo-chan, were all excited and happy on seeing her. But Saki had a cold attitude and didn't get along well."
         ),
         SearchItem(
             id = 888,
             title = "Spider-Man",
-            posterPath = "/wXthtEN5kdWA1bHz03lkuCJS6hA.jpg",
+            posterPath = null,
             mediaType = "tv",
-            releaseDate = "1994-11-19",
-            genreIds = listOf(16, 10759),
+            releaseDate = "",
+            genreIds = listOf(),
             overview = ""
 
         ),
@@ -84,15 +85,16 @@ class SearchViewModel(
 //        loading = false
 //    }
 
-    fun search() {
+    fun search(type: SearchType = SearchType.MULTI) {
         if (query.isBlank()) return
 
         viewModelScope.launch {
             loading = true
-            results = repo.search(query)
+            results = repo.search(query, type)
             loading = false
         }
     }
+
 
     fun addToWatchlist(item: SearchItem) {
         viewModelScope.launch {
