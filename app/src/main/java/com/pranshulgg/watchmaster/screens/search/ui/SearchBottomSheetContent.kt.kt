@@ -23,6 +23,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.pranshulgg.watchmaster.R
+import com.pranshulgg.watchmaster.model.SearchType
 import com.pranshulgg.watchmaster.screens.search.SearchViewModel
 import com.pranshulgg.watchmaster.screens.search.SearchViewModelFactory
 import com.pranshulgg.watchmaster.utils.Symbol
@@ -32,7 +33,8 @@ fun SearchBottomSheetContent(
     viewModel: SearchViewModel = viewModel(factory = SearchViewModelFactory(LocalContext.current)),
     query: String,
     focusRequester: FocusRequester,
-    focusManager: FocusManager
+    focusManager: FocusManager,
+    type: SearchType
 ) {
     Column(
         Modifier
@@ -55,7 +57,7 @@ fun SearchBottomSheetContent(
             ),
             keyboardActions = KeyboardActions(
                 onSearch = {
-                    viewModel.search()
+                    viewModel.search(type)
                     focusManager.clearFocus()
                 }
             ),
