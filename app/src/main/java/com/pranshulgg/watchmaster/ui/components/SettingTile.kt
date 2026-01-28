@@ -22,6 +22,7 @@ import com.pranshulgg.watchmaster.ui.components.tiles.DialogTextFieldTile
 import com.pranshulgg.watchmaster.ui.components.tiles.SingleSwitchTile
 import com.pranshulgg.watchmaster.ui.components.tiles.SwitchTile
 import com.pranshulgg.watchmaster.ui.components.tiles.TextTile
+import com.pranshulgg.watchmaster.utils.Radius
 
 sealed class SettingTile {
     abstract val title: String
@@ -112,14 +113,16 @@ sealed class SettingTile {
 
 @Composable
 fun SettingSection(
-    tiles: List<SettingTile>,
+    tiles: List<SettingTile?>,
     title: String? = null,
     primarySwitch: Boolean = false,
     noPadding: Boolean = false,
-    errorTile: Boolean = false
+    errorTile: Boolean = false,
+    isModalOption: Boolean = false,
 ) {
 
-    val itemBgColor = MaterialTheme.colorScheme.surfaceBright
+    val itemBgColor =
+        if (isModalOption) MaterialTheme.colorScheme.surfaceContainerHigh else MaterialTheme.colorScheme.surfaceBright
 
     Column(
         modifier = Modifier
@@ -146,23 +149,23 @@ fun SettingSection(
 
 
             val shape = when {
-                primarySwitch -> RoundedCornerShape(50.dp)
-                isOnly -> RoundedCornerShape(16.dp)
+                primarySwitch -> RoundedCornerShape(Radius.Full)
+                isOnly -> RoundedCornerShape(Radius.Large)
                 isFirst -> RoundedCornerShape(
-                    topStart = 16.dp,
-                    topEnd = 16.dp,
-                    bottomStart = 4.dp,
-                    bottomEnd = 4.dp
+                    topStart = Radius.Large,
+                    topEnd = Radius.Large,
+                    bottomStart = Radius.ExtraSmall,
+                    bottomEnd = Radius.ExtraSmall
                 )
 
                 isLast -> RoundedCornerShape(
-                    topStart = 4.dp,
-                    topEnd = 4.dp,
-                    bottomStart = 16.dp,
-                    bottomEnd = 16.dp
+                    topStart = Radius.ExtraSmall,
+                    topEnd = Radius.ExtraSmall,
+                    bottomStart = Radius.Large,
+                    bottomEnd = Radius.Large
                 )
 
-                else -> RoundedCornerShape(4.dp)
+                else -> RoundedCornerShape(Radius.ExtraSmall)
             }
 
             when (tile) {
@@ -257,6 +260,8 @@ fun SettingSection(
                     isDescriptionAsValue = tile.isDescriptionAsValue,
                     itemBgColor = itemBgColor
                 )
+
+                else -> null
             }
         }
     }
