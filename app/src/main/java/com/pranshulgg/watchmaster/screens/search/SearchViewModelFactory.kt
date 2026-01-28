@@ -7,6 +7,7 @@ import com.pranshulgg.watchmaster.data.local.WatchMasterDatabase
 import com.pranshulgg.watchmaster.data.repository.WatchlistRepository
 import com.pranshulgg.watchmaster.network.TmdbApi
 import com.pranshulgg.watchmaster.data.local.dao.WatchlistDao
+import com.pranshulgg.watchmaster.data.repository.MovieRepository
 
 class SearchViewModelFactory(
     private val context: Context
@@ -17,7 +18,12 @@ class SearchViewModelFactory(
         val searchRepo = SearchRepository(api)
 
         val db = WatchMasterDatabase.getInstance(context)
-        val watchlistRepo = WatchlistRepository(db.watchlistDao())
+        val watchlistRepo = WatchlistRepository(
+            db.watchlistDao(), MovieRepository(
+                api = TmdbApi.create(),
+                dao = db.movieBundleDao()
+            )
+        )
 
         return SearchViewModel(
             searchRepo,
