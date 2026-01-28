@@ -24,10 +24,12 @@ import androidx.navigation.NavController
 import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.data.local.WatchMasterDatabase
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
+import com.pranshulgg.watchmaster.data.repository.MovieRepository
 import com.pranshulgg.watchmaster.model.WatchStatus
 import com.pranshulgg.watchmaster.data.repository.WatchlistRepository
 import com.pranshulgg.watchmaster.models.WatchlistViewModel
 import com.pranshulgg.watchmaster.models.WatchlistViewModelFactory
+import com.pranshulgg.watchmaster.network.TmdbApi
 import com.pranshulgg.watchmaster.screens.movieTabs.finished.FinishedMovies
 import com.pranshulgg.watchmaster.screens.movieTabs.watching.WatchingMovies
 import com.pranshulgg.watchmaster.screens.movieTabs.watchlist.WatchlistMovies
@@ -47,7 +49,12 @@ fun MovieTabHomeScreen(
     val context = LocalContext.current
 
     val db = WatchMasterDatabase.getInstance(context)
-    val repository = WatchlistRepository(db.watchlistDao())
+    val repository = WatchlistRepository(
+        db.watchlistDao(), MovieRepository(
+            api = TmdbApi.create(),
+            dao = db.movieBundleDao()
+        )
+    )
 
     val viewModel: WatchlistViewModel = viewModel(
         factory = WatchlistViewModelFactory(repository)
@@ -55,12 +62,13 @@ fun MovieTabHomeScreen(
 
     val items by viewModel.watchlist.collectAsState()
 
+
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surfaceContainer,
         topBar = {
             PrimaryTabRow(
                 containerColor = MaterialTheme.colorScheme.surfaceContainer,
-                selectedTabIndex = pagerState.currentPage
+                selectedTabIndex = pagerState.currentPage,
             ) {
                 tabs.forEachIndexed { index, title ->
                     Tab(
@@ -91,19 +99,29 @@ fun MovieTabHomeScreen(
                         it.status == WatchStatus.WANT_TO_WATCH && it.mediaType != "tv"
                     },
                     scrollBehavior,
-                    scrollBehaviorTopBar
+                    scrollBehaviorTopBar,
+                    navController
                 )
 
                 1 -> WatchingMovies(
                     items = items.filter {
-                        it.status != WatchStatus.WATCHING && it.mediaType != "tv"
-                    }
+                        (it.status == WatchStatus.WATCHING || it.status == WatchStatus.INTERRUPTED) && it.mediaType != "tv"
+
+                    },
+                    scrollBehavior,
+                    scrollBehaviorTopBar,
+                    navController
+
                 )
 
                 2 -> FinishedMovies(
                     items = items.filter {
                         it.status == WatchStatus.FINISHED && it.mediaType != "tv"
-                    }
+                    },
+                    scrollBehavior,
+                    scrollBehaviorTopBar,
+                    navController
+
                 )
             }
         }
