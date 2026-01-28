@@ -45,4 +45,13 @@ interface WatchlistDao {
     @Query("SELECT EXISTS(SELECT 1 FROM watchlist WHERE id = :id)")
     suspend fun exists(id: Long): Boolean
 
+    @Query("UPDATE watchlist SET isFavorite = :isFavorite WHERE id = :id")
+    suspend fun updateFavorite(id: Long, isFavorite: Boolean)
+
+    @Query("UPDATE watchlist SET isPinned = :isPinned WHERE id = :id")
+    suspend fun updatePinned(id: Long, isPinned: Boolean)
+
+    @Query("UPDATE watchlist SET userRating = :rating WHERE id = :id")
+    suspend fun updateUserRating(id: Long, rating: Double)
+
 }

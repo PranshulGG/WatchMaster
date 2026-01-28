@@ -9,7 +9,8 @@ import com.pranshulgg.watchmaster.screens.search.SearchItem
 import java.time.Instant
 
 class WatchlistRepository(
-    private val dao: WatchlistDao
+    private val dao: WatchlistDao,
+    private val movieRepository: MovieRepository
 ) {
 
     suspend fun addFromSearch(item: SearchItem) {
@@ -61,9 +62,20 @@ class WatchlistRepository(
         )
     }
 
-    suspend fun deleteItem(id: Long) = dao.deleteById(id)
+
+    suspend fun deleteItem(id: Long) {
+        dao.deleteById(id)
+        movieRepository.deleteCachedMovie(id)
+    }
 
     suspend fun deleteFinishedItems() = dao.deleteFinished()
 
     suspend fun itemExists(id: Long): Boolean = dao.exists(id)
+
+    suspend fun updateFavorite(id: Long, isFavorite: Boolean) = dao.updateFavorite(id, isFavorite)
+
+    suspend fun updatePinned(id: Long, isPinned: Boolean) = dao.updatePinned(id, isPinned)
+
+    suspend fun updateUserRating(id: Long, rating: Double) = dao.updateUserRating(id, rating)
+
 }

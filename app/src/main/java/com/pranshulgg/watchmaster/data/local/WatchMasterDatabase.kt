@@ -10,10 +10,12 @@ import com.pranshulgg.watchmaster.data.local.converters.GenreIdsConverter
 import androidx.room.Room
 import com.pranshulgg.watchmaster.data.local.converters.InstantConverters
 import com.pranshulgg.watchmaster.data.local.converters.WatchStatusConverter
+import com.pranshulgg.watchmaster.data.local.dao.MovieBundleDao
+import com.pranshulgg.watchmaster.data.local.entity.MovieBundleEntity
 
 @Database(
-    entities = [WatchlistItemEntity::class],
-    version = 5
+    entities = [WatchlistItemEntity::class, MovieBundleEntity::class],
+    version = 7
 )
 @TypeConverters(
     GenreIdsConverter::class,
@@ -23,6 +25,7 @@ import com.pranshulgg.watchmaster.data.local.converters.WatchStatusConverter
 abstract class WatchMasterDatabase : RoomDatabase() {
 
     abstract fun watchlistDao(): WatchlistDao
+    abstract fun movieBundleDao(): MovieBundleDao
 
     companion object {
         @Volatile

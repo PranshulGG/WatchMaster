@@ -25,5 +25,12 @@ data class WatchlistItemEntity(
 
     val avgRating: Double? = null,
 
-    val notes: String? = null
+    val isPinned: Boolean = false,
+    val isFavorite: Boolean = false,
+    val userRating: Double? = null,
+
+
+    val notes: String? = null,
+
+    val folder: String? = null
 )

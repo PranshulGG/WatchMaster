@@ -45,5 +45,18 @@ class WatchlistViewModel(
 
     suspend fun exists(id: Long): Boolean =
         repository.itemExists(id)
+
+    fun setFavorite(id: Long, isFavorite: Boolean) = viewModelScope.launch {
+        repository.updateFavorite(id, isFavorite)
+    }
+
+    fun setPinned(id: Long, isPinned: Boolean) = viewModelScope.launch {
+        repository.updatePinned(id, isPinned)
+    }
+
+    fun setUserRating(id: Long, rating: Double) = viewModelScope.launch {
+        repository.updateUserRating(id, rating)
+    }
+
 }
 
