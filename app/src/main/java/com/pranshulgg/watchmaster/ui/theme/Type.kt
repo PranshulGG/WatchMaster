@@ -11,32 +11,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.pranshulgg.watchmaster.R
 
-
-//@OptIn(ExperimentalTextApi::class)
-//val NotoSansRegular = FontFamily(
-//    Font(
-//        resId = R.font.googlesans_regular,
-//        weight = FontWeight.Normal,
-//    )
-//)
-//
-//@OptIn(ExperimentalTextApi::class)
-//val NotoSansMedium = FontFamily(
-//    Font(
-//        resId = R.font.googlesans_medium,
-//        weight = FontWeight.Medium,
-//    )
-//)
-//
-//@OptIn(ExperimentalTextApi::class)
-//val NotoSansBold = FontFamily(
-//    Font(
-//        resId = R.font.googlesans_bold,
-//        weight = FontWeight.Bold,
-//    )
-//)
-
-
 @OptIn(ExperimentalTextApi::class)
 val RobotoFlexRegular = FontFamily(
     Font(
