@@ -1,9 +1,8 @@
 package com.pranshulgg.watchmaster.prefs
 
-data class AppPrefsState(
-    val useExpressive: Boolean,
-    val setUseExpressive: (Boolean) -> Unit,
+import com.pranshulgg.watchmaster.model.ThemeVariantType
 
+data class AppPrefsState(
     val appTheme: String,
     val setAppTheme: (String) -> Unit,
 
@@ -14,5 +13,8 @@ data class AppPrefsState(
     val useCustomTheme: (Boolean) -> Unit,
 
     val useDynamicColor: Boolean,
-    val setDynamicColor: (Boolean) -> Unit
+    val setDynamicColor: (Boolean) -> Unit,
+
+    val themeVariant: ThemeVariantType,
+    val setThemeVariant: (ThemeVariantType) -> Unit
 )

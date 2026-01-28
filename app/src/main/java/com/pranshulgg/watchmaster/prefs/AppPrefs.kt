@@ -4,36 +4,36 @@ import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import com.pranshulgg.watchmaster.helpers.PreferencesHelper
+import com.pranshulgg.watchmaster.model.ThemeVariantType
 
 object AppPrefs {
-
-    private val _useExpressive = mutableStateOf(true)
     private val _appTheme = mutableStateOf("System")
     private val _themeColor = mutableStateOf("#2196f3")
     private val _isCustomTheme = mutableStateOf(false)
     private val _useDynamicColor = mutableStateOf(false)
 
+    private val _themeVariant =
+        mutableStateOf(ThemeVariantType.EXPRESSIVE)
+
 
     fun initPrefs(context: Context) {
         PreferencesHelper.init(context)
 
-        _useExpressive.value =
-            PreferencesHelper.getBool("useExpressiveColor") ?: true
         _appTheme.value =
             PreferencesHelper.getString("app_theme") ?: "System"
         _themeColor.value = PreferencesHelper.getString("theme_color") ?: "#2196f3"
         _isCustomTheme.value = PreferencesHelper.getBool("isCustomTheme") ?: false
         _useDynamicColor.value = PreferencesHelper.getBool("useDynamicColor") ?: false
-
+        _themeVariant.value =
+            PreferencesHelper.getString("theme_variant")
+                ?.let {
+                    runCatching { ThemeVariantType.valueOf(it) }.getOrNull()
+                }
+                ?: ThemeVariantType.EXPRESSIVE
     }
 
     @Composable
     fun state(): AppPrefsState = AppPrefsState(
-        useExpressive = _useExpressive.value,
-        setUseExpressive = {
-            _useExpressive.value = it
-            PreferencesHelper.setBool("useExpressiveColor", it)
-        },
 
         appTheme = _appTheme.value,
         setAppTheme = {
@@ -57,6 +57,12 @@ object AppPrefs {
         setDynamicColor = {
             _useDynamicColor.value = it
             PreferencesHelper.setBool("useDynamicColor", it)
+        },
+
+        themeVariant = _themeVariant.value,
+        setThemeVariant = {
+            _themeVariant.value = it
+            PreferencesHelper.setString("theme_variant", it.name)
         },
 
         )
