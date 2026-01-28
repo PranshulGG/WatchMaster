@@ -4,6 +4,8 @@ package com.pranshulgg.watchmaster.ui.components
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.expandHorizontally
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -46,6 +48,7 @@ import androidx.compose.material3.TooltipAnchorPosition
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -163,9 +166,10 @@ fun BottomNav(
                         spacing = 10.dp
                     ) {
                         AnimatedVisibility(
+                            modifier = Modifier.clip(CircleShape),
                             visible = selectedItem != 0,
-                            enter = expandHorizontally(),
-                            exit = shrinkHorizontally()
+                            enter = fadeIn() + expandHorizontally(),
+                            exit = fadeOut() + shrinkHorizontally()
                         ) {
                             FilledTonalIconButton(
                                 modifier = Modifier.size(48.dp),
