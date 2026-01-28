@@ -132,7 +132,6 @@ fun MediaDetailPage(
             }
 
 
-            // Similarly: Reviews, Similar, Recommendations, Watch Providers…
         }
     } ?: run {
         Text(
