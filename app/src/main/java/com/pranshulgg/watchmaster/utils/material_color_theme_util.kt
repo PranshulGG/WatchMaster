@@ -2,7 +2,6 @@ package com.pranshulgg.watchmaster.utils
 
 import androidx.compose.animation.core.animateValueAsState
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -36,14 +35,26 @@ import androidx.compose.animation.core.animateValueAsState
 import androidx.compose.animation.core.TwoWayConverter
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
+import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.ToggleButton
+import androidx.compose.material3.ToggleButtonDefaults
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
+import com.pranshulgg.watchmaster.R
+import com.pranshulgg.watchmaster.model.ThemeVariantType
 import com.pranshulgg.watchmaster.ui.components.SettingSection
 import com.pranshulgg.watchmaster.ui.components.SettingTile
 
@@ -148,15 +159,41 @@ fun SelectableThemeColors(onThemeColorChanged: (String) -> Unit) {
             }
         }
         Box(Modifier.height(16.dp))
-        SettingSection(
-            tiles = listOf(
-                SettingTile.SingleSwitchTile(
-                    title = "Use expressive palette",
-                    checked = prefs.useExpressive,
-                    onCheckedChange = prefs.setUseExpressive
-                )
 
-            )
+        val options = listOf(
+            "Tonal Spot" to ThemeVariantType.TONAL_SPOT,
+            "Neutral" to ThemeVariantType.NEUTRAL,
+            "Vibrant" to ThemeVariantType.VIBRANT,
+            "Expressive" to ThemeVariantType.EXPRESSIVE,
         )
+
+        var selected by remember { mutableStateOf(prefs.themeVariant) }
+
+        FlowRow(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp),
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            options.forEach { (label, variant) ->
+                ToggleButton(
+                    checked = selected == variant,
+                    onCheckedChange = {
+                        prefs.setThemeVariant(variant)
+                        selected = variant
+                    },
+                    modifier = Modifier.semantics { role = Role.RadioButton },
+                    shapes = ToggleButtonDefaults.shapes(),
+                    colors = ToggleButtonDefaults.toggleButtonColors(
+                        checkedContainerColor = MaterialTheme.colorScheme.tertiary,
+//                        contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        checkedContentColor = MaterialTheme.colorScheme.onTertiary,
+                    )
+                ) {
+                    Text(label)
+                }
+            }
+        }
+
     }
 }

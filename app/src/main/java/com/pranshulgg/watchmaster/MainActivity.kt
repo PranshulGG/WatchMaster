@@ -33,6 +33,7 @@ import com.pranshulgg.watchmaster.prefs.AppPrefs.initPrefs
 import com.pranshulgg.watchmaster.prefs.LocalAppPrefs
 import com.pranshulgg.watchmaster.screens.MainScreen
 import com.pranshulgg.watchmaster.screens.SettingsPage
+import com.pranshulgg.watchmaster.screens.media_detail.MediaDetailPage
 import com.pranshulgg.watchmaster.screens.search.SearchScreen
 import com.pranshulgg.watchmaster.screens.search.SearchViewModel
 import com.pranshulgg.watchmaster.screens.search.SearchViewModelFactory
@@ -75,7 +76,7 @@ class MainActivity : ComponentActivity() {
 
                 WatchMasterTheme(
                     darkTheme = appTheme,
-                    useExpressive = prefs.useExpressive,
+                    themeVariantType = prefs.themeVariant,
                     seedColor = Color(prefs.themeColor.toColorInt())
                 ) {
                     androidx.compose.material3.Scaffold(
@@ -113,6 +114,16 @@ class MainActivity : ComponentActivity() {
                             ) {
                                 SettingsPage(navController)
                             }
+                            composable(
+                                route = "${NavRoutes.MEDIA_DETAIL_PAGE}/{id}",
+                                arguments = listOf(
+                                    navArgument("id") { type = NavType.LongType }
+                                )
+                            ) { backStackEntry ->
+                                val id = backStackEntry.arguments!!.getLong("id")
+                                MediaDetailPage(movieId = id)
+                            }
+
                             composable(
                                 route = "${NavRoutes.SEARCH}?type={type}",
                                 arguments = listOf(
