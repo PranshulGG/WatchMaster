@@ -20,6 +20,7 @@ import androidx.core.view.WindowCompat
 import com.materialkolor.PaletteStyle
 import com.materialkolor.dynamiccolor.ColorSpec
 import com.materialkolor.rememberDynamicColorScheme
+import com.pranshulgg.watchmaster.model.ThemeVariantType
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -48,7 +49,7 @@ private val LightColorScheme = lightColorScheme(
 fun WatchMasterTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     seedColor: Color = Color.Green,
-    useExpressive: Boolean = true,
+    themeVariantType: ThemeVariantType,
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
@@ -63,7 +64,7 @@ fun WatchMasterTheme(
                 seedColor = seedColor,
                 isDark = darkTheme,
                 specVersion = ColorSpec.SpecVersion.SPEC_2025,
-                style = if (useExpressive) PaletteStyle.Expressive else PaletteStyle.TonalSpot,
+                style = themeVariantType.paletteStyle,
             )
         }
     }
