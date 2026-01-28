@@ -10,6 +10,15 @@ import okhttp3.OkHttpClient
 import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
 import com.pranshulgg.watchmaster.BuildConfig
+import com.pranshulgg.watchmaster.data.CreditsDto
+import com.pranshulgg.watchmaster.data.Genre
+import com.pranshulgg.watchmaster.data.ImagesDto
+import com.pranshulgg.watchmaster.data.MovieListDto
+import com.pranshulgg.watchmaster.data.ReleaseDatesDto
+import com.pranshulgg.watchmaster.data.ReviewsDto
+import com.pranshulgg.watchmaster.data.VideosDto
+import com.pranshulgg.watchmaster.data.WatchProvidersDto
+import retrofit2.http.Path
 import retrofit2.http.Url
 import java.util.concurrent.TimeUnit
 
@@ -59,6 +68,26 @@ data class KnownFor(
     val firstAirDate: String?
 )
 
+data class MovieBundleDto(
+    val id: Long,
+    val title: String,
+    val overview: String,
+    val runtime: Int?,
+    val genres: List<Genre>,
+
+    val credits: CreditsDto,
+    val videos: VideosDto,
+    val images: ImagesDto,
+
+    @SerializedName("watch/providers")
+    val watchProviders: WatchProvidersDto?,
+
+    val similar: MovieListDto,
+    val recommendations: MovieListDto,
+    val reviews: ReviewsDto,
+    val release_dates: ReleaseDatesDto
+)
+
 
 interface TmdbApi {
     @GET
@@ -69,6 +98,15 @@ interface TmdbApi {
         @Query("include_adult") includeAdult: Boolean = false,
         @Query("language") language: String = "en-US"
     ): Response<MultiSearchResponse>
+
+    @GET("movie/{movie_id}")
+    suspend fun getWholeMovieData(
+        @Path("movie_id") movieId: Long,
+        @Query("append_to_response") append: String =
+            "credits,videos,images,watch/providers,similar,recommendations,reviews,release_dates",
+        @Query("language") language: String = "en-US"
+    ): Response<MovieBundleDto>
+
 
     companion object {
         private const val BASE = "https://api.themoviedb.org/3/"
