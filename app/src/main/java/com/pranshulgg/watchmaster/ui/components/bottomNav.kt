@@ -102,8 +102,7 @@ fun BottomNav(
                 )
                 .align(Alignment.BottomCenter)
                 .zIndex(1f),
-            colors = FloatingToolbarDefaults.vibrantFloatingToolbarColors(
-            ),
+            colors = FloatingToolbarDefaults.vibrantFloatingToolbarColors(),
             expanded = true,
             content = {
 
