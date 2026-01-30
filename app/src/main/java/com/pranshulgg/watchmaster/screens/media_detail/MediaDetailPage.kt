@@ -27,6 +27,8 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FlexibleBottomAppBar
+import androidx.compose.material3.FloatingToolbarDefaults
+import androidx.compose.material3.FloatingToolbarExitDirection.Companion.Bottom
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -37,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -71,24 +74,20 @@ fun MediaDetailPage(
 
     val loading = viewModel.loading
 
+    val scrollBehavior =
+        FloatingToolbarDefaults.exitAlwaysScrollBehavior(exitDirection = Bottom)
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surfaceContainer,
         bottomBar = {
-//            FlexibleBottomAppBar(
-//                horizontalArrangement = Arrangement.SpaceEvenly,
-//                contentPadding = PaddingValues(horizontal = 0.dp),
-//                content = {
-//
-//                }
-//            )
-            MovieDetailFloatingToolBar()
+            MovieDetailFloatingToolBar(scrollBehavior)
         },
     ) { paddingValues ->
 
         viewModel.state?.let {
             Column(
                 modifier = Modifier
+                    .nestedScroll(scrollBehavior)
                     .verticalScroll(rememberScrollState())
                     .padding(bottom = paddingValues.calculateBottomPadding())
             )
@@ -99,20 +98,6 @@ fun MediaDetailPage(
                     }
                     return@Column
                 }
-//                Box {
-//                    AsyncImage(
-//                        model = "https://image.tmdb.org/t/p/original${it.images.backdrops.firstOrNull()?.file_path}",
-//                        contentDescription = it.title,
-//                        modifier = Modifier
-//                            .fillMaxWidth(),
-//
-//                        contentScale = ContentScale.Crop
-//                    )
-//                    Text(
-//                        text = it.title,
-//                        modifier = Modifier.padding(16.dp)
-//                    )
-//                }
                 MovieHeroHeader(movie = it)
 
 
@@ -171,7 +156,6 @@ fun MediaDetailPage(
                         }
                     }
                 }
-
 
             }
         } ?: run {
