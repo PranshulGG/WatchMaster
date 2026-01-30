@@ -85,7 +85,9 @@ class MainActivity : ComponentActivity() {
                         NavHost(
                             modifier = Modifier
                                 .background(MaterialTheme.colorScheme.surfaceContainer),
-                            navController = navController, startDestination = NavRoutes.MAIN,
+                            navController = navController,
+//                            startDestination = NavRoutes.mediaDetail(550),
+                            startDestination = NavRoutes.MAIN,
                             enterTransition = {
                                 NavTransitions.enter(motionScheme)
                             },
