@@ -9,6 +9,7 @@ import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -31,8 +33,10 @@ import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.FlexibleBottomAppBar
 import androidx.compose.material3.FloatingToolbarDefaults
 import androidx.compose.material3.FloatingToolbarDefaults.ScreenOffset
+import androidx.compose.material3.FloatingToolbarScrollBehavior
 import androidx.compose.material3.HorizontalFloatingToolbar
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialExpressiveTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.motionScheme
 import androidx.compose.material3.Text
@@ -68,7 +72,7 @@ data class MenuItemOptionList(
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun MovieDetailFloatingToolBar() {
+fun MovieDetailFloatingToolBar(scrollBehavior: FloatingToolbarScrollBehavior) {
     val systemInsets = WindowInsets.systemBars.asPaddingValues()
     var expanded by remember { mutableStateOf(false) }
 
@@ -80,35 +84,16 @@ fun MovieDetailFloatingToolBar() {
         MenuItemOptionList(title = "Rate", leading = R.drawable.star_24px, action = {}),
         MenuItemOptionList(title = "Folder", leading = R.drawable.folder_24px, action = {}),
         MenuItemOptionList(title = "Share", leading = R.drawable.share_24px, action = {}),
+        MenuItemOptionList(title = "Delete", leading = R.drawable.delete_24px, action = {})
 
-        )
+    )
 
     Box(
         Modifier
             .fillMaxWidth(),
     ) {
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false },
-            containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-            shape = RoundedCornerShape(Radius.Large)
-        ) {
-            menuItemOptionList.forEach { option ->
-                DropdownMenuItem(
-                    leadingIcon = { Symbol(option.leading, color = menuItemContentColor) },
-                    text = {
-                        Text(
-                            option.title,
-                            color = menuItemContentColor,
-                            style = menuItemContentTextStyle,
-                        )
-                    },
-                    onClick = { option.action },
-                )
-            }
-
-        }
         HorizontalFloatingToolbar(
+            scrollBehavior = scrollBehavior,
             modifier = Modifier
                 .padding(
                     top = ScreenOffset,
@@ -125,47 +110,60 @@ fun MovieDetailFloatingToolBar() {
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
 
-                    IconButton(
-                        modifier = Modifier.size(48.dp),
-                        onClick = {
-                            expanded = true
-                        },
-                    ) {
-                        Symbol(
-                            R.drawable.more_vert_24px,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer
-                        )
-                    }
-
-
-
                     Button(
                         modifier = Modifier
                             .height(48.dp),
-                        shapes = ButtonDefaults.shapes(),
-                        onClick = {}) { Text("Start watching") }
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                            contentColor = MaterialTheme.colorScheme.onSurface
+                        ),
+                        contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
+                        onClick = {}) {
+                        Symbol(R.drawable.play_arrow_24px)
+                        Spacer(Modifier.width(ButtonDefaults.IconSpacing))
+                        Text("Mark as watching")
+                    }
 
-                    IconButton(
-                        modifier = Modifier.size(48.dp),
-                        onClick = {
+                    Box {
+                        FilledTonalIconButton(
+                            modifier = Modifier.size(48.dp),
+                            onClick = { expanded = true }
+                        ) {
+                            Symbol(
+                                R.drawable.more_vert_24px,
+                                color = MaterialTheme.colorScheme.onSecondaryContainer
+                            )
+                        }
 
-                        },
-                    ) {
-                        Symbol(
-                            R.drawable.delete_24px,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer
-                        )
+                        DropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false },
+                            containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                            shape = RoundedCornerShape(Radius.Large)
+                        ) {
+                            menuItemOptionList.forEach { option ->
+                                DropdownMenuItem(
+                                    leadingIcon = {
+                                        Symbol(option.leading, color = menuItemContentColor)
+                                    },
+                                    text = {
+                                        Text(
+                                            option.title,
+                                            color = menuItemContentColor,
+                                            style = menuItemContentTextStyle
+                                        )
+                                    },
+                                    onClick = {
+                                        expanded = false
+                                        option.action()
+                                    }
+                                )
+                            }
+                        }
                     }
 
                 }
-
             },
-
-
-            )
-
-
+        )
     }
-
-
 }
