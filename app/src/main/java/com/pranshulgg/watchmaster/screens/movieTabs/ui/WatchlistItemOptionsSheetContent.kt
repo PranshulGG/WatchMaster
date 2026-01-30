@@ -1,6 +1,5 @@
 package com.pranshulgg.watchmaster.screens.movieTabs.ui
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.pranshulgg.watchmaster.R
