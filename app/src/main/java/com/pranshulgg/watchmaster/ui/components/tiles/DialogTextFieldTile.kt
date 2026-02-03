@@ -75,7 +75,7 @@ fun DialogTextFieldTile(
                     },
                     shapes = ButtonDefaults.shapes()
                 ) {
-                    Text("Save", fontWeight = FontWeight.W600, fontSize = 16.sp)
+                    Text("Save", style = MaterialTheme.typography.labelLarge)
                 }
             },
             dismissButton = {
@@ -83,7 +83,7 @@ fun DialogTextFieldTile(
                     onClick = { showDialog = false },
                     shapes = ButtonDefaults.shapes()
                 ) {
-                    Text("Cancel", fontWeight = FontWeight.W600, fontSize = 16.sp)
+                    Text("Cancel", style = MaterialTheme.typography.labelLarge)
                 }
             }
         )
