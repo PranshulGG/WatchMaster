@@ -52,67 +52,83 @@ val RobotoFlexWide = FontFamily(
     )
 )
 
+
 val AppTypography = Typography().run {
     copy(
         displayLarge = displayLarge.copy(
             fontFamily = RobotoFlexRegular,
-            fontSize = 57.sp
+            fontSize = 57.sp,
+            lineHeight = 64.sp
         ),
         displayMedium = displayMedium.copy(
             fontFamily = RobotoFlexRegular,
-            fontSize = 45.sp
+            fontSize = 45.sp,
+            lineHeight = 52.sp
         ),
         displaySmall = displaySmall.copy(
             fontFamily = RobotoFlexRegular,
-            fontSize = 36.sp
+            fontSize = 36.sp,
+            lineHeight = 44.sp
         ),
         headlineLarge = headlineLarge.copy(
             fontFamily = RobotoFlexRegular,
-            fontSize = 32.sp
+            fontSize = 32.sp,
+            lineHeight = 40.sp
         ),
         headlineMedium = headlineMedium.copy(
             fontFamily = RobotoFlexRegular,
-            fontSize = 28.sp
+            fontSize = 28.sp,
+            lineHeight = 36.sp
         ),
         headlineSmall = headlineSmall.copy(
             fontFamily = RobotoFlexRegular,
-            fontSize = 24.sp
+            fontSize = 24.sp,
+            lineHeight = 32.sp
         ),
         titleLarge = titleLarge.copy(
             fontFamily = RobotoFlexRegular,
-            fontSize = 22.sp
+            fontSize = 22.sp,
+            lineHeight = 28.sp
         ),
         titleMedium = titleMedium.copy(
             fontFamily = RobotoFlexMedium,
-            fontSize = 16.sp
+            fontSize = 16.sp,
+            lineHeight = 24.sp
         ),
         titleSmall = titleSmall.copy(
             fontFamily = RobotoFlexMedium,
-            fontSize = 14.sp
+            fontSize = 14.sp,
+            lineHeight = 20.sp
         ),
         bodyLarge = bodyLarge.copy(
             fontFamily = RobotoFlexRegular,
-            fontSize = 16.sp
+            fontSize = 16.sp,
+            lineHeight = 24.sp
         ),
         bodyMedium = bodyMedium.copy(
             fontFamily = RobotoFlexRegular,
-            fontSize = 14.sp
+            fontSize = 14.sp,
+            lineHeight = 26.sp
         ),
         bodySmall = bodySmall.copy(
             fontFamily = RobotoFlexRegular,
-            fontSize = 12.sp
+            fontSize = 12.sp,
+            lineHeight = 16.sp
         ),
         labelLarge = labelLarge.copy(
             fontFamily = RobotoFlexMedium,
-            fontSize = 14.sp
+            fontSize = 14.sp,
+            lineHeight = 20.sp
         ),
         labelMedium = labelMedium.copy(
             fontFamily = RobotoFlexMedium,
-            fontSize = 12.sp
+            fontSize = 12.sp,
+            lineHeight = 12.sp
         ),
         labelSmall = labelSmall.copy(
             fontFamily = RobotoFlexMedium,
-            fontSize = 16.sp
+            fontSize = 11.sp,
+            lineHeight = 16.sp
         ),
     )
 }
