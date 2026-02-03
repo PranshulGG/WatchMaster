@@ -6,6 +6,7 @@ import com.pranshulgg.watchmaster.data.local.dao.WatchlistDao
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 import com.pranshulgg.watchmaster.model.WatchStatus
 import com.pranshulgg.watchmaster.screens.search.SearchItem
+import kotlinx.coroutines.flow.Flow
 import java.time.Instant
 
 class WatchlistRepository(
@@ -77,5 +78,9 @@ class WatchlistRepository(
     suspend fun updatePinned(id: Long, isPinned: Boolean) = dao.updatePinned(id, isPinned)
 
     suspend fun updateUserRating(id: Long, rating: Double) = dao.updateUserRating(id, rating)
+
+    fun getItemById(id: Long): Flow<WatchlistItemEntity?> {
+        return dao.getById(id)
+    }
 
 }
