@@ -31,6 +31,7 @@ import androidx.compose.material3.FloatingToolbarDefaults
 import androidx.compose.material3.FloatingToolbarExitDirection.Companion.Bottom
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -42,11 +43,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.ExperimentalTextApi
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.data.local.dao.MovieBundleDao
 import com.pranshulgg.watchmaster.data.local.entity.MovieBundle
 import com.pranshulgg.watchmaster.data.local.entity.MovieBundleEntity
@@ -56,9 +63,15 @@ import com.pranshulgg.watchmaster.models.MovieDetailsViewModel
 import com.pranshulgg.watchmaster.network.MovieBundleDto
 import com.pranshulgg.watchmaster.screens.media_detail.factory.MovieDetailsViewModelFactory
 import com.pranshulgg.watchmaster.screens.media_detail.ui.MovieDetailFloatingToolBar
+import com.pranshulgg.watchmaster.screens.media_detail.ui.SectionCard
+import com.pranshulgg.watchmaster.ui.components.PosterBox
 import com.pranshulgg.watchmaster.utils.Radius
+import com.pranshulgg.watchmaster.utils.Symbol
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(
+    ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class,
+    ExperimentalTextApi::class
+)
 @Composable
 fun MediaDetailPage(
     movieId: Long,
@@ -80,7 +93,7 @@ fun MediaDetailPage(
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surfaceContainer,
         bottomBar = {
-            MovieDetailFloatingToolBar(scrollBehavior)
+            MovieDetailFloatingToolBar(scrollBehavior, movieId)
         },
     ) { paddingValues ->
 
@@ -89,7 +102,9 @@ fun MediaDetailPage(
                 modifier = Modifier
                     .nestedScroll(scrollBehavior)
                     .verticalScroll(rememberScrollState())
-                    .padding(bottom = paddingValues.calculateBottomPadding())
+                    .padding(
+                        bottom = paddingValues.calculateBottomPadding(),
+                    )
             )
             {
                 if (loading) {
@@ -98,66 +113,139 @@ fun MediaDetailPage(
                     }
                     return@Column
                 }
+
                 MovieHeroHeader(movie = it)
 
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(
+                            16.dp
+                        )
+                ) {
+//
+//                    Card(
+//                        shape = RoundedCornerShape(Radius.ExtraLarge)
+//                    ) {
+//                        Column(
+//                            modifier = Modifier.padding(16.dp),
+//                            verticalArrangement = Arrangement.spacedBy(6.dp)
+//                        ) {
+//                            Row(
+//                                horizontalArrangement = Arrangement.spacedBy(5.dp),
+//                                verticalAlignment = Alignment.CenterVertically
+//                            ) {
+//                                Symbol(
+//                                    R.drawable.star_24px,
+//                                    color = MaterialTheme.colorScheme.secondary
+//                                )
+//
+//                                Text(
+//                                    "Overview",
+//                                    style = MaterialTheme.typography.titleMedium,
+//                                    fontFamily = FontFamily(
+//                                        Font(
+//                                            R.font.roboto_flex,
+//                                            variationSettings = FontVariation.Settings(
+//                                                FontVariation.width(150f),
+//                                                FontVariation.weight(1000)
+//                                            )
+//                                        )
+//                                    ),
+//                                    color = MaterialTheme.colorScheme.secondary
+//                                )
+//                            }
+//                            Text(
+//                                text = it.overview ?: "No overview available",
+//                                style = MaterialTheme.typography.bodyLarge,
+//                            )
+//                        }
+//                    }
 
-                // Overview
-                Text(
-                    text = it.overview ?: "No overview available",
-                    style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Genres
-                Text(
-                    text = "Genres",
-                    style = MaterialTheme.typography.headlineSmall,
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
-                Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
-                    it.genres.forEach { genre ->
-                        AssistChip(label = { Text(genre.name) }, onClick = {})
+                    SectionCard(
+                        title = "Overview",
+                        titleIcon = R.drawable.overview_24px
+                    ) {
+                        Text(
+                            text = it.overview ?: "No overview available",
+                            style = MaterialTheme.typography.bodyLarge,
+                        )
                     }
-                }
 
-                Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                // Cast
-                Text(
-                    text = "Cast",
-                    style = MaterialTheme.typography.headlineSmall,
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
-                LazyRow {
-                    items(it.credits.cast) { castMember ->
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier.padding(8.dp)
-                        ) {
-                            AsyncImage(
-                                model = "https://image.tmdb.org/t/p/w200${castMember.profile_path}",
-                                contentDescription = castMember.name,
-                                modifier = Modifier
-                                    .size(100.dp)
-                                    .clip(CircleShape)
-                            )
-                            Text(
-                                text = castMember.name,
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                            Text(
-                                text = castMember.character ?: "",
-                                style = MaterialTheme.typography.displaySmall
-                            )
+//                Text(
+//                    text = "Genres",
+//                    style = MaterialTheme.typography.headlineSmall,
+//                    modifier = Modifier.padding(horizontal = 16.dp)
+//                )
+//                Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
+//                    it.genres.forEach { genre ->
+//                        AssistChip(label = { Text(genre.name) }, onClick = {})
+//                    }
+//                }
+//
+//                Spacer(modifier = Modifier.height(16.dp))
+//
+
+
+                    Text(
+                        text = "Cast",
+                        style = MaterialTheme.typography.headlineSmall,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                    val director = it.credits.crew.firstOrNull { crew ->
+                        crew.job == "Director"
+                    }
+                    LazyRow {
+                        director?.let { director ->
+                            item {
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    modifier = Modifier.padding(8.dp)
+                                ) {
+                                    PosterBox(
+                                        posterUrl = "https://image.tmdb.org/t/p/w200${director.profile_path}",
+                                        width = 100.dp,
+                                        height = 160.dp
+                                    )
+                                    Text(
+                                        text = director.name,
+                                        style = MaterialTheme.typography.bodyMedium
+                                    )
+                                    Text(
+                                        text = "Director",
+                                        style = MaterialTheme.typography.bodyLarge
+                                    )
+                                }
+                            }
+                        }
+                        items(it.credits.cast) { castMember ->
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier.padding(8.dp)
+                            ) {
+                                PosterBox(
+                                    posterUrl = "https://image.tmdb.org/t/p/w200${castMember.profile_path}",
+                                    width = 100.dp,
+                                    height = 160.dp
+                                )
+                                Text(
+                                    text = castMember.name,
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                                Text(
+                                    text = castMember.character ?: "",
+                                    style = MaterialTheme.typography.bodyLarge
+                                )
+                            }
                         }
                     }
-                }
 
+                }
             }
+
         } ?: run {
             Text(
                 "Movie not found", modifier = Modifier
@@ -187,9 +275,10 @@ fun MovieHeroHeader(movie: MovieBundle) {
                 .matchParentSize()
                 .background(
                     Brush.verticalGradient(
-                        colors = listOf(
-                            Color.Transparent,
-                            Color.Black.copy(alpha = 0.85f)
+                        colorStops = arrayOf(
+                            0.0f to Color.Transparent,
+                            0.4f to MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.5f),
+                            1.0f to MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 1f)
                         )
                     )
                 )
