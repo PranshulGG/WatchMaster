@@ -105,6 +105,16 @@ fun SelectableThemeColors(onThemeColorChanged: (String) -> Unit) {
     val motionScheme = remember(currentMotionScheme) { currentMotionScheme }
     var currentSelectedColor by remember { mutableStateOf(prefs.themeColor) }
 
+
+    val selectedShapes =
+        listOf(
+            MaterialShapes.Cookie4Sided.toShape(),
+            MaterialShapes.Slanted.toShape(),
+            MaterialShapes.Triangle.toShape(),
+            MaterialShapes.Pill.toShape(),
+            MaterialShapes.Sunny.toShape()
+        )
+
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
@@ -152,7 +162,8 @@ fun SelectableThemeColors(onThemeColorChanged: (String) -> Unit) {
                     ),
                     color = Color(hex.toColorInt()),
                     shape = if (isSelected)
-                        MaterialShapes.Cookie4Sided.toShape()
+//                        MaterialShapes.Cookie4Sided.toShape()
+                        selectedShapes.random()
                     else
                         CircleShape
                 ) {}
@@ -186,7 +197,6 @@ fun SelectableThemeColors(onThemeColorChanged: (String) -> Unit) {
                     shapes = ToggleButtonDefaults.shapes(),
                     colors = ToggleButtonDefaults.toggleButtonColors(
                         checkedContainerColor = MaterialTheme.colorScheme.tertiary,
-//                        contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                         checkedContentColor = MaterialTheme.colorScheme.onTertiary,
                     )
                 ) {
