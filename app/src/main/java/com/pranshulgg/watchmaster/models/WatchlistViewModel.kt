@@ -6,8 +6,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 import com.pranshulgg.watchmaster.data.repository.WatchlistRepository
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -57,6 +62,27 @@ class WatchlistViewModel(
     fun setUserRating(id: Long, rating: Double) = viewModelScope.launch {
         repository.updateUserRating(id, rating)
     }
+
+//    fun getItem(id: Long): StateFlow<WatchlistItemEntity?> =
+//        repository.getItemById(id)
+//            .distinctUntilChanged()
+//            .stateIn(
+//                scope = viewModelScope,
+//                started = SharingStarted.Eagerly,
+//                initialValue = null
+//            )
+
+    private val _currentItem = MutableStateFlow<WatchlistItemEntity?>(null)
+    val currentItem = _currentItem.asStateFlow()
+
+    fun observeItem(id: Long) {
+        viewModelScope.launch {
+            repository.getItemById(id)
+                .distinctUntilChanged()
+                .collect { _currentItem.value = it }
+        }
+    }
+
 
 }
 
