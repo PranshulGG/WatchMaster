@@ -2,9 +2,12 @@ package com.pranshulgg.watchmaster.screens.search.ui
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -19,8 +22,10 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.model.SearchType
@@ -36,69 +41,56 @@ fun SearchBottomSheetContent(
     focusManager: FocusManager,
     type: SearchType
 ) {
-    Column(
-        Modifier
-            .fillMaxWidth()
-            .padding(top = 14.dp, start = 12.dp, end = 12.dp, bottom = 10.dp)
-            .imePadding()
+//    Box(
+//        Modifier
+//            .width(220.dp)
+//    ) {
 
-    ) {
+    TextField(
+        value = query,
+        onValueChange = viewModel::onQueryChange,
 
-        TextField(
-            value = query,
-            onValueChange = viewModel::onQueryChange,
-            modifier = Modifier
-                .fillMaxWidth()
-                .focusRequester(focusRequester),
-            placeholder = { Text("Search…") },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Search
-            ),
-            keyboardActions = KeyboardActions(
-                onSearch = {
-                    viewModel.search(type)
-                    focusManager.clearFocus()
-                }
-            ),
-            leadingIcon = {
-                Box(Modifier.padding(start = 6.dp)) {
+        modifier = Modifier
+            .width(220.dp)
+//            .height(50.dp)
+//            .padding(0.dp)
+            .focusRequester(focusRequester),
+        placeholder = { Text("Search…") },
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(
+            imeAction = ImeAction.Search
+        ),
+        keyboardActions = KeyboardActions(
+            onSearch = {
+                viewModel.search(type)
+                focusManager.clearFocus()
+            }
+        ),
+
+        trailingIcon = {
+
+            if (query.isNotEmpty()) {
+                Box(Modifier.padding(end = 6.dp)) {
                     IconButton(
-
                         onClick = {
-                            focusRequester.requestFocus()
-                        },
+                            viewModel.onQueryChange("")
+                            focusManager.clearFocus()
+                        }
                     ) {
                         Symbol(
-                            R.drawable.search_24px,
+                            R.drawable.close_24px,
                         )
                     }
                 }
-            },
-            trailingIcon = {
+            }
+        },
+        colors = TextFieldDefaults.colors(
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+            focusedContainerColor = Color.Transparent
+        ),
+    )
 
-                if (query.isNotEmpty()) {
-                    Box(Modifier.padding(end = 6.dp)) {
-
-                        IconButton(
-                            onClick = {
-                                viewModel.onQueryChange("")
-                                focusManager.clearFocus()
-                            }
-                        ) {
-                            Symbol(
-                                R.drawable.close_24px,
-                            )
-                        }
-                    }
-                }
-            },
-            shape = CircleShape,
-            colors = TextFieldDefaults.colors(
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent
-            )
-        )
-
-    }
+//    }
 }
