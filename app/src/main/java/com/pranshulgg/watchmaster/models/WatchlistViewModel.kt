@@ -63,15 +63,6 @@ class WatchlistViewModel(
         repository.updateUserRating(id, rating)
     }
 
-//    fun getItem(id: Long): StateFlow<WatchlistItemEntity?> =
-//        repository.getItemById(id)
-//            .distinctUntilChanged()
-//            .stateIn(
-//                scope = viewModelScope,
-//                started = SharingStarted.Eagerly,
-//                initialValue = null
-//            )
-
     private val _currentItem = MutableStateFlow<WatchlistItemEntity?>(null)
     val currentItem = _currentItem.asStateFlow()
 

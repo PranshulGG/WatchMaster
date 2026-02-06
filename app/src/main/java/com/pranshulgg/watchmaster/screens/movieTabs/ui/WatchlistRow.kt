@@ -46,6 +46,7 @@ import com.pranshulgg.watchmaster.helpers.NavRoutes
 import com.pranshulgg.watchmaster.model.WatchStatus
 import com.pranshulgg.watchmaster.ui.components.ActionBottomSheet
 import com.pranshulgg.watchmaster.ui.components.PosterPlaceholder
+import com.pranshulgg.watchmaster.ui.theme.LocalStatusColors
 import com.pranshulgg.watchmaster.utils.formatDate
 import kotlinx.coroutines.launch
 
@@ -77,6 +78,22 @@ fun WatchlistRow(
         WatchStatus.FINISHED -> "Finished • ${item.finishedDate?.formatDate()}"
         WatchStatus.INTERRUPTED -> "Interrupted • ${item.interruptedAt?.formatDate()}"
         else -> "Added • ${item.addedDate.formatDate()}"
+    }
+
+    val statusColor = LocalStatusColors.current
+
+    val statusContainerColor = when (item.status) {
+        WatchStatus.INTERRUPTED -> MaterialTheme.colorScheme.errorContainer
+        WatchStatus.WATCHING -> statusColor.warning.bg
+        WatchStatus.FINISHED -> statusColor.success.bg
+        else -> statusColor.pending.bg
+    }
+
+    val statusContentColor = when (item.status) {
+        WatchStatus.INTERRUPTED -> MaterialTheme.colorScheme.onErrorContainer
+        WatchStatus.WATCHING -> statusColor.warning.on
+        WatchStatus.FINISHED -> statusColor.success.on
+        else -> statusColor.pending.on
     }
 
 
@@ -185,13 +202,13 @@ fun WatchlistRow(
                 )
                 Spacer(Modifier.height(5.dp))
                 Surface(
-                    color = if (item.status == WatchStatus.INTERRUPTED) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
+                    color = statusContainerColor,
                     shape = CircleShape
                 ) {
 
                     Text(
                         movieStatusLabel,
-                        color = if (item.status == WatchStatus.INTERRUPTED) MaterialTheme.colorScheme.onError else MaterialTheme.colorScheme.onPrimary,
+                        color = statusContentColor,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(horizontal = 8.dp)
