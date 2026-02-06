@@ -26,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -56,10 +57,22 @@ fun SearchRow(
     val isLast = index == results.lastIndex
 
     val shape = when {
-        isOnly -> RoundedCornerShape(18.dp)
-        isFirst -> RoundedCornerShape(topStart = 18.dp, topEnd = 18.dp)
-        isLast -> RoundedCornerShape(bottomStart = 18.dp, bottomEnd = 18.dp)
-        else -> RoundedCornerShape(0.dp)
+        isOnly -> RoundedCornerShape(16.dp)
+        isFirst -> RoundedCornerShape(
+            topStart = 16.dp,
+            topEnd = 16.dp,
+            bottomStart = 4.dp,
+            bottomEnd = 4.dp
+        )
+
+        isLast -> RoundedCornerShape(
+            topStart = 4.dp,
+            topEnd = 4.dp,
+            bottomStart = 16.dp,
+            bottomEnd = 16.dp
+        )
+
+        else -> RoundedCornerShape(4.dp)
     }
 
     val poster = item.posterPath?.let {
@@ -77,16 +90,17 @@ fun SearchRow(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 10.dp, horizontal = 18.dp),
+                .height(115.dp)
+                .clipToBounds()
+                .padding(end = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(
                 space = 12.dp,
             ),
-            verticalAlignment = Alignment.Top
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Box(
                 modifier = Modifier
-                    .size(width = 80.dp, height = 120.dp)
-                    .clip(RoundedCornerShape(16.dp)),
+                    .size(80.dp, height = 120.dp),
                 contentAlignment = Alignment.Center
             ) {
                 if (!poster.isNullOrBlank()) {
@@ -114,17 +128,17 @@ fun SearchRow(
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.Start,
             ) {
-                Surface(
-                    color = MaterialTheme.colorScheme.secondaryContainer,
-                    shape = CircleShape,
-                ) {
-                    Text(
-                        isoToName(item.originalLanguage ?: "en"),
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
-                        style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.onSecondaryContainer
-                    )
-                }
+//                Surface(
+//                    color = MaterialTheme.colorScheme.secondaryContainer,
+//                    shape = CircleShape,
+//                ) {
+//                    Text(
+//                        isoToName(item.originalLanguage ?: "en"),
+//                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
+//                        style = MaterialTheme.typography.labelLarge,
+//                        color = MaterialTheme.colorScheme.onSecondaryContainer
+//                    )
+//                }
                 Text(
                     text = item.title,
                     fontWeight = FontWeight.W900,
@@ -186,6 +200,6 @@ fun SearchRow(
 
 fun isoToName(code: String): String {
     val locale = Locale.forLanguageTag(code)
-    val name = locale.getDisplayLanguage(Locale.ENGLISH)
+    val name = locale.getDisplayLanguage(Locale.ENGLISH).uppercase()
     return name.ifBlank { code }
 }
