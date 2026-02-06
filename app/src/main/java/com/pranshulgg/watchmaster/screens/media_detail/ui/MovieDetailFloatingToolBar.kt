@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -41,6 +42,7 @@ import androidx.compose.material3.MaterialExpressiveTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.motionScheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.ToggleButton
@@ -96,7 +98,15 @@ data class MenuItemOptionList(
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun MovieDetailFloatingToolBar(scrollBehavior: FloatingToolbarScrollBehavior, movieId: Long) {
+fun MovieDetailFloatingToolBar(
+    scrollBehavior: FloatingToolbarScrollBehavior,
+    movieId: Long,
+    liveItem: WatchlistItemEntity?,
+    startWatching: () -> Unit,
+    resetWatching: () -> Unit,
+    finishWatching: () -> Unit,
+    interruptWatching: () -> Unit,
+) {
     val systemInsets = WindowInsets.systemBars.asPaddingValues()
     var expanded by remember { mutableStateOf(false) }
 
@@ -107,7 +117,7 @@ fun MovieDetailFloatingToolBar(scrollBehavior: FloatingToolbarScrollBehavior, mo
         MenuItemOptionList(
             title = "Interrupt",
             leading = R.drawable.pause_24px,
-            action = {}, isInterruptOption = true
+            action = { interruptWatching }, isInterruptOption = true
         ),
         MenuItemOptionList(title = "Pin", leading = R.drawable.keep_24px, action = {}),
         MenuItemOptionList(title = "Rate", leading = R.drawable.star_24px, action = {}),
@@ -117,31 +127,6 @@ fun MovieDetailFloatingToolBar(scrollBehavior: FloatingToolbarScrollBehavior, mo
     )
 
     var showDialog by remember { mutableStateOf(false) }
-    val context = LocalContext.current
-    val repository = remember {
-        val db = WatchMasterDatabase.getInstance(context)
-        WatchlistRepository(
-            db.watchlistDao(),
-            MovieRepository(
-                api = TmdbApi.create(),
-                dao = db.movieBundleDao()
-            )
-        )
-    }
-
-    val factory = remember {
-        WatchlistViewModelFactory(repository)
-    }
-
-    val watchlistViewModel: WatchlistViewModel = viewModel(factory = factory)
-
-    LaunchedEffect(movieId) {
-        watchlistViewModel.observeItem(movieId)
-    }
-
-    val liveItem by watchlistViewModel.currentItem.collectAsStateWithLifecycle()
-
-
     var displayItem by remember { mutableStateOf<WatchlistItemEntity?>(null) }
 
     LaunchedEffect(liveItem) {
@@ -202,11 +187,12 @@ fun MovieDetailFloatingToolBar(scrollBehavior: FloatingToolbarScrollBehavior, mo
                         ) {
                             menuItemOptionList.forEach { option ->
 
-                                if (option.isInterruptOption && liveItem?.status == WatchStatus.FINISHED) {
+                                if (option.isInterruptOption && liveItem?.status != WatchStatus.WATCHING) {
                                     return@forEach
                                 }
 
                                 DropdownMenuItem(
+                                    modifier = Modifier.widthIn(min = if (option.isInterruptOption) 130.dp else 112.dp),
                                     leadingIcon = {
                                         Symbol(option.leading, color = menuItemContentColor)
                                     },
@@ -240,15 +226,15 @@ fun MovieDetailFloatingToolBar(scrollBehavior: FloatingToolbarScrollBehavior, mo
         onConfirm = {
             when (liveItem?.status) {
                 WatchStatus.WATCHING -> {
-                    watchlistViewModel.finish(movieId)
+                    finishWatching()
                 }
 
                 WatchStatus.FINISHED -> {
-                    watchlistViewModel.reset(movieId)
+                    resetWatching()
                 }
 
                 else -> {
-                    watchlistViewModel.start(movieId)
+                    startWatching()
                 }
             }
         },
@@ -258,21 +244,9 @@ fun MovieDetailFloatingToolBar(scrollBehavior: FloatingToolbarScrollBehavior, mo
     )
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun FloatingMainActionBtn(onClick: () -> Unit, item: WatchlistItemEntity?) {
-
-
-    val contentColor = when (item?.status) {
-        WatchStatus.INTERRUPTED -> MaterialTheme.colorScheme.error
-        WatchStatus.WATCHING -> MaterialTheme.colorScheme.onPrimary
-        else -> MaterialTheme.colorScheme.onSurface
-    }
-
-    val containerColor = when (item?.status) {
-        WatchStatus.INTERRUPTED -> MaterialTheme.colorScheme.onError
-        WatchStatus.WATCHING -> MaterialTheme.colorScheme.primary
-        else -> MaterialTheme.colorScheme.surfaceContainer
-    }
 
     val btnLabels = when (item?.status) {
         WatchStatus.WATCHING -> "Mark as finished"
@@ -291,20 +265,24 @@ private fun FloatingMainActionBtn(onClick: () -> Unit, item: WatchlistItemEntity
         modifier = Modifier
             .height(48.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = containerColor,
-            contentColor = contentColor
+            containerColor = MaterialTheme.colorScheme.surfaceContainer,
+            contentColor = MaterialTheme.colorScheme.onSurface
         ),
-        contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
         onClick = {
             onClick()
-        }) {
+        },
+        contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
+    ) {
         Symbol(
             btnIcons,
-            color = contentColor
+            color = MaterialTheme.colorScheme.onSurface,
         )
-        Spacer(Modifier.width(ButtonDefaults.IconSpacing))
+        Spacer(Modifier.width(ButtonDefaults.iconSpacingFor(48.dp)))
         Text(
-            btnLabels
+            btnLabels,
+            style = MaterialTheme.typography.titleMedium
+
         )
     }
 }
+
