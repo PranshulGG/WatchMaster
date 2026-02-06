@@ -80,10 +80,10 @@ class SearchViewModel(
     )
 
 
-//    init {
-//        results = mockResults
-//        loading = false
-//    }
+    init {
+        results = mockResults
+        loading = false
+    }
 
     fun search(type: SearchType = SearchType.MULTI) {
         if (query.isBlank()) return
