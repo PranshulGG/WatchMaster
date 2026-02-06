@@ -196,7 +196,7 @@ fun AddToWatchlistDialogContent(item: SearchItem, onCancel: () -> Unit, onConfir
 
 
 @Composable
-fun StarDateChip(text: String, isDate: Boolean = false) {
+private fun StarDateChip(text: String, isDate: Boolean = false) {
     Surface(
         color = MaterialTheme.colorScheme.surfaceBright,
         shape = CircleShape
