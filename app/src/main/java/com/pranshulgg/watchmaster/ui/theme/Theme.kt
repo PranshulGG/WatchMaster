@@ -12,7 +12,9 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -20,29 +22,18 @@ import androidx.core.view.WindowCompat
 import com.materialkolor.PaletteStyle
 import com.materialkolor.dynamiccolor.ColorSpec
 import com.materialkolor.rememberDynamicColorScheme
+import com.pranshulgg.watchmaster.model.StatusColor
+import com.pranshulgg.watchmaster.model.StatusColors
 import com.pranshulgg.watchmaster.model.ThemeVariantType
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
-)
 
-private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
-)
+val LocalStatusColors = staticCompositionLocalOf {
+    StatusColors(
+        success = StatusColor(Color(0xFF16520E), Color(0xFFB1F49D)),
+        pending = StatusColor(Color(0xFFD4D4D4), Color(0xFF000000)),
+        warning = StatusColor(Color(0xFF5D4200), Color(0xFFFFDEA4)),
+    )
+}
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -77,10 +68,30 @@ fun WatchMasterTheme(
         }
     }
 
-    MaterialExpressiveTheme(
-        colorScheme = colorScheme,
-        typography = AppTypography,
-        motionScheme = MotionScheme.expressive(),
-        content = content
-    )
+    val statusColors = if (darkTheme) {
+        StatusColors(
+            success = StatusColor(Color(0xFF16520E), Color(0xFFB1F49D)),
+            pending = StatusColor(Color(0xFFD4D4D4), Color(0xFF000000)),
+            warning = StatusColor(Color(0xFF5D4200), Color(0xFFFFDEA4)),
+        )
+    } else {
+        StatusColors(
+            success = StatusColor(Color(0xFFC4F18C), Color(0xFF304F00)),
+            pending = StatusColor(Color(0xFF3B3B3B), Color(0xFFFFFFFF)),
+            warning = StatusColor(Color(0xFFFFDEA4), Color(0xFF5D4200)),
+        )
+    }
+
+
+    CompositionLocalProvider(
+        LocalStatusColors provides statusColors
+    ) {
+        MaterialExpressiveTheme(
+            colorScheme = colorScheme,
+            typography = AppTypography,
+            motionScheme = MotionScheme.expressive(),
+            content = content
+        )
+    }
+
 }

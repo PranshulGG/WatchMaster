@@ -54,7 +54,7 @@ fun SettingsPage(navController: NavController) {
                     SettingTile.SwitchTile(
                         leading = {
                             if (prefs.isCustomTheme) ColorPickerBtn() else SettingsTileIcon(
-                                R.drawable.colorize_24px
+                                R.drawable.brush_24px
                             )
                         },
                         title = "Use custom color",
@@ -71,7 +71,7 @@ fun SettingsPage(navController: NavController) {
                     SettingTile.SwitchTile(
                         leading = {
                             SettingsTileIcon(
-                                R.drawable.wallpaper_24px
+                                R.drawable.photo_24px
                             )
                         },
                         title = "Dynamic colors",
