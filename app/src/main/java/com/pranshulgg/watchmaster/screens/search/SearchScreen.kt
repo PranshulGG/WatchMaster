@@ -1,15 +1,21 @@
 package com.pranshulgg.watchmaster.screens.search
 
 import android.graphics.Movie
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
@@ -22,10 +28,16 @@ import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.FloatingToolbarDefaults
+import androidx.compose.material3.FloatingToolbarDefaults.ScreenOffset
+import androidx.compose.material3.FloatingToolbarExitDirection.Companion.Bottom
+import androidx.compose.material3.HorizontalFloatingToolbar
 import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -50,6 +62,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.pranshulgg.watchmaster.R
@@ -64,6 +77,7 @@ import com.pranshulgg.watchmaster.ui.components.ActionBottomSheet
 import com.pranshulgg.watchmaster.ui.components.EmptyContainerPlaceholder
 import com.pranshulgg.watchmaster.ui.snackbar.SnackbarManager
 import com.pranshulgg.watchmaster.utils.NavigateUpBtn
+import com.pranshulgg.watchmaster.utils.Symbol
 import kotlinx.coroutines.launch
 
 
@@ -94,11 +108,13 @@ fun SearchScreen(
     val viewModelWatchList: WatchlistViewModel = viewModel(
         factory = WatchlistViewModelFactory(repositoryWatchList)
     )
+    val systemInsets = WindowInsets.systemBars.asPaddingValues()
 
-    BottomSheetScaffold(
+    val scrollBehaviorToolBar =
+        FloatingToolbarDefaults.exitAlwaysScrollBehavior(exitDirection = Bottom)
+
+    Scaffold(
         containerColor = MaterialTheme.colorScheme.surfaceContainer,
-
-        sheetShadowElevation = 10.dp,
         topBar = {
             LargeFlexibleTopAppBar(
                 title = { Text(text = "Search") },
@@ -110,21 +126,61 @@ fun SearchScreen(
                     ),
             )
         },
-        sheetContent = {
-            SearchBottomSheetContent(viewModel, query, focusRequester, focusManager, type)
-        },
-        sheetPeekHeight = 100.dp,
-        sheetDragHandle = null,
+//        sheetContent = {
+//            SearchBottomSheetContent(viewModel, query, focusRequester, focusManager, type)
+//        },
+//        sheetPeekHeight = 100.dp,
+//        sheetDragHandle = null,
         modifier = Modifier
             .fillMaxSize()
-            .nestedScroll(scrollBehavior.nestedScrollConnection)
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
+        bottomBar = {
+            Box(
+                Modifier
+                    .fillMaxWidth()
+                    .imePadding(),
+            ) {
+                HorizontalFloatingToolbar(
+                    scrollBehavior = scrollBehaviorToolBar,
+                    contentPadding = PaddingValues(top = 0.dp, bottom = 0.dp, start = 10.dp),
+                    modifier = Modifier
+                        .padding(
+                            top = ScreenOffset,
+                            bottom = systemInsets.calculateBottomPadding()
+                                    + ScreenOffset
+                        )
+                        .align(Alignment.BottomCenter)
+                        .zIndex(1f),
+                    colors = FloatingToolbarDefaults.vibrantFloatingToolbarColors(),
+                    expanded = true,
+                    floatingActionButton = {
+                        FloatingToolbarDefaults.VibrantFloatingActionButton(
+                            onClick = {
+                                viewModel.search(type)
+                                focusManager.clearFocus()
+                            }
+                        ) {
+                            Symbol(R.drawable.search_24px)
+                        }
+                    },
+                    content = {
+                        SearchBottomSheetContent(
+                            viewModel,
+                            query,
+                            focusRequester,
+                            focusManager,
+                            type
+                        )
+
+                    })
+            }
+        }
     ) { paddingValues ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(
                     top = paddingValues.calculateTopPadding(),
-                    bottom = paddingValues.calculateBottomPadding() - 20.dp
                 )
         ) {
             when {
@@ -149,6 +205,10 @@ fun SearchScreen(
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxSize()
+                            .padding(horizontal = 16.dp)
+                            .nestedScroll(scrollBehaviorToolBar),
+
+                        verticalArrangement = Arrangement.spacedBy(2.dp)
                     ) {
                         itemsIndexed(results) { index, item ->
                             SearchRow(item, index, results, onAddToWatchlist = {
