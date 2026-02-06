@@ -27,12 +27,13 @@ fun SectionCard(title: String, titleIcon: Int, content: @Composable () -> Unit) 
         shape = RoundedCornerShape(Radius.ExtraLarge)
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(6.dp)
+            modifier = Modifier.padding(bottom = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(5.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp)
             ) {
                 Symbol(
                     titleIcon,
@@ -54,8 +55,9 @@ fun SectionCard(title: String, titleIcon: Int, content: @Composable () -> Unit) 
                     color = MaterialTheme.colorScheme.secondary
                 )
             }
-            content
+            content()
         }
     }
 
 }
+
