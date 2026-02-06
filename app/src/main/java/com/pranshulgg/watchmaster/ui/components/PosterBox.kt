@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
+import com.pranshulgg.watchmaster.utils.Radius
 
 @Composable
 fun PosterBox(
@@ -21,13 +22,14 @@ fun PosterBox(
     modifier: Modifier = Modifier,
     width: Dp = 80.dp,
     height: Dp = 120.dp,
-    cornerRadius: Dp = 16.dp,
+    cornerRadius: Dp = Radius.Medium,
+    circular: Boolean = false,
     placeholder: @Composable () -> Unit = { PosterPlaceholder() }
 ) {
     Box(
         modifier = modifier
             .size(width = width, height = height)
-            .clip(RoundedCornerShape(cornerRadius)),
+            .clip(RoundedCornerShape(if (circular) Radius.Full else cornerRadius)),
         contentAlignment = Alignment.Center
     ) {
         if (!posterUrl.isNullOrBlank()) {
