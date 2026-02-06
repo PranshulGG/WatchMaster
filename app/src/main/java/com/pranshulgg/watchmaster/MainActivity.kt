@@ -86,8 +86,8 @@ class MainActivity : ComponentActivity() {
                             modifier = Modifier
                                 .background(MaterialTheme.colorScheme.surfaceContainer),
                             navController = navController,
-                            startDestination = NavRoutes.mediaDetail(550),
-//                            startDestination = NavRoutes.MAIN,
+//                            startDestination = NavRoutes.mediaDetail(550),
+                            startDestination = NavRoutes.SEARCH,
                             enterTransition = {
                                 NavTransitions.enter(motionScheme)
                             },
@@ -123,7 +123,7 @@ class MainActivity : ComponentActivity() {
                                 )
                             ) { backStackEntry ->
                                 val id = backStackEntry.arguments!!.getLong("id")
-                                MediaDetailPage(movieId = id)
+                                MediaDetailPage(movieId = id, navController)
                             }
 
                             composable(
