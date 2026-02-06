@@ -166,12 +166,12 @@ fun <T> DialogOptionTile(
                     }, shapes = ButtonDefaults.shapes()
                 ) {
 
-                    Text("Save", style = MaterialTheme.typography.labelSmall)
+                    Text("Save", style = MaterialTheme.typography.labelLarge)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDialog = false }, shapes = ButtonDefaults.shapes()) {
-                    Text("Cancel", style = MaterialTheme.typography.labelSmall)
+                    Text("Cancel", style = MaterialTheme.typography.labelLarge)
                 }
             }
         )
