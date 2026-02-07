@@ -17,32 +17,21 @@ import com.pranshulgg.watchmaster.ui.components.Tooltip
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun NavigateUpBtn(navController: NavController, tonal: Boolean = false) {
+fun NavigateUpBtn(navController: NavController) {
     Tooltip(
         "Navigate up",
         preferredPosition = TooltipAnchorPosition.Below,
         spacing = 10.dp
     ) {
-        if (tonal) {
-            FilledTonalIconButton(
-                onClick = { navController.popBackStack() }, shapes = IconButtonDefaults.shapes()
-            ) {
-                Symbol(
-                    R.drawable.arrow_back_24px,
-                    desc = "settings icon",
-                    color = MaterialTheme.colorScheme.onSecondaryContainer
-                )
-            }
-        } else {
-            IconButton(
-                onClick = { navController.popBackStack() }, shapes = IconButtonDefaults.shapes()
-            ) {
-                Symbol(
-                    R.drawable.arrow_back_24px,
-                    desc = "settings icon",
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-            }
+
+        IconButton(
+            onClick = { navController.popBackStack() }, shapes = IconButtonDefaults.shapes()
+        ) {
+            Symbol(
+                R.drawable.arrow_back_24px,
+                desc = "settings icon",
+                color = MaterialTheme.colorScheme.onSurface
+            )
         }
     }
 
