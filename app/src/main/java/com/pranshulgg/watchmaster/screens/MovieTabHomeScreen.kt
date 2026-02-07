@@ -17,8 +17,10 @@ import kotlinx.coroutines.launch
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.pranshulgg.watchmaster.R
@@ -40,7 +42,7 @@ fun MovieTabHomeScreen(
     navController: NavController,
     motionScheme: MotionScheme,
     scrollBehavior: FloatingToolbarScrollBehavior,
-    scrollBehaviorTopBar: TopAppBarScrollBehavior
+    scrollBehaviorTopBar: TopAppBarScrollBehavior,
 ) {
 
     val tabs = listOf("Watchlist", "Watching", "Finished")
@@ -63,6 +65,7 @@ fun MovieTabHomeScreen(
     val items by viewModel.watchlist.collectAsState()
 
 
+
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surfaceContainer,
         topBar = {
@@ -71,6 +74,7 @@ fun MovieTabHomeScreen(
                 selectedTabIndex = pagerState.currentPage,
             ) {
                 tabs.forEachIndexed { index, title ->
+
                     Tab(
                         selected = pagerState.currentPage == index,
                         onClick = {
@@ -87,11 +91,13 @@ fun MovieTabHomeScreen(
         contentWindowInsets = WindowInsets(bottom = 0, top = 0),
     ) { innerPadding ->
 
+
         HorizontalPager(
             state = pagerState,
             modifier = Modifier
                 .padding(innerPadding)
-                .fillMaxSize()
+                .fillMaxSize(),
+            verticalAlignment = Alignment.Top
         ) { page ->
             when (page) {
                 0 -> WatchlistMovies(
@@ -100,7 +106,7 @@ fun MovieTabHomeScreen(
                     },
                     scrollBehavior,
                     scrollBehaviorTopBar,
-                    navController
+                    navController,
                 )
 
                 1 -> WatchingMovies(
