@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyRow
@@ -19,13 +20,18 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingToolbarDefaults
 import androidx.compose.material3.FloatingToolbarExitDirection.Companion.Bottom
+import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -48,6 +54,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -68,10 +75,13 @@ import com.pranshulgg.watchmaster.screens.media_detail.ui.MovieDetailActionsTop
 import com.pranshulgg.watchmaster.screens.media_detail.ui.MovieDetailFloatingToolBar
 import com.pranshulgg.watchmaster.screens.media_detail.ui.MovieHeroHeader
 import com.pranshulgg.watchmaster.screens.media_detail.ui.SectionCard
+import com.pranshulgg.watchmaster.ui.components.DialogBasic
 import com.pranshulgg.watchmaster.ui.components.PosterBox
+import com.pranshulgg.watchmaster.ui.components.TextAlertDialog
 import com.pranshulgg.watchmaster.utils.Radius
 import com.pranshulgg.watchmaster.utils.Symbol
 import kotlinx.coroutines.delay
+import kotlin.math.roundToInt
 
 @OptIn(
     ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class,
@@ -95,11 +105,11 @@ fun MediaDetailPage(
     var minLoadingDone by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        delay(2000)
+        delay(1000)
         minLoadingDone = true
     }
 
-    val showLoading = loading || !minLoadingDone // loading to hide nav lag hack
+    val showLoading = loading || !minLoadingDone // loading to hide nav lag -hack
 
     val scrollBehavior =
         FloatingToolbarDefaults.exitAlwaysScrollBehavior(exitDirection = Bottom)
@@ -128,22 +138,35 @@ fun MediaDetailPage(
     }
 
     val liveItem by watchlistViewModel.currentItem.collectAsStateWithLifecycle()
+    var showRatingDialog by remember { mutableStateOf(true) }
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surfaceContainer,
         bottomBar = {
-            MovieDetailFloatingToolBar(
-                scrollBehavior,
-                movieId,
-                liveItem,
-                startWatching = { watchlistViewModel.start(movieId) },
-                resetWatching = { watchlistViewModel.reset(movieId) },
-                finishWatching = { watchlistViewModel.finish(movieId) },
-                interruptWatching = { watchlistViewModel.interrupt(movieId) }
-            )
+            if (!showLoading)
+                MovieDetailFloatingToolBar(
+                    scrollBehavior,
+                    movieId,
+                    liveItem,
+                    startWatching = { watchlistViewModel.start(movieId) },
+                    resetWatching = { watchlistViewModel.reset(movieId) },
+//                    finishWatching = { watchlistViewModel.finish(movieId) },
+                    finishWatching = { showRatingDialog = true },
+                    interruptWatching = { watchlistViewModel.interrupt(movieId) },
+                )
         },
     ) { paddingValues ->
-
+        if (showLoading) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = MaterialTheme.colorScheme.surfaceContainer)
+                    .zIndex(10f),
+                contentAlignment = Alignment.Center
+            ) {
+                LoadingIndicator(modifier = Modifier.size(60.dp))
+            }
+        }
         viewModel.state?.let {
             Column(
                 modifier = Modifier
@@ -154,12 +177,6 @@ fun MediaDetailPage(
                     )
             )
             {
-                if (showLoading) {
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        CircularProgressIndicator()
-                    }
-                    return@Column
-                }
                 MovieHeroHeader(movie = it, navController)
                 MovieDetailActionsTop(status = liveItem?.status ?: WatchStatus.WATCHING)
                 Column(
@@ -225,7 +242,101 @@ fun MediaDetailPage(
             }
 
         }
-    }
 
+        var rating by remember { mutableStateOf("") }
+
+        DialogBasic(
+            show = showRatingDialog,
+            title = "Rate this movie",
+            showDefaultActions = false,
+            onDismiss = { showRatingDialog = false },
+            content = {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    OutlinedTextField(
+                        value = rating,
+                        onValueChange = {},
+                        readOnly = true,
+                        label = { Text("Rating") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    Spacer(Modifier.height(16.dp))
+
+                    RatingNumberPad(
+                        rating = rating,
+                        onRatingChange = { rating = it }
+                    )
+
+                }
+            }
+        )
+    }
 }
 
+@Composable
+fun RatingNumberPad(
+    rating: String,
+    onRatingChange: (String) -> Unit
+) {
+    val buttons = listOf(
+        listOf("1", "2", "3"),
+        listOf("4", "5", "6"),
+        listOf("7", "8", "9"),
+        listOf(".", "0", "⌫")
+    )
+
+    fun appendRating(current: String, next: String): String {
+        if (next == ".") {
+            if (current.isEmpty() || current.contains(".")) return current
+            return "$current."
+        }
+
+        // Auto-format: 5 + 5 -> 5.5
+        if (!current.contains(".") && current.length == 1) {
+            val autoDecimal = "${current}.$next"
+            if (autoDecimal.toFloat() <= 10f) {
+                return autoDecimal
+            }
+        }
+
+        val newValue = current + next
+        val number = newValue.toFloatOrNull() ?: return current
+
+        // one decimal max
+        if (newValue.contains(".")) {
+            if (newValue.substringAfter(".").length > 1) return current
+        }
+
+        return if (number in 0f..10f) newValue else current
+    }
+
+
+    Column {
+        buttons.forEach { row ->
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                row.forEach { label ->
+                    Button(
+                        modifier = Modifier.size(64.dp),
+                        onClick = {
+                            when (label) {
+                                "⌫" -> onRatingChange(rating.dropLast(1))
+                                else -> onRatingChange(
+                                    appendRating(rating, label)
+                                )
+                            }
+                        }
+                    ) {
+                        Text(label)
+                    }
+
+                }
+            }
+            Spacer(Modifier.height(8.dp))
+        }
+    }
+}
