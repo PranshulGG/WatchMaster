@@ -102,7 +102,7 @@ fun MainScreen(
                     navController,
                     motionScheme,
                     scrollBehavior,
-                    scrollBehaviorTopBar
+                    scrollBehaviorTopBar,
                 )
             }
 
