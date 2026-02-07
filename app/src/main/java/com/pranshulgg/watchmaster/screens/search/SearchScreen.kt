@@ -71,9 +71,10 @@ import com.pranshulgg.watchmaster.model.SearchType
 import com.pranshulgg.watchmaster.models.WatchlistViewModel
 import com.pranshulgg.watchmaster.models.WatchlistViewModelFactory
 import com.pranshulgg.watchmaster.screens.search.ui.AddToWatchlistDialogContent
-import com.pranshulgg.watchmaster.screens.search.ui.SearchBottomSheetContent
+import com.pranshulgg.watchmaster.screens.search.ui.SearchFloatingBarContent
 import com.pranshulgg.watchmaster.screens.search.ui.SearchRow
 import com.pranshulgg.watchmaster.ui.components.ActionBottomSheet
+import com.pranshulgg.watchmaster.ui.components.BottomNav
 import com.pranshulgg.watchmaster.ui.components.EmptyContainerPlaceholder
 import com.pranshulgg.watchmaster.ui.snackbar.SnackbarManager
 import com.pranshulgg.watchmaster.utils.NavigateUpBtn
@@ -99,7 +100,7 @@ fun SearchScreen(
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
     val scrollBehavior =
-        TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+        TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val selectedItem = remember { mutableStateOf<SearchItem?>(null) }
     val showDialog = rememberSaveable { mutableStateOf(false) }
 
@@ -112,6 +113,7 @@ fun SearchScreen(
 
     val scrollBehaviorToolBar =
         FloatingToolbarDefaults.exitAlwaysScrollBehavior(exitDirection = Bottom)
+
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surfaceContainer,
@@ -126,19 +128,13 @@ fun SearchScreen(
                     ),
             )
         },
-//        sheetContent = {
-//            SearchBottomSheetContent(viewModel, query, focusRequester, focusManager, type)
-//        },
-//        sheetPeekHeight = 100.dp,
-//        sheetDragHandle = null,
         modifier = Modifier
-            .fillMaxSize()
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
+            .fillMaxSize(),
         bottomBar = {
             Box(
                 Modifier
                     .fillMaxWidth()
-                    .imePadding(),
+                    .imePadding()
             ) {
                 HorizontalFloatingToolbar(
                     scrollBehavior = scrollBehaviorToolBar,
@@ -160,11 +156,14 @@ fun SearchScreen(
                                 focusManager.clearFocus()
                             }
                         ) {
-                            Symbol(R.drawable.search_24px)
+                            Symbol(
+                                R.drawable.search_24px,
+                                color = MaterialTheme.colorScheme.onTertiary
+                            )
                         }
                     },
                     content = {
-                        SearchBottomSheetContent(
+                        SearchFloatingBarContent(
                             viewModel,
                             query,
                             focusRequester,
@@ -174,6 +173,7 @@ fun SearchScreen(
 
                     })
             }
+
         }
     ) { paddingValues ->
         Box(
@@ -206,8 +206,8 @@ fun SearchScreen(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(horizontal = 16.dp)
-                            .nestedScroll(scrollBehaviorToolBar),
-
+                            .nestedScroll(scrollBehaviorToolBar)
+                            .nestedScroll(scrollBehavior.nestedScrollConnection),
                         verticalArrangement = Arrangement.spacedBy(2.dp)
                     ) {
                         itemsIndexed(results) { index, item ->
