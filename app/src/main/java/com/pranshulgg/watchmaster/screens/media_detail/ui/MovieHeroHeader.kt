@@ -15,7 +15,10 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -45,6 +48,7 @@ import com.pranshulgg.watchmaster.utils.Radius
 import com.pranshulgg.watchmaster.utils.Symbol
 import com.pranshulgg.watchmaster.utils.topSysStatusPadding
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun MovieHeroHeader(movie: MovieBundle, navController: NavController) {
 
@@ -73,7 +77,15 @@ fun MovieHeroHeader(movie: MovieBundle, navController: NavController) {
                 .padding(top = topSysStatusPadding(), start = 8.dp)
                 .zIndex(2f)
         ) {
-            NavigateUpBtn(navController, true)
+            FilledIconButton(
+                onClick = { navController.popBackStack() }, shapes = IconButtonDefaults.shapes()
+            ) {
+                Symbol(
+                    R.drawable.arrow_back_24px,
+                    desc = "settings icon",
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            }
         }
 
         Box(
