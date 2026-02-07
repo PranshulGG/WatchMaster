@@ -67,23 +67,13 @@ class SearchViewModel(
             overview = ""
 
         ),
-        SearchItem(
-            id = 557,
-            title = "Spider-Man",
-            posterPath = "/kjdJntyBeEvqm9w97QGBdxPptzj.jpg",
-            mediaType = "movie",
-            releaseDate = "2002-05-01",
-            genreIds = listOf(28, 878),
-            overview = ""
-
-        )
     )
 
-
-    init {
-        results = mockResults
-        loading = false
-    }
+//
+//    init {
+//        results = mockResults
+//        loading = false
+//    }
 
     fun search(type: SearchType = SearchType.MULTI) {
         if (query.isBlank()) return
