@@ -15,8 +15,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 import com.pranshulgg.watchmaster.screens.movieTabs.ui.WatchlistRow
+import com.pranshulgg.watchmaster.ui.components.EmptyContainerPlaceholder
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -27,6 +29,15 @@ fun FinishedMovies(
     navController: NavController
 
 ) {
+
+    if (items.isEmpty()) {
+        EmptyContainerPlaceholder(
+            R.drawable.movie_info_24px,
+            "No completed movies",
+            description = "You haven’t completed anything yet. Time to start and finish a movie!"
+        )
+    }
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
