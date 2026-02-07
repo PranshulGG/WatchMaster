@@ -85,7 +85,9 @@ fun SearchRow(
         shape = shape,
         modifier = Modifier
             .clip(shape)
-            .clickable { onAddToWatchlist() }
+            .clickable { onAddToWatchlist() },
+        color = MaterialTheme.colorScheme.surfaceBright
+        
     ) {
         Row(
             modifier = Modifier
