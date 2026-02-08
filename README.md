@@ -7,8 +7,6 @@ Built with **Kotlin**, **Jetpack Compose**, and **Material 3 Expressive**, power
 
 Organize what you watch. That’s it. That’s the app.
 
----
-
 ## 🖼 Screenshots
 
 <div align="center">
