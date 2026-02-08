@@ -1,6 +1,6 @@
-<img src=""/>
+<img src="https://github.com/PranshulGG/WatchMaster/blob/master/app/src/main/res/drawable/app_icon.png" width="150"/>
 
-# 🎬 WatchMaster
+# WatchMaster
 
 WatchMaster is an Android watchlist app for tracking TV shows and movies.  
 Built with **Kotlin**, **Jetpack Compose**, and **Material 3 Expressive**, powered by **TMDB**.
@@ -11,8 +11,12 @@ Organize what you watch. That’s it. That’s the app.
 
 ## 🖼 Screenshots
 
-> Coming soon  
-> (Material You but make it expressive 👀)
+<div align="center">
+  <img src="/screenshots/img_1.png" width="250"/>
+<img src="/screenshots/img_2.png" width="250"/>
+<img src="/screenshots/img_3.png" width="250"/>
+</div>
+
 
 ---
 
