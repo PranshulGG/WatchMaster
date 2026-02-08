@@ -15,9 +15,6 @@ Organize what you watch. That’s it. That’s the app.
 <img src="/screenshots/img_3.png" width="250"/>
 </div>
 
-
----
-
 ## 🚀 Features
 
 - 📺 Browse and track TV shows & movies
@@ -26,8 +23,6 @@ Organize what you watch. That’s it. That’s the app.
 - 🕒 Track watching / pending / completed titles
 - 🎨 Material 3 Expressive UI
 - ⚡ Smooth, modern Compose experience
-
----
 
 ## 🧱 Built With
 
