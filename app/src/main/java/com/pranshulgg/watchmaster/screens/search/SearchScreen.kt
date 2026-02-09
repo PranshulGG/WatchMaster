@@ -158,7 +158,7 @@ fun SearchScreen(
                         ) {
                             Symbol(
                                 R.drawable.search_24px,
-                                color = MaterialTheme.colorScheme.onTertiary
+                                color = MaterialTheme.colorScheme.onTertiaryContainer
                             )
                         }
                     },
