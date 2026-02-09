@@ -152,7 +152,6 @@ fun SearchRow(
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    lineHeight = 18.sp
                 )
                 Spacer(Modifier.height(5.dp))
                 Row {
@@ -183,7 +182,7 @@ fun isoToName(code: String): String {
 @Composable
 private fun StarDateChip(text: String, isDate: Boolean = false) {
     Surface(
-        color = MaterialTheme.colorScheme.surface,
+        color = MaterialTheme.colorScheme.surfaceContainerHigh,
         shape = CircleShape
     ) {
         Row(
