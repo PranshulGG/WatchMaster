@@ -1,6 +1,7 @@
 package com.pranshulgg.watchmaster.screens.media_detail
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,37 +22,51 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingToolbarDefaults
 import androidx.compose.material3.FloatingToolbarExitDirection.Companion.Bottom
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.SliderState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.VerticalSlider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.ExperimentalTextApi
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
@@ -77,10 +92,14 @@ import com.pranshulgg.watchmaster.screens.media_detail.ui.MovieHeroHeader
 import com.pranshulgg.watchmaster.screens.media_detail.ui.SectionCard
 import com.pranshulgg.watchmaster.ui.components.DialogBasic
 import com.pranshulgg.watchmaster.ui.components.PosterBox
+import com.pranshulgg.watchmaster.ui.components.RateMovieDialogContent
 import com.pranshulgg.watchmaster.ui.components.TextAlertDialog
+import com.pranshulgg.watchmaster.ui.snackbar.SnackbarManager
+import com.pranshulgg.watchmaster.ui.theme.RobotoFlexWide
 import com.pranshulgg.watchmaster.utils.Radius
 import com.pranshulgg.watchmaster.utils.Symbol
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 @OptIn(
@@ -114,6 +133,8 @@ fun MediaDetailPage(
     val scrollBehavior =
         FloatingToolbarDefaults.exitAlwaysScrollBehavior(exitDirection = Bottom)
 
+    val scope = rememberCoroutineScope()
+
 
     val context = LocalContext.current
     val repository = remember {
@@ -138,7 +159,7 @@ fun MediaDetailPage(
     }
 
     val liveItem by watchlistViewModel.currentItem.collectAsStateWithLifecycle()
-    var showRatingDialog by remember { mutableStateOf(true) }
+    var showRatingDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surfaceContainer,
@@ -177,7 +198,19 @@ fun MediaDetailPage(
                     )
             )
             {
-                MovieHeroHeader(movie = it, navController)
+                MovieHeroHeader(
+                    movie = it,
+                    navController,
+                    isFinished = liveItem?.status == WatchStatus.FINISHED,
+                    userRating = liveItem?.userRating,
+                    onUpdateRating = { newRating ->
+                        watchlistViewModel.setUserRating(movieId, newRating)
+                        scope.launch {
+                            SnackbarManager.show("User rating updated")
+                        }
+
+                    }
+                )
                 MovieDetailActionsTop(status = liveItem?.status ?: WatchStatus.WATCHING)
                 Column(
                     modifier = Modifier
@@ -243,100 +276,22 @@ fun MediaDetailPage(
 
         }
 
-        var rating by remember { mutableStateOf("") }
-
         DialogBasic(
             show = showRatingDialog,
             title = "Rate this movie",
             showDefaultActions = false,
             onDismiss = { showRatingDialog = false },
             content = {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    OutlinedTextField(
-                        value = rating,
-                        onValueChange = {},
-                        readOnly = true,
-                        label = { Text("Rating") },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-
-                    Spacer(Modifier.height(16.dp))
-
-                    RatingNumberPad(
-                        rating = rating,
-                        onRatingChange = { rating = it }
-                    )
-
-                }
+                RateMovieDialogContent(
+                    onCancel = { showRatingDialog = false },
+                    onConfirm = { rating ->
+                        watchlistViewModel.setUserRating(movieId, rating)
+                        watchlistViewModel.finish(movieId)
+                    }
+                )
             }
         )
     }
+
 }
 
-@Composable
-fun RatingNumberPad(
-    rating: String,
-    onRatingChange: (String) -> Unit
-) {
-    val buttons = listOf(
-        listOf("1", "2", "3"),
-        listOf("4", "5", "6"),
-        listOf("7", "8", "9"),
-        listOf(".", "0", "⌫")
-    )
-
-    fun appendRating(current: String, next: String): String {
-        if (next == ".") {
-            if (current.isEmpty() || current.contains(".")) return current
-            return "$current."
-        }
-
-        // Auto-format: 5 + 5 -> 5.5
-        if (!current.contains(".") && current.length == 1) {
-            val autoDecimal = "${current}.$next"
-            if (autoDecimal.toFloat() <= 10f) {
-                return autoDecimal
-            }
-        }
-
-        val newValue = current + next
-        val number = newValue.toFloatOrNull() ?: return current
-
-        // one decimal max
-        if (newValue.contains(".")) {
-            if (newValue.substringAfter(".").length > 1) return current
-        }
-
-        return if (number in 0f..10f) newValue else current
-    }
-
-
-    Column {
-        buttons.forEach { row ->
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                row.forEach { label ->
-                    Button(
-                        modifier = Modifier.size(64.dp),
-                        onClick = {
-                            when (label) {
-                                "⌫" -> onRatingChange(rating.dropLast(1))
-                                else -> onRatingChange(
-                                    appendRating(rating, label)
-                                )
-                            }
-                        }
-                    ) {
-                        Text(label)
-                    }
-
-                }
-            }
-            Spacer(Modifier.height(8.dp))
-        }
-    }
-}
