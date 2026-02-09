@@ -53,7 +53,7 @@ fun TextAlertDialog(
             color = MaterialTheme.colorScheme.surfaceContainerHigh,
             shadowElevation = 6.dp
         ) {
-            Column(modifier = Modifier.padding(26.dp)) {
+            Column(modifier = Modifier.padding(24.dp)) {
                 Text(
                     title,
                     style = MaterialTheme.typography.headlineSmall,
@@ -65,7 +65,7 @@ fun TextAlertDialog(
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                Spacer(Modifier.height(24.dp))
+                Spacer(Modifier.height(16.dp))
 
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                     TextButton(
