@@ -81,13 +81,14 @@ class MainActivity : ComponentActivity() {
                 ) {
                     androidx.compose.material3.Scaffold(
                         snackbarHost = { androidx.compose.material3.SnackbarHost(snackbarHostState) }
-                    ) { _ -> // ass padding
+                    ) { innerPad ->
                         NavHost(
                             modifier = Modifier
-                                .background(MaterialTheme.colorScheme.surfaceContainer),
+                                .background(MaterialTheme.colorScheme.surfaceContainer)
+                                .padding(innerPad.calculateRightPadding(layoutDirection = LayoutDirection.Ltr)),
                             navController = navController,
-                            startDestination = NavRoutes.mediaDetail(5174),
-//                            startDestination = NavRoutes.MAIN,
+//                            startDestination = NavRoutes.mediaDetail(5174),
+                            startDestination = NavRoutes.MAIN,
                             enterTransition = {
                                 NavTransitions.enter(motionScheme)
                             },
