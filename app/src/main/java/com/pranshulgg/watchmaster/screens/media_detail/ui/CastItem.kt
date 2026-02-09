@@ -2,6 +2,7 @@ package com.pranshulgg.watchmaster.screens.media_detail.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,12 +29,13 @@ fun CastItem(character: String, name: String, profilePath: String?) {
         )
         Text(
             text = name,
+            modifier = Modifier.widthIn(max = 100.dp),
             style = MaterialTheme.typography.titleMedium,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            color = MaterialTheme.colorScheme.onSurface
+            color = MaterialTheme.colorScheme.onSurface,
 
-        )
+            )
         Text(
             text = character,
             style = MaterialTheme.typography.labelMedium,
