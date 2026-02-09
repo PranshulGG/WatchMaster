@@ -198,7 +198,6 @@ fun WatchlistRow(
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    lineHeight = 18.sp
                 )
                 Spacer(Modifier.height(5.dp))
                 Surface(
