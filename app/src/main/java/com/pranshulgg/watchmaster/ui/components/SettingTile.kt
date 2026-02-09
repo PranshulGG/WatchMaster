@@ -22,6 +22,7 @@ import com.pranshulgg.watchmaster.ui.components.tiles.DialogTextFieldTile
 import com.pranshulgg.watchmaster.ui.components.tiles.SingleSwitchTile
 import com.pranshulgg.watchmaster.ui.components.tiles.SwitchTile
 import com.pranshulgg.watchmaster.ui.components.tiles.TextTile
+import com.pranshulgg.watchmaster.ui.theme.RobotoFlexWide
 import com.pranshulgg.watchmaster.utils.Radius
 
 sealed class SettingTile {
