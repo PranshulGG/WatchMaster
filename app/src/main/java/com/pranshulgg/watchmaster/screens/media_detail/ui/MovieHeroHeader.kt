@@ -50,7 +50,13 @@ import com.pranshulgg.watchmaster.utils.topSysStatusPadding
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun MovieHeroHeader(movie: MovieBundle, navController: NavController) {
+fun MovieHeroHeader(
+    movie: MovieBundle,
+    navController: NavController,
+    isFinished: Boolean,
+    userRating: Double? = 0.0,
+    onUpdateRating: (Double) -> Unit
+) {
 
     val watchlistViewModel: WatchlistViewModel = viewModel()
 
@@ -72,21 +78,7 @@ fun MovieHeroHeader(movie: MovieBundle, navController: NavController) {
             contentScale = ContentScale.Crop
         )
 
-        Row(
-            Modifier
-                .padding(top = topSysStatusPadding(), start = 8.dp)
-                .zIndex(2f)
-        ) {
-            FilledIconButton(
-                onClick = { navController.popBackStack() }, shapes = IconButtonDefaults.shapes()
-            ) {
-                Symbol(
-                    R.drawable.arrow_back_24px,
-                    desc = "settings icon",
-                    color = MaterialTheme.colorScheme.onPrimary
-                )
-            }
-        }
+        TopNavMovieDetailsScreenHeader(navController, isFinished, userRating, onUpdateRating)
 
         Box(
             modifier = Modifier
