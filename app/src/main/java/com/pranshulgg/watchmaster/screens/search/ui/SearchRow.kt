@@ -22,12 +22,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
@@ -79,6 +81,8 @@ fun SearchRow(
         "https://image.tmdb.org/t/p/w154$it"
     }
 
+    val titleMaxLines = 2
+    val overviewMaxLines = remember { mutableIntStateOf(1) }
 
 
     Surface(
@@ -87,7 +91,7 @@ fun SearchRow(
             .clip(shape)
             .clickable { onAddToWatchlist() },
         color = MaterialTheme.colorScheme.surfaceBright
-        
+
     ) {
         Row(
             modifier = Modifier
@@ -127,72 +131,42 @@ fun SearchRow(
             }
             Column(
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .padding(vertical = 10.dp),
                 horizontalAlignment = Alignment.Start,
             ) {
-//                Surface(
-//                    color = MaterialTheme.colorScheme.secondaryContainer,
-//                    shape = CircleShape,
-//                ) {
-//                    Text(
-//                        isoToName(item.originalLanguage ?: "en"),
-//                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
-//                        style = MaterialTheme.typography.labelLarge,
-//                        color = MaterialTheme.colorScheme.onSecondaryContainer
-//                    )
-//                }
                 Text(
                     text = item.title,
                     fontWeight = FontWeight.W900,
                     color = MaterialTheme.colorScheme.onSurface,
-                    fontSize = 19.sp,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
+                    fontSize = 17.sp,
+                    maxLines = titleMaxLines,
+                    overflow = TextOverflow.Ellipsis,
+                    onTextLayout = { textLayoutResult: TextLayoutResult ->
+                        overviewMaxLines.value = if (textLayoutResult.lineCount == 1) 2 else 1
+                    }
+                )
+                Text(
+                    item.overview ?: "No overview found",
+                    maxLines = overviewMaxLines.value,
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    lineHeight = 18.sp
                 )
                 Spacer(Modifier.height(5.dp))
-                Text(
-                    "${
+                Row {
+                    StarDateChip(
                         if (item.releaseDate == "" || item.releaseDate == null) {
                             "No date"
                         } else {
-                            item.releaseDate.take(4)
-                        }
-                    } • ${
-                        if (!item.genreIds.isNullOrEmpty()) {
-                            getGenreNames(item.genreIds).joinToString(", ")
-                        } else {
-                            "No genre found"
-                        }
-
-                    }",
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    lineHeight = TextUnit(16f, TextUnitType.Sp),
-                    fontSize = 14.sp
-                )
-                Spacer(Modifier.height(5.dp))
-
-                Surface(
-                    color = MaterialTheme.colorScheme.surfaceContainerHighest,
-                    shape = CircleShape
-                ) {
-                    Row(
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(start = 5.dp, end = 8.dp)
-                    ) {
-                        Symbol(
-                            R.drawable.star_24px,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            size = 16.dp,
-                        )
-                        Spacer(Modifier.width(3.dp))
-                        Text(
-                            "%.1f".format(item.avg_rating),
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
+                            item.releaseDate.take(
+                                4
+                            )
+                        }, isDate = true
+                    )
+                    Spacer(Modifier.width(5.dp))
+                    StarDateChip("%.1f".format(item.avg_rating))
                 }
             }
         }
@@ -205,3 +179,34 @@ fun isoToName(code: String): String {
     val name = locale.getDisplayLanguage(Locale.ENGLISH).uppercase()
     return name.ifBlank { code }
 }
+
+@Composable
+private fun StarDateChip(text: String, isDate: Boolean = false) {
+    Surface(
+        color = MaterialTheme.colorScheme.surface,
+        shape = CircleShape
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(start = if (isDate) 8.dp else 5.dp, end = 8.dp)
+        ) {
+            if (!isDate) {
+                Symbol(
+                    R.drawable.star_24px,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    size = 16.dp,
+                )
+                Spacer(Modifier.width(3.dp))
+            }
+            Text(
+                text,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
+    }
+}
+
+
