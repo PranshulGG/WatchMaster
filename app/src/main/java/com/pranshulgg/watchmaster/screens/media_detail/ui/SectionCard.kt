@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,7 +25,10 @@ import com.pranshulgg.watchmaster.utils.Symbol
 @Composable
 fun SectionCard(title: String, titleIcon: Int, content: @Composable () -> Unit) {
     Card(
-        shape = RoundedCornerShape(Radius.ExtraLarge)
+        shape = RoundedCornerShape(Radius.ExtraLarge),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceBright
+        )
     ) {
         Column(
             modifier = Modifier.padding(bottom = 16.dp),
