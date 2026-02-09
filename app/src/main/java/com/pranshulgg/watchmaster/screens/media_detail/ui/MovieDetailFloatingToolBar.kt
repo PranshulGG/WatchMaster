@@ -165,7 +165,13 @@ fun MovieDetailFloatingToolBar(
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
                     FloatingMainActionBtn(
-                        onClick = { showDialog = true },
+                        onClick = {
+                            if (liveItem?.status == WatchStatus.WATCHING) {
+                                finishWatching()
+                            } else {
+                                showDialog = true
+                            }
+                        },
                         item = liveItem
                     )
                     Box {
