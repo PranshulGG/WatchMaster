@@ -3,13 +3,16 @@ package com.pranshulgg.watchmaster.ui.components.tiles
 import android.app.AlertDialog
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -45,6 +48,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.pranshulgg.watchmaster.utils.Radius
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -77,11 +81,14 @@ fun <T> DialogOptionTile(
             leadingContent = leading,
             headlineContent = { Text(headline) },
             supportingContent = {
-                if (description != null) Text(description)
+                if (description != null) Text(
+                    description,
+                )
                 else selectedOption?.let {
                     Text(
                         optionLabel(it),
-                        color = MaterialTheme.colorScheme.tertiary
+                        color = MaterialTheme.colorScheme.tertiary,
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 }
             },
@@ -90,90 +97,211 @@ fun <T> DialogOptionTile(
 
     if (showDialog) {
         var tempSelection by remember { mutableStateOf(selectedOption) }
-        AlertDialog(
-            onDismissRequest = { showDialog = false },
-            title = { Text(dialogTitle ?: headline) },
-            text = {
-                val listState = rememberLazyListState()
+        val listState = rememberLazyListState()
 
-                val showTopDivider by remember {
-                    derivedStateOf {
-                        listState.firstVisibleItemIndex > 0 || listState.firstVisibleItemScrollOffset > 0
-                    }
-                }
+        val showTopDivider by remember {
+            derivedStateOf {
+                listState.firstVisibleItemIndex > 0 || listState.firstVisibleItemScrollOffset > 0
+            }
+        }
 
-                val showBottomDivider by remember {
-                    derivedStateOf {
-                        val info = listState.layoutInfo
-                        val total = info.totalItemsCount
-                        val lastVisible = info.visibleItemsInfo.lastOrNull()?.index ?: -1
-                        total > 0 && lastVisible < total - 1
-                    }
-                }
+        val showBottomDivider by remember {
+            derivedStateOf {
+                val info = listState.layoutInfo
+                val total = info.totalItemsCount
+                val lastVisible = info.visibleItemsInfo.lastOrNull()?.index ?: -1
+                total > 0 && lastVisible < total - 1
+            }
+        }
 
-                Box(
-                    modifier = Modifier
-                        .heightIn(max = 500.dp)
-                        .fillMaxWidth()
+        Dialog(
+            onDismissRequest = {
+                showDialog = false
+            }
+        ) {
 
-                ) {
-                    LazyColumn(
-                        state = listState,
+            Surface(
+                modifier = Modifier
+                    .width(300.dp)
+                    .heightIn(max = 500.dp),
+                shape = RoundedCornerShape(Radius.ExtraLarge),
+                color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                shadowElevation = 6.dp
+            ) {
+                Column() {
+                    Text(
+                        dialogTitle ?: headline,
+                        style = MaterialTheme.typography.headlineSmall,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.padding(top = 24.dp, start = 24.dp, end = 24.dp)
+                    )
+                    Spacer(Modifier.height(16.dp))
+                    Box(
                         modifier = Modifier
+                            .weight(1f, fill = false)
                             .fillMaxWidth()
+
                     ) {
-                        items(options) { option ->
-                            Row(
-                                modifier = Modifier
-                                    .clickable { tempSelection = option }
-                                    .fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                RadioButton(
-                                    selected = option == tempSelection,
-                                    onClick = { tempSelection = option }
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text(
-                                    optionLabel(option),
-                                    style = MaterialTheme.typography.bodyLarge
-                                )
+                        LazyColumn(
+                            state = listState,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        ) {
+                            items(options) { option ->
+                                Row(
+                                    modifier = Modifier
+                                        .clickable { tempSelection = option }
+                                        .fillMaxWidth(),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Spacer(modifier = Modifier.width(16.dp))
+                                    RadioButton(
+                                        selected = option == tempSelection,
+                                        onClick = { tempSelection = option }
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(
+                                        optionLabel(option),
+                                        color = MaterialTheme.colorScheme.onSurface,
+                                        style = MaterialTheme.typography.bodyLarge
+                                    )
+                                    Spacer(modifier = Modifier.width(16.dp))
+                                }
                             }
                         }
+
+                        androidx.compose.animation.AnimatedVisibility(
+                            visible = showTopDivider,
+                            modifier = Modifier.align(Alignment.TopCenter)
+                        ) {
+                            HorizontalDivider(modifier = Modifier.fillMaxWidth())
+                        }
+
+                        androidx.compose.animation.AnimatedVisibility(
+                            visible = showBottomDivider,
+                            modifier = Modifier.align(Alignment.BottomCenter)
+                        ) {
+                            HorizontalDivider(modifier = Modifier.fillMaxWidth())
+                        }
+
                     }
 
-                    AnimatedVisibility(
-                        visible = showTopDivider,
-                        modifier = Modifier.align(Alignment.TopCenter)
+                    Spacer(Modifier.height(16.dp))
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 24.dp, start = 24.dp, end = 24.dp),
+                        horizontalArrangement = Arrangement.End
                     ) {
-                        HorizontalDivider(modifier = Modifier.fillMaxWidth())
+                        TextButton(
+                            onClick = {
+                                showDialog = false
+                            },
+                            shapes = ButtonDefaults.shapes()
+                        ) {
+                            Text("Cancel", style = MaterialTheme.typography.labelLarge)
+                        }
+                        Spacer(Modifier.width(8.dp))
+                        TextButton(
+                            onClick = {
+                                tempSelection?.let { onOptionSelected(it) }
+                                showDialog = false
+                            },
+                            shapes = ButtonDefaults.shapes()
+                        ) {
+                            Text("Save", style = MaterialTheme.typography.labelLarge)
+                        }
                     }
-
-                    AnimatedVisibility(
-                        visible = showBottomDivider,
-                        modifier = Modifier.align(Alignment.BottomCenter)
-                    ) {
-                        HorizontalDivider(modifier = Modifier.fillMaxWidth())
-                    }
-                }
-            },
-            confirmButton = {
-                TextButton(
-
-                    onClick = {
-                        tempSelection?.let { onOptionSelected(it) }
-                        showDialog = false
-                    }, shapes = ButtonDefaults.shapes()
-                ) {
-
-                    Text("Save", style = MaterialTheme.typography.labelLarge)
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { showDialog = false }, shapes = ButtonDefaults.shapes()) {
-                    Text("Cancel", style = MaterialTheme.typography.labelLarge)
                 }
             }
-        )
+        }
+
+//        AlertDialog(
+//            onDismissRequest = { showDialog = false },
+//            title = { Text(dialogTitle ?: headline) },
+//            text = {
+//                val listState = rememberLazyListState()
+//
+//                val showTopDivider by remember {
+//                    derivedStateOf {
+//                        listState.firstVisibleItemIndex > 0 || listState.firstVisibleItemScrollOffset > 0
+//                    }
+//                }
+//
+//                val showBottomDivider by remember {
+//                    derivedStateOf {
+//                        val info = listState.layoutInfo
+//                        val total = info.totalItemsCount
+//                        val lastVisible = info.visibleItemsInfo.lastOrNull()?.index ?: -1
+//                        total > 0 && lastVisible < total - 1
+//                    }
+//                }
+//
+//                Box(
+//                    modifier = Modifier
+//                        .heightIn(max = 500.dp)
+//                        .fillMaxWidth()
+//
+//                ) {
+//                    LazyColumn(
+//                        state = listState,
+//                        modifier = Modifier
+//                            .fillMaxWidth()
+//                    ) {
+//                        items(options) { option ->
+//                            Row(
+//                                modifier = Modifier
+//                                    .clickable { tempSelection = option }
+//                                    .fillMaxWidth(),
+//                                verticalAlignment = Alignment.CenterVertically
+//                            ) {
+//                                RadioButton(
+//                                    selected = option == tempSelection,
+//                                    onClick = { tempSelection = option }
+//                                )
+//                                Spacer(modifier = Modifier.width(8.dp))
+//                                Text(
+//                                    optionLabel(option),
+//                                    color = MaterialTheme.colorScheme.onSurface,
+//                                    style = MaterialTheme.typography.bodyLarge
+//                                )
+//                            }
+//                        }
+//                    }
+//
+//                    AnimatedVisibility(
+//                        visible = showTopDivider,
+//                        modifier = Modifier.align(Alignment.TopCenter)
+//                    ) {
+//                        HorizontalDivider(modifier = Modifier.fillMaxWidth())
+//                    }
+//
+//                    AnimatedVisibility(
+//                        visible = showBottomDivider,
+//                        modifier = Modifier.align(Alignment.BottomCenter)
+//                    ) {
+//                        HorizontalDivider(modifier = Modifier.fillMaxWidth())
+//                    }
+//                }
+//            },
+//            confirmButton = {
+//                TextButton(
+//
+//                    onClick = {
+//                        tempSelection?.let { onOptionSelected(it) }
+//                        showDialog = false
+//                    }, shapes = ButtonDefaults.shapes()
+//                ) {
+//
+//                    Text("Save", style = MaterialTheme.typography.labelLarge)
+//                }
+//            },
+//            dismissButton = {
+//                TextButton(onClick = { showDialog = false }, shapes = ButtonDefaults.shapes()) {
+//                    Text("Cancel", style = MaterialTheme.typography.labelLarge)
+//                }
+//            }
+//        )
     }
 }
