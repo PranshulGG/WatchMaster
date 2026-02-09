@@ -34,7 +34,7 @@ class SearchViewModel(
             posterPath = "/xgHTpx8dywe3QTd5iuKuB0g3SNv.jpg",
             mediaType = "tv",
             releaseDate = "1978-05-17",
-            genreIds = listOf(),
+            genreIds = listOf(28, 878, 28, 878),
             overview = "One night, the Nohara family were enjoying a pleasant dream, when suddenly a big fish appeared in their dreams and ate them. The next morning, Hiroshi read in the newspaper that everybody in another town had the same nightmare as him, but it seemed to have ended. But Hiroshi also heard the same dream from Misae, Shinnosuke, Himawari and even Shiro. They were surprised and thought if the same thing is happening in Kasukabe too. In kindergarten, on telling others about his nightmare, Shinnosuke was surprised to know that everybody too had the same dream. Then a mysterious girl named Saki was transferred to Futaba Kindergarten and joined Shinnosuke's class. Everyone in the class, including the rather inactive Bo-chan, were all excited and happy on seeing her. But Saki had a cold attitude and didn't get along well."
         ),
         SearchItem(
