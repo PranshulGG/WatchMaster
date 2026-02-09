@@ -108,7 +108,7 @@ val AppTypography = Typography().run {
         bodyMedium = bodyMedium.copy(
             fontFamily = RobotoFlexRegular,
             fontSize = 14.sp,
-            lineHeight = 26.sp
+            lineHeight = 20.sp
         ),
         bodySmall = bodySmall.copy(
             fontFamily = RobotoFlexRegular,
@@ -123,7 +123,7 @@ val AppTypography = Typography().run {
         labelMedium = labelMedium.copy(
             fontFamily = RobotoFlexMedium,
             fontSize = 12.sp,
-            lineHeight = 12.sp
+            lineHeight = 16.sp
         ),
         labelSmall = labelSmall.copy(
             fontFamily = RobotoFlexMedium,
