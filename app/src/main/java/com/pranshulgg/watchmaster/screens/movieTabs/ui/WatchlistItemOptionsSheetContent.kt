@@ -1,11 +1,17 @@
 package com.pranshulgg.watchmaster.screens.movieTabs.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 import com.pranshulgg.watchmaster.model.WatchStatus
 import com.pranshulgg.watchmaster.models.WatchlistViewModel
+import com.pranshulgg.watchmaster.ui.components.DialogBasic
+import com.pranshulgg.watchmaster.ui.components.RateMovieDialogContent
 import com.pranshulgg.watchmaster.ui.components.SettingSection
 import com.pranshulgg.watchmaster.ui.components.SettingTile
 import com.pranshulgg.watchmaster.ui.components.SettingsTileIcon
@@ -25,6 +31,7 @@ fun WatchlistItemOptionsSheetContent(
         WatchStatus.INTERRUPTED -> "Continue watching"
         else -> "Mark as watching"
     }
+    var showRatingDialog by remember { mutableStateOf(false) }
 
     SettingSection(
         isModalOption = true,
@@ -40,7 +47,8 @@ fun WatchlistItemOptionsSheetContent(
                         }
 
                         WatchStatus.WATCHING -> {
-                            watchlistViewModel.finish(selectedMovieItem.id)
+//                            watchlistViewModel.finish(selectedMovieItem.id)
+                            showRatingDialog = true
                         }
 
                         WatchStatus.FINISHED -> {
@@ -87,6 +95,22 @@ fun WatchlistItemOptionsSheetContent(
                 }
             )
         )
+    )
+
+    DialogBasic(
+        show = showRatingDialog,
+        title = "Rate this movie",
+        showDefaultActions = false,
+        onDismiss = { showRatingDialog = false },
+        content = {
+            RateMovieDialogContent(
+                onCancel = { showRatingDialog = false },
+                onConfirm = { rating ->
+                    watchlistViewModel.setUserRating(selectedMovieItem.id, rating)
+                    watchlistViewModel.finish(selectedMovieItem.id)
+                }
+            )
+        }
     )
 
 }
