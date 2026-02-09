@@ -45,7 +45,11 @@ fun SettingsPage(navController: NavController) {
                     SettingTile.DialogOptionTile(
                         leading = { SettingsTileIcon(R.drawable.palette_24px) },
                         title = "App theme",
-                        options = listOf("Dark", "Light", "System"),
+                        options = listOf(
+                            "Dark",
+                            "Light",
+                            "System",
+                        ),
                         selectedOption = prefs.appTheme,
                         onOptionSelected = {
                             prefs.setAppTheme(it)
