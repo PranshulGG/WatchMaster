@@ -11,12 +11,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,7 +40,7 @@ import com.pranshulgg.watchmaster.utils.Radius
 import com.pranshulgg.watchmaster.utils.Symbol
 import com.pranshulgg.watchmaster.utils.topSysStatusPadding
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun TopNavMovieDetailsScreenHeader(
     navController: NavController,
@@ -48,66 +51,86 @@ fun TopNavMovieDetailsScreenHeader(
     val schemeColor = MaterialTheme.colorScheme
     var showRatingDialog by remember { mutableStateOf(false) }
 
-    Row(
-        Modifier
-            .padding(top = topSysStatusPadding(), start = 8.dp, end = 12.dp)
-            .fillMaxWidth()
-            .zIndex(2f),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        FilledIconButton(
-            onClick = { navController.popBackStack() }, shapes = IconButtonDefaults.shapes()
-        ) {
-            Symbol(
-                R.drawable.arrow_back_24px,
-                desc = "settings icon",
-                color = MaterialTheme.colorScheme.onPrimary
-            )
-        }
+//    Row(
+//        Modifier
+//            .padding(top = topSysStatusPadding(), start = 8.dp, end = 12.dp)
+//            .fillMaxWidth()
+//            .zIndex(2f),
+//        horizontalArrangement = Arrangement.SpaceBetween,
+//        verticalAlignment = Alignment.CenterVertically
+//    ) {
+//        FilledIconButton(
+//            onClick = { navController.popBackStack() }, shapes = IconButtonDefaults.shapes()
+//        ) {
+//            Symbol(
+//                R.drawable.arrow_back_24px,
+//                desc = "settings icon",
+//                color = MaterialTheme.colorScheme.onPrimary
+//            )
+//        }
+//
+//        if (isFinished) {
+//            Row(
+//                verticalAlignment = Alignment.CenterVertically
+//            ) {
+//
+//                Surface(
+//                    color = schemeColor.surface,
+//                    shape = CircleShape
+//                ) {
+//                    Row(
+//                        horizontalArrangement = Arrangement.Center,
+//                        verticalAlignment = Alignment.CenterVertically,
+//                        modifier = Modifier
+//                            .padding(start = 12.dp, end = 14.dp)
+//                            .height(40.dp)
+//                    ) {
+//                        Symbol(R.drawable.star_24px, size = 24.dp, color = schemeColor.onSurface)
+//                        Spacer(Modifier.width(3.dp))
+//                        Text(
+//                            userRating.toString(),
+//                            color = schemeColor.onSurface,
+//                            fontSize = 16.sp,
+//                            fontWeight = FontWeight.Bold
+//                        )
+//                    }
+//                }
+//                Spacer(Modifier.width(5.dp))
+//                FilledIconButton(
+//                    modifier = Modifier.width(36.dp),
+//                    onClick = {
+//                        showRatingDialog = true
+//                    }, shapes = IconButtonDefaults.shapes()
+//                ) {
+//                    Symbol(
+//                        R.drawable.edit_24px,
+//                        color = MaterialTheme.colorScheme.onPrimary
+//                    )
+//                }
+//            }
+//        }
+//
+//    }
 
-        if (isFinished) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
+    TopAppBar(
+        modifier = Modifier.zIndex(2f),
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = Color.Transparent
+        ),
+        navigationIcon = {
+            FilledIconButton(
+                onClick = { navController.popBackStack() }, shapes = IconButtonDefaults.shapes()
             ) {
-
-                Surface(
-                    color = schemeColor.surface,
-                    shape = CircleShape
-                ) {
-                    Row(
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .padding(start = 12.dp, end = 14.dp)
-                            .height(40.dp)
-                    ) {
-                        Symbol(R.drawable.star_24px, size = 24.dp, color = schemeColor.onSurface)
-                        Spacer(Modifier.width(3.dp))
-                        Text(
-                            userRating.toString(),
-                            color = schemeColor.onSurface,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                }
-                Spacer(Modifier.width(5.dp))
-                FilledIconButton(
-                    modifier = Modifier.width(36.dp),
-                    onClick = {
-                        showRatingDialog = true
-                    }, shapes = IconButtonDefaults.shapes()
-                ) {
-                    Symbol(
-                        R.drawable.edit_24px,
-                        color = MaterialTheme.colorScheme.onPrimary
-                    )
-                }
+                Symbol(
+                    R.drawable.arrow_back_24px,
+                    desc = "settings icon",
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
             }
+        },
+        title = {
         }
-
-    }
+    )
 
 
     DialogBasic(
