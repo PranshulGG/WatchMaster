@@ -1,10 +1,12 @@
 package com.pranshulgg.watchmaster.screens.search
 
 import android.graphics.Movie
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -28,11 +30,15 @@ import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingToolbarDefaults
 import androidx.compose.material3.FloatingToolbarDefaults.ScreenOffset
 import androidx.compose.material3.FloatingToolbarExitDirection.Companion.Bottom
+import androidx.compose.material3.FloatingToolbarScrollBehavior
 import androidx.compose.material3.HorizontalFloatingToolbar
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
@@ -54,6 +60,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -66,6 +73,7 @@ import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.pranshulgg.watchmaster.R
+import com.pranshulgg.watchmaster.helpers.NavRoutes
 import com.pranshulgg.watchmaster.helpers.provideWatchlistRepository
 import com.pranshulgg.watchmaster.model.SearchType
 import com.pranshulgg.watchmaster.models.WatchlistViewModel
@@ -128,23 +136,24 @@ fun SearchScreen(
                     ),
             )
         },
-        modifier = Modifier
-            .fillMaxSize(),
         bottomBar = {
+
             Box(
                 Modifier
                     .fillMaxWidth()
                     .imePadding()
             ) {
+
                 HorizontalFloatingToolbar(
                     scrollBehavior = scrollBehaviorToolBar,
                     contentPadding = PaddingValues(top = 0.dp, bottom = 0.dp, start = 10.dp),
                     modifier = Modifier
                         .padding(
-                            top = ScreenOffset,
                             bottom = systemInsets.calculateBottomPadding()
-                                    + ScreenOffset
+                                    + ScreenOffset,
+                            top = ScreenOffset
                         )
+                        .height(64.dp)
                         .align(Alignment.BottomCenter)
                         .zIndex(1f),
                     colors = FloatingToolbarDefaults.vibrantFloatingToolbarColors(),
@@ -170,7 +179,6 @@ fun SearchScreen(
                             focusManager,
                             type
                         )
-
                     })
             }
 
@@ -178,7 +186,6 @@ fun SearchScreen(
     ) { paddingValues ->
         Box(
             modifier = Modifier
-                .fillMaxSize()
                 .padding(
                     top = paddingValues.calculateTopPadding(),
                 )
@@ -260,7 +267,9 @@ fun SearchScreen(
                     onCancel = { closeDialog() },
                     onConfirm = {
                         viewModel.addToWatchlist(selectedItem.value!!)
-                        SnackbarManager.show("Added to watchlist")
+                        scope.launch {
+                            SnackbarManager.show("Added to watchlist")
+                        }
                         closeDialog()
                     }
                 )
