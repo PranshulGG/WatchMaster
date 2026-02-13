@@ -6,18 +6,30 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FloatingToolbarDefaults.ScreenOffset
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.motionScheme
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.core.graphics.toColorInt
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
@@ -37,9 +49,11 @@ import com.pranshulgg.watchmaster.screens.media_detail.MediaDetailPage
 import com.pranshulgg.watchmaster.screens.search.SearchScreen
 import com.pranshulgg.watchmaster.screens.search.SearchViewModel
 import com.pranshulgg.watchmaster.screens.search.SearchViewModelFactory
+import com.pranshulgg.watchmaster.ui.snackbar.LocalSnackbarHostState
 import com.pranshulgg.watchmaster.ui.snackbar.SnackbarManager
 import com.pranshulgg.watchmaster.ui.theme.WatchMasterTheme
 import com.pranshulgg.watchmaster.utils.NavTransitions
+import kotlinx.coroutines.flow.collectLatest
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -56,13 +70,15 @@ class MainActivity : ComponentActivity() {
             val snackbarHostState = remember { SnackbarHostState() }
 
             LaunchedEffect(Unit) {
-                SnackbarManager.messages.collect { message ->
-                    snackbarHostState.showSnackbar(message)
+                SnackbarManager.messages.collectLatest { message ->
+                    snackbarHostState.currentSnackbarData?.dismiss()
+                    snackbarHostState.showSnackbar(message, withDismissAction = true)
                 }
             }
 
 
             CompositionLocalProvider(
+                LocalSnackbarHostState provides snackbarHostState,
                 LocalAppPrefs provides AppPrefs.state()
             ) {
                 val prefs = LocalAppPrefs.current
@@ -77,17 +93,31 @@ class MainActivity : ComponentActivity() {
                 WatchMasterTheme(
                     darkTheme = appTheme,
                     themeVariantType = prefs.themeVariant,
+                    dynamicColor = prefs.useDynamicColor,
                     seedColor = Color(prefs.themeColor.toColorInt())
                 ) {
-                    androidx.compose.material3.Scaffold(
-                        snackbarHost = { androidx.compose.material3.SnackbarHost(snackbarHostState) }
-                    ) { innerPad ->
+                    Box(
+                        Modifier.fillMaxSize()
+                    ) {
+                        SnackbarHost(
+                            hostState = snackbarHostState,
+                            Modifier
+                                .fillMaxWidth()
+                                .zIndex(1f)
+                                .align(Alignment.BottomCenter)
+                                .padding(
+                                    bottom =
+                                        WindowInsets.navigationBars
+                                            .asPaddingValues()
+                                            .calculateBottomPadding() + ScreenOffset +
+                                                70.dp
+                                )
+                        )
                         NavHost(
                             modifier = Modifier
-                                .background(MaterialTheme.colorScheme.surfaceContainer)
-                                .padding(innerPad.calculateRightPadding(layoutDirection = LayoutDirection.Ltr)),
+                                .background(MaterialTheme.colorScheme.surfaceContainer),
                             navController = navController,
-//                            startDestination = NavRoutes.mediaDetail(5174),
+//                            startDestination = NavRoutes.mediaDetail(10681),
                             startDestination = NavRoutes.MAIN,
                             enterTransition = {
                                 NavTransitions.enter(motionScheme)
