@@ -31,6 +31,7 @@ import com.pranshulgg.watchmaster.helpers.NavRoutes
 import com.pranshulgg.watchmaster.models.HomeNavViewModel
 import com.pranshulgg.watchmaster.ui.components.BottomNav
 import com.pranshulgg.watchmaster.ui.components.Tooltip
+import com.pranshulgg.watchmaster.ui.snackbar.SnackbarManager
 import com.pranshulgg.watchmaster.utils.Symbol
 
 @OptIn(
@@ -70,7 +71,10 @@ fun MainScreen(
                         spacing = 10.dp
                     ) {
                         IconButton(
-                            onClick = { navController.navigate(NavRoutes.SETTINGS) },
+                            onClick = {
+//                                navController.navigate(NavRoutes.SETTINGS)
+                                SnackbarManager.show("COOL ANYWAYS")
+                            },
                             shapes = IconButtonDefaults.shapes()
                         ) {
                             Symbol(
