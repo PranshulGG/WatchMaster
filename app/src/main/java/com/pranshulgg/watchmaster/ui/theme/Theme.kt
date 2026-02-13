@@ -41,7 +41,7 @@ fun WatchMasterTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     seedColor: Color = Color.Green,
     themeVariantType: ThemeVariantType,
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
