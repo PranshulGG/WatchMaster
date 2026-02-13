@@ -88,7 +88,7 @@ fun MovieTabHomeScreen(
                 }
             }
         },
-        contentWindowInsets = WindowInsets(bottom = 0, top = 0),
+//        contentWindowInsets = WindowInsets(bottom = 0, top = 0),
     ) { innerPadding ->
 
 
