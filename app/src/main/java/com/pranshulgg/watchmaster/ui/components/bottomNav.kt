@@ -7,6 +7,7 @@ import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkHorizontally
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,9 +17,11 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContent
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.AppBarRow
 import androidx.compose.material3.ButtonDefaults
@@ -63,6 +66,7 @@ import androidx.navigation.NavController
 import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.helpers.NavRoutes
 import com.pranshulgg.watchmaster.model.SearchType
+import com.pranshulgg.watchmaster.ui.snackbar.LocalSnackbarHostState
 import com.pranshulgg.watchmaster.utils.Symbol
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
@@ -89,10 +93,10 @@ fun BottomNav(
 
     val systemInsets = WindowInsets.systemBars.asPaddingValues()
 
-
     Box(
         Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+
     ) {
         HorizontalFloatingToolbar(
             scrollBehavior = scrollBehavior,
