@@ -129,6 +129,53 @@ fun TopNavMovieDetailsScreenHeader(
             }
         },
         title = {
+        },
+        actions = {
+            if (isFinished) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+
+                    Surface(
+                        color = schemeColor.inverseSurface,
+                        shape = CircleShape
+                    ) {
+                        Row(
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .padding(start = 12.dp, end = 14.dp)
+                                .height(40.dp)
+                        ) {
+                            Symbol(
+                                R.drawable.star_24px,
+                                size = 24.dp,
+                                color = schemeColor.inverseOnSurface
+                            )
+                            Spacer(Modifier.width(3.dp))
+                            Text(
+                                userRating.toString(),
+                                color = schemeColor.inverseOnSurface,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+                    Spacer(Modifier.width(5.dp))
+                    FilledIconButton(
+                        modifier = Modifier.width(36.dp),
+                        onClick = {
+                            showRatingDialog = true
+                        }, shapes = IconButtonDefaults.shapes()
+                    ) {
+                        Symbol(
+                            R.drawable.edit_24px,
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
+                }
+            }
+            Spacer(Modifier.width(8.dp))
         }
     )
 
