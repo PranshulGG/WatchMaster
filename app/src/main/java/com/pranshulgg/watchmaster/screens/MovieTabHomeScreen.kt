@@ -33,8 +33,14 @@ import com.pranshulgg.watchmaster.models.WatchlistViewModel
 import com.pranshulgg.watchmaster.models.WatchlistViewModelFactory
 import com.pranshulgg.watchmaster.network.TmdbApi
 import com.pranshulgg.watchmaster.screens.movieTabs.finished.FinishedMovies
+import com.pranshulgg.watchmaster.screens.movieTabs.ui.WatchlistItemOptionsSheetContent
 import com.pranshulgg.watchmaster.screens.movieTabs.watching.WatchingMovies
 import com.pranshulgg.watchmaster.screens.movieTabs.watchlist.WatchlistMovies
+import com.pranshulgg.watchmaster.ui.components.ActionBottomSheet
+import com.pranshulgg.watchmaster.ui.components.DialogBasic
+import com.pranshulgg.watchmaster.ui.components.RateMovieDialogContent
+import com.pranshulgg.watchmaster.ui.components.TextAlertDialog
+import com.pranshulgg.watchmaster.ui.snackbar.SnackbarManager
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -63,6 +69,29 @@ fun MovieTabHomeScreen(
     )
 
     val items by viewModel.watchlist.collectAsState()
+
+
+    var showConfirmationDialog by remember { mutableStateOf(false) }
+    var showRatingDialog by remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    var longPressedItemId by remember { mutableStateOf<Long?>(null) }
+    var dialogMessage by remember { mutableStateOf("") }
+    var dialogTitle by remember { mutableStateOf("") }
+    var actionSheetItem by remember { mutableStateOf<WatchlistItemEntity?>(null) }
+
+    val deleteMovieFun: (Long) -> Unit = { id ->
+        longPressedItemId = id
+        dialogTitle = "Delete movie";
+        dialogMessage = "Are you sure you want to delete this movie? this action cannot be undone"
+        showConfirmationDialog = true
+    }
+
+    val launchSheet: (WatchlistItemEntity) -> Unit = { item ->
+        scope.launch {
+            actionSheetItem = item
+            sheetState.show()
+        }
+    }
 
 
 
@@ -107,6 +136,9 @@ fun MovieTabHomeScreen(
                     scrollBehavior,
                     scrollBehaviorTopBar,
                     navController,
+                    onLongActionMovieRequest = { item ->
+                        launchSheet(item)
+                    }
                 )
 
                 1 -> WatchingMovies(
@@ -116,7 +148,10 @@ fun MovieTabHomeScreen(
                     },
                     scrollBehavior,
                     scrollBehaviorTopBar,
-                    navController
+                    navController,
+                    onLongActionMovieRequest = { item ->
+                        launchSheet(item)
+                    }
 
                 )
 
@@ -126,12 +161,76 @@ fun MovieTabHomeScreen(
                     },
                     scrollBehavior,
                     scrollBehaviorTopBar,
-                    navController
+                    navController,
+                    onLongActionMovieRequest = { item ->
+                        launchSheet(item)
+                    }
 
                 )
             }
         }
     }
+
+    TextAlertDialog(
+        show = showConfirmationDialog,
+        title = dialogTitle,
+        message = dialogMessage,
+        confirmText = "Confirm",
+        onConfirm = {
+            longPressedItemId?.let { viewModel.delete(it) }
+            SnackbarManager.show("Movie deleted ${actionSheetItem?.title}")
+        },
+        onDismiss = {
+            showConfirmationDialog = false
+        }
+    )
+
+    ActionBottomSheet(
+        showActions = false,
+        sheetState = sheetState,
+        onCancel = {
+            scope.launch { sheetState.hide() }
+        },
+        onConfirm = {
+            scope.launch { sheetState.hide() }
+        }
+    ) {
+
+        if (actionSheetItem != null) {
+            WatchlistItemOptionsSheetContent(
+                selectedMovieItem = actionSheetItem,
+                hideSheet = { scope.launch { sheetState.hide() } },
+                onMovieDelete = { id ->
+                    id?.let { deleteMovieFun(it) }
+                },
+                onMovieFinish = { id ->
+                    if (id != null) {
+                        longPressedItemId = id
+                        showRatingDialog = true
+                    }
+                }
+            )
+        }
+    }
+
+
+    DialogBasic(
+        show = showRatingDialog,
+        title = "Rate this movie",
+        showDefaultActions = false,
+        onDismiss = { showRatingDialog = false },
+        content = {
+            RateMovieDialogContent(
+                onCancel = { showRatingDialog = false },
+                onConfirm = { rating ->
+                    longPressedItemId?.let {
+                        viewModel.setUserRating(it, rating)
+                        viewModel.finish(it)
+                    }
+                },
+            )
+        }
+    )
 }
 
 
