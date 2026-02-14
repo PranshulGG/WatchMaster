@@ -119,7 +119,7 @@ fun MovieDetailFloatingToolBar(
         MenuItemOptionList(
             title = "Interrupt",
             leading = R.drawable.pause_24px,
-            action = { interruptWatching }, isInterruptOption = true
+            action = { interruptWatching() }, isInterruptOption = true
         ),
         MenuItemOptionList(title = "Pin", leading = R.drawable.keep_24px, action = {}),
         MenuItemOptionList(title = "Rate", leading = R.drawable.star_24px, action = {}),
@@ -151,6 +151,7 @@ fun MovieDetailFloatingToolBar(
             .fillMaxWidth(),
     ) {
         HorizontalFloatingToolbar(
+            expandedShadowElevation = 1.dp,
             scrollBehavior = scrollBehavior,
             modifier = Modifier
                 .padding(
