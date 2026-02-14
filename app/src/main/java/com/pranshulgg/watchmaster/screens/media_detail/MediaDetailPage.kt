@@ -223,20 +223,39 @@ fun MediaDetailPage(
 
                     SectionCard(
                         title = "Overview",
-                        titleIcon = R.drawable.overview_24px
+                        titleIcon = R.drawable.overview_24px,
                     ) {
                         Text(
                             modifier = Modifier.padding(horizontal = 16.dp),
                             text = it.overview,
-                            style = MaterialTheme.typography.bodyLarge,
+                            style = MaterialTheme.typography.bodyMedium,
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
+                    SectionCard(
+                        title = "User note",
+                        titleIcon = R.drawable.edit_note_24px,
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            OutlinedTextField(
+                                modifier = Modifier.fillMaxWidth(),
+                                value = "",
+                                onValueChange = {},
+                                placeholder = { Text("Add a note") }
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(12.dp))
 
                     SectionCard(
                         title = "Cast",
-                        titleIcon = R.drawable.groups_2_24px
+                        titleIcon = R.drawable.groups_2_24px,
                     ) {
                         val director = it.credits.crew.firstOrNull { crew ->
                             crew.job == "Director"
