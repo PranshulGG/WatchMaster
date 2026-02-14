@@ -15,54 +15,58 @@ import com.pranshulgg.watchmaster.ui.components.RateMovieDialogContent
 import com.pranshulgg.watchmaster.ui.components.SettingSection
 import com.pranshulgg.watchmaster.ui.components.SettingTile
 import com.pranshulgg.watchmaster.ui.components.SettingsTileIcon
+import com.pranshulgg.watchmaster.ui.components.TextAlertDialog
 
 @Composable
 fun WatchlistItemOptionsSheetContent(
-    selectedMovieItem: WatchlistItemEntity,
-    hideSheet: () -> Unit
+    selectedMovieItem: WatchlistItemEntity?,
+    hideSheet: () -> Unit,
+    onMovieDelete: (Long?) -> Unit,
+    onMovieFinish: (Long?) -> Unit,
 ) {
 
     val watchlistViewModel: WatchlistViewModel = viewModel()
 
 
-    val markAsActionLabel = when (selectedMovieItem.status) {
+    val markAsActionLabel = when (selectedMovieItem?.status) {
         WatchStatus.WATCHING -> "Mark as finished"
         WatchStatus.FINISHED -> "Reset to watchlist"
         WatchStatus.INTERRUPTED -> "Continue watching"
         else -> "Mark as watching"
     }
-    var showRatingDialog by remember { mutableStateOf(false) }
 
     SettingSection(
         isModalOption = true,
-        title = selectedMovieItem.title,
+        title = selectedMovieItem?.title,
         tiles = listOf(
             SettingTile.ActionTile(
                 leading = { SettingsTileIcon(R.drawable.play_arrow_24px) },
                 title = markAsActionLabel,
                 onClick = {
-                    when (selectedMovieItem.status) {
-                        WatchStatus.WANT_TO_WATCH -> {
-                            watchlistViewModel.start(selectedMovieItem.id)
-                        }
+                    if (selectedMovieItem != null) {
+                        when (selectedMovieItem.status) {
+                            WatchStatus.WANT_TO_WATCH -> {
+                                watchlistViewModel.start(selectedMovieItem.id)
+                            }
 
-                        WatchStatus.WATCHING -> {
-//                            watchlistViewModel.finish(selectedMovieItem.id)
-                            showRatingDialog = true
-                        }
+                            WatchStatus.WATCHING -> {
+                                onMovieFinish(selectedMovieItem.id)
+                            }
 
-                        WatchStatus.FINISHED -> {
-                            watchlistViewModel.reset(selectedMovieItem.id)
-                        }
+                            WatchStatus.FINISHED -> {
+                                watchlistViewModel.reset(selectedMovieItem.id)
+                            }
 
-                        else -> {
-                            watchlistViewModel.start(selectedMovieItem.id)
+                            else -> {
+                                watchlistViewModel.start(selectedMovieItem.id)
+                            }
                         }
                     }
+
                     hideSheet()
                 }
             ),
-            if (selectedMovieItem.status == WatchStatus.WATCHING) {
+            if (selectedMovieItem?.status == WatchStatus.WATCHING) {
                 SettingTile.ActionTile(
                     leading = { SettingsTileIcon(R.drawable.pause_24px) },
                     title = "Mark as interrupted",
@@ -76,7 +80,7 @@ fun WatchlistItemOptionsSheetContent(
                 leading = { SettingsTileIcon(R.drawable.delete_24px) },
                 title = "Delete",
                 onClick = {
-                    watchlistViewModel.delete(selectedMovieItem.id)
+                    onMovieDelete(selectedMovieItem?.id)
                     hideSheet()
 
                 }
@@ -97,20 +101,5 @@ fun WatchlistItemOptionsSheetContent(
         )
     )
 
-    DialogBasic(
-        show = showRatingDialog,
-        title = "Rate this movie",
-        showDefaultActions = false,
-        onDismiss = { showRatingDialog = false },
-        content = {
-            RateMovieDialogContent(
-                onCancel = { showRatingDialog = false },
-                onConfirm = { rating ->
-                    watchlistViewModel.setUserRating(selectedMovieItem.id, rating)
-                    watchlistViewModel.finish(selectedMovieItem.id)
-                }
-            )
-        }
-    )
 
 }
