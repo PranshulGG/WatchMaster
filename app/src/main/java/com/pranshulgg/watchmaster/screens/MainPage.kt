@@ -72,8 +72,7 @@ fun MainScreen(
                     ) {
                         IconButton(
                             onClick = {
-//                                navController.navigate(NavRoutes.SETTINGS)
-                                SnackbarManager.show("COOL ANYWAYS")
+                                navController.navigate(NavRoutes.SETTINGS)
                             },
                             shapes = IconButtonDefaults.shapes()
                         ) {
