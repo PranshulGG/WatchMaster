@@ -3,6 +3,7 @@ package com.pranshulgg.watchmaster.screens.media_detail.ui
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -24,7 +25,9 @@ import com.pranshulgg.watchmaster.utils.Symbol
 @OptIn(ExperimentalTextApi::class)
 @Composable
 fun SectionCard(title: String, titleIcon: Int, content: @Composable () -> Unit) {
+
     Card(
+        modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(Radius.ExtraLarge),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceBright
