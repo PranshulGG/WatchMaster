@@ -49,7 +49,7 @@ data class ImageItem(
 )
 
 data class WatchProvidersDto(
-    val results: Map<String, CountryWatchProviders> // e.g. "US" -> providers
+    val results: Map<String, CountryWatchProviders>
 )
 
 data class CountryWatchProviders(
