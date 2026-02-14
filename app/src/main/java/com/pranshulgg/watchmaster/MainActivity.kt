@@ -110,14 +110,14 @@ class MainActivity : ComponentActivity() {
                                         WindowInsets.navigationBars
                                             .asPaddingValues()
                                             .calculateBottomPadding() + ScreenOffset +
-                                                70.dp
+                                                64.dp
                                 )
                         )
                         NavHost(
                             modifier = Modifier
                                 .background(MaterialTheme.colorScheme.surfaceContainer),
                             navController = navController,
-//                            startDestination = NavRoutes.mediaDetail(10681),
+//                            startDestination = NavRoutes.mediaDetail(957997),
                             startDestination = NavRoutes.MAIN,
                             enterTransition = {
                                 NavTransitions.enter(motionScheme)
