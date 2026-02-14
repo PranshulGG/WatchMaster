@@ -126,7 +126,7 @@ fun SearchRow(
                         )
                     }
                 } else {
-                    PosterPlaceholder()
+                    PosterPlaceholder(iconSize = 25.dp)
                 }
             }
             Column(
