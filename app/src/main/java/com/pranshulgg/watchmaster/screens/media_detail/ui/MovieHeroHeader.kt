@@ -29,8 +29,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -70,7 +72,7 @@ fun MovieHeroHeader(
     Box(modifier = Modifier.fillMaxWidth()) {
 
         AsyncImage(
-            model = "https://image.tmdb.org/t/p/original${movie.images.backdrops.firstOrNull()?.file_path}",
+            model = backdropUrl(movie),
             contentDescription = movie.title,
             modifier = Modifier
                 .fillMaxWidth()
@@ -102,7 +104,7 @@ fun MovieHeroHeader(
         ) {
 
             AsyncImage(
-                model = "https://image.tmdb.org/t/p/w500${movie.images.posters.firstOrNull()?.file_path}",
+                model = posterUrl(movie),
                 contentDescription = movie.title,
                 modifier = Modifier
                     .height(180.dp)
@@ -116,13 +118,21 @@ fun MovieHeroHeader(
             ) {
                 Text(
                     text = movie.title,
-                    style = MaterialTheme.typography.headlineMedium,
+                    style = MaterialTheme.typography.headlineMedium.copy(
+                        shadow = Shadow(
+//                            color = Color.Black.copy(alpha = 0.4f),
+                            color = MaterialTheme.colorScheme.surfaceContainer,
+                            offset = Offset(2f, 2f),
+                            blurRadius = 6f
+                        )
+                    ),
                     color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Bold,
                     maxLines = 3,
                     lineHeight = 30.sp,
-                    overflow = TextOverflow.Ellipsis
-                )
+                    overflow = TextOverflow.Ellipsis,
+
+                    )
                 Text(
                     text = "${formatRuntime(movie.runtime)} • ${watchlistItem?.releaseDate?.take(4) ?: "—"}",
                     style = MaterialTheme.typography.titleMedium,
@@ -180,3 +190,25 @@ private fun GenreChip(text: String, rating: Boolean = false) {
         }
     }
 }
+
+private fun posterUrl(movie: MovieBundle): String? =
+    when {
+        movie.poster_path != null ->
+            "https://image.tmdb.org/t/p/w500${movie.poster_path}"
+
+        movie.images.posters.isNotEmpty() ->
+            "https://image.tmdb.org/t/p/w500${movie.images.posters.first().file_path}"
+
+        else -> null
+    }
+
+private fun backdropUrl(movie: MovieBundle): String? =
+    when {
+        movie.backdrop_path != null ->
+            "https://image.tmdb.org/t/p/original${movie.backdrop_path}"
+
+        movie.images.backdrops.isNotEmpty() ->
+            "https://image.tmdb.org/t/p/original${movie.images.backdrops.first().file_path}"
+
+        else -> null
+    }
