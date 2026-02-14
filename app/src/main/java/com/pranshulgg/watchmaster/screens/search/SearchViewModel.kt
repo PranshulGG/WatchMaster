@@ -23,6 +23,10 @@ class SearchViewModel(
     var loading by mutableStateOf(false)
         private set
 
+    var showNoResultsSnack by mutableStateOf(false)
+        private set
+
+
     fun onQueryChange(q: String) {
         query = q
     }
@@ -90,8 +94,11 @@ class SearchViewModel(
 
         viewModelScope.launch {
             loading = true
-            results = repo.search(query, type)
+            val res = repo.search(query, type)
+            results = res
             loading = false
+
+            showNoResultsSnack = res.isEmpty()
         }
     }
 
