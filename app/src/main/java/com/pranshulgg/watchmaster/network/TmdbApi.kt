@@ -78,6 +78,9 @@ data class MovieBundleDto(
     val credits: CreditsDto,
     val videos: VideosDto,
     val images: ImagesDto,
+    val poster_path: String?,
+    val backdrop_path: String?,
+
 
     @SerializedName("watch/providers")
     val watchProviders: WatchProvidersDto?,
