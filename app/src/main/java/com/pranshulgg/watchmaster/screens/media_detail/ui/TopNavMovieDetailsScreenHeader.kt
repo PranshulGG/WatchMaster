@@ -154,7 +154,7 @@ fun TopNavMovieDetailsScreenHeader(
                             )
                             Spacer(Modifier.width(3.dp))
                             Text(
-                                userRating.toString(),
+                                if (userRating == 10.0) "10" else userRating.toString(),
                                 color = schemeColor.inverseOnSurface,
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Bold
