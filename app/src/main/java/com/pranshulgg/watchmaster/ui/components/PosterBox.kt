@@ -24,7 +24,8 @@ fun PosterBox(
     height: Dp = 120.dp,
     cornerRadius: Dp = Radius.Medium,
     circular: Boolean = false,
-    placeholder: @Composable () -> Unit = { PosterPlaceholder() }
+    placeholder: @Composable () -> Unit = { PosterPlaceholder() },
+    apiPath: String? = null
 ) {
     Box(
         modifier = modifier
@@ -32,7 +33,7 @@ fun PosterBox(
             .clip(RoundedCornerShape(if (circular) Radius.Full else cornerRadius)),
         contentAlignment = Alignment.Center
     ) {
-        if (!posterUrl.isNullOrBlank()) {
+        if (!apiPath.isNullOrBlank()) {
             val painter = rememberAsyncImagePainter(model = posterUrl)
 
             Image(
