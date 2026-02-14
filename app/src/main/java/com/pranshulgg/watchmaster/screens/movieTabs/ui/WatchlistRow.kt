@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
@@ -41,12 +42,16 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
+import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 import com.pranshulgg.watchmaster.helpers.NavRoutes
 import com.pranshulgg.watchmaster.model.WatchStatus
 import com.pranshulgg.watchmaster.ui.components.ActionBottomSheet
 import com.pranshulgg.watchmaster.ui.components.PosterPlaceholder
+import com.pranshulgg.watchmaster.ui.components.TextAlertDialog
 import com.pranshulgg.watchmaster.ui.theme.LocalStatusColors
+import com.pranshulgg.watchmaster.utils.Radius
+import com.pranshulgg.watchmaster.utils.Symbol
 import com.pranshulgg.watchmaster.utils.formatDate
 import kotlinx.coroutines.launch
 
@@ -57,7 +62,8 @@ fun WatchlistRow(
     item: WatchlistItemEntity,
     index: Int,
     items: List<WatchlistItemEntity>,
-    navController: NavController
+    navController: NavController,
+    onLongActionMovieRequest: () -> Unit
 ) {
 
     val isOnly = items.singleOrNull() == item
@@ -65,7 +71,6 @@ fun WatchlistRow(
     val isLast = index == items.lastIndex
     val titleMaxLines = 2
     val overviewMaxLines = remember { mutableIntStateOf(1) }
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
 
 
@@ -96,8 +101,6 @@ fun WatchlistRow(
         else -> statusColor.pending.on
     }
 
-
-    var selectedMovieItem: WatchlistItemEntity? = null
 
     val shape = when {
         isOnly -> RoundedCornerShape(16.dp)
@@ -131,10 +134,7 @@ fun WatchlistRow(
                     navController.navigate(NavRoutes.mediaDetail(item.id))
                 },
                 onLongClick = {
-                    selectedMovieItem = item
-                    scope.launch {
-                        sheetState.show()
-                    }
+                    onLongActionMovieRequest()
                 }
             ),
         color = MaterialTheme.colorScheme.surfaceBright
@@ -200,18 +200,63 @@ fun WatchlistRow(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Spacer(Modifier.height(5.dp))
-                Surface(
-                    color = statusContainerColor,
-                    shape = CircleShape
-                ) {
+                Row {
+                    Surface(
+                        color = statusContainerColor,
+                        shape = if (item.status == WatchStatus.FINISHED) RoundedCornerShape(
+                            topStart = Radius.Full,
+                            bottomStart = Radius.Full
+                        ) else CircleShape
+                    ) {
+                        Text(
+                            movieStatusLabel,
+                            color = statusContentColor,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(horizontal = 8.dp)
+                        )
+                    }
 
-                    Text(
-                        movieStatusLabel,
-                        color = statusContentColor,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(horizontal = 8.dp)
-                    )
+                    if (item.status == WatchStatus.FINISHED) {
+//                    Surface(
+//                        color = MaterialTheme.colorScheme.primary,
+//                        shape = CircleShape
+//                    ) {
+//                        Text(
+//                            "${item.userRating}",
+//                            color = MaterialTheme.colorScheme.onPrimary,
+//                            fontSize = 12.sp,
+//                            fontWeight = FontWeight.Bold,
+//                            modifier = Modifier.padding(horizontal = 8.dp)
+//                        )
+//                    }
+                        Surface(
+                            color = MaterialTheme.colorScheme.primary,
+                            shape = RoundedCornerShape(
+                                topEnd = Radius.Small,
+                                bottomEnd = Radius.Small
+                            )
+                        ) {
+                            Row(
+                                horizontalArrangement = Arrangement.Center,
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.padding(start = 6.dp, end = 8.dp)
+                            ) {
+                                Symbol(
+                                    R.drawable.star_24px,
+                                    size = 16.dp,
+                                    color = MaterialTheme.colorScheme.onPrimary
+                                )
+                                Spacer(Modifier.width(3.dp))
+                                Text(
+                                    "${if (item.userRating == 10.0) "10" else item.userRating}",
+                                    color = MaterialTheme.colorScheme.onPrimary,
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -226,25 +271,5 @@ fun WatchlistRow(
         )
     }
 
-
-
-    ActionBottomSheet(
-        showActions = false,
-        sheetState = sheetState,
-        onCancel = {
-            scope.launch { sheetState.hide() }
-        },
-        onConfirm = {
-            scope.launch { sheetState.hide() }
-        }
-    ) {
-
-        if (selectedMovieItem != null) {
-            WatchlistItemOptionsSheetContent(
-                selectedMovieItem = selectedMovieItem,
-                hideSheet = { scope.launch { sheetState.hide() } })
-        }
-
-    }
 
 }
