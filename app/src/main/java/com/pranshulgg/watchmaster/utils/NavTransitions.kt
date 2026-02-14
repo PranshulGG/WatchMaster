@@ -13,29 +13,32 @@ import androidx.compose.material3.MotionScheme
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 object NavTransitions {
 
+    private const val FADE_IN = 350
+    private const val FADE_OUT = 200
+
     fun enter(motionScheme: MotionScheme): EnterTransition =
         slideInHorizontally(
-            animationSpec = motionScheme.defaultSpatialSpec(),
+            animationSpec = motionScheme.defaultEffectsSpec(),
             initialOffsetX = { it }
-        ) + fadeIn()
+        ) + fadeIn(tween(FADE_IN))
 
     fun exit(motionScheme: MotionScheme): ExitTransition =
         slideOutHorizontally(
-            animationSpec = motionScheme.defaultSpatialSpec(),
+            animationSpec = motionScheme.defaultEffectsSpec(),
             targetOffsetX = { -it }
-        ) + fadeOut()
+        ) + fadeOut(tween(FADE_OUT))
 
     @OptIn(ExperimentalMaterial3ExpressiveApi::class)
     fun popEnter(motionScheme: MotionScheme): EnterTransition =
         slideInHorizontally(
-            animationSpec = motionScheme.defaultSpatialSpec(),
+            animationSpec = motionScheme.defaultEffectsSpec(),
             initialOffsetX = { -it }
-        ) + fadeIn()
+        ) + fadeIn(tween(FADE_IN))
 
     @OptIn(ExperimentalMaterial3ExpressiveApi::class)
     fun popExit(motionScheme: MotionScheme): ExitTransition =
         slideOutHorizontally(
-            animationSpec = motionScheme.defaultSpatialSpec(),
+            animationSpec = motionScheme.defaultEffectsSpec(),
             targetOffsetX = { it }
-        ) + fadeOut()
+        ) + fadeOut(tween(FADE_OUT))
 }
