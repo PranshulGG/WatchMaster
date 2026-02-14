@@ -9,6 +9,8 @@ data class MovieBundleEntity(
     val title: String,
     val overview: String,
     val runtime: Int?,
+    val poster_path: String?,
+    val backdrop_path: String?,
     val genresJson: String,
     val creditsJson: String,
     val videosJson: String,
