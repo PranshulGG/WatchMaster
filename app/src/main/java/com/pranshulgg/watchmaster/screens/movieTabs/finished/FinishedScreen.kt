@@ -26,7 +26,8 @@ import com.pranshulgg.watchmaster.ui.components.EmptyContainerPlaceholder
 fun FinishedMovies(
     items: List<WatchlistItemEntity>, scrollBehavior: FloatingToolbarScrollBehavior,
     scrollBehaviorTopBar: TopAppBarScrollBehavior,
-    navController: NavController
+    navController: NavController,
+    onLongActionMovieRequest: (WatchlistItemEntity) -> Unit
 
 ) {
 
@@ -47,7 +48,12 @@ fun FinishedMovies(
         verticalArrangement = Arrangement.spacedBy(2.dp)
     ) {
         itemsIndexed(items) { index, item ->
-            WatchlistRow(item, index, items, navController)
+            WatchlistRow(
+                item,
+                index,
+                items,
+                navController,
+                onLongActionMovieRequest = { onLongActionMovieRequest(item) })
         }
 
     }
