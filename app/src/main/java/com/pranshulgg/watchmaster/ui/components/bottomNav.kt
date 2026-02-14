@@ -99,6 +99,8 @@ fun BottomNav(
 
     ) {
         HorizontalFloatingToolbar(
+            expandedShadowElevation = 1.dp,
+
             scrollBehavior = scrollBehavior,
             modifier = Modifier
                 .padding(
