@@ -1,6 +1,8 @@
 package com.pranshulgg.watchmaster.screens.media_detail.ui
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.MaterialTheme
@@ -12,6 +14,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.pranshulgg.watchmaster.data.CastMember
 import com.pranshulgg.watchmaster.ui.components.PosterBox
+import com.pranshulgg.watchmaster.ui.components.ProfilePlaceholder
 
 
 @Composable
@@ -19,14 +22,17 @@ fun CastItem(character: String, name: String, profilePath: String?) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
-            .width(120.dp)
+            .width(110.dp)
     ) {
         PosterBox(
             posterUrl = "https://image.tmdb.org/t/p/w200${profilePath}",
             width = 80.dp,
             height = 80.dp,
-            circular = true
+            circular = true,
+            apiPath = profilePath,
+            placeholder = { ProfilePlaceholder(size = 80.dp) }
         )
+        Spacer(Modifier.height(3.dp))
         Text(
             text = name,
             modifier = Modifier.widthIn(max = 100.dp),
@@ -38,6 +44,7 @@ fun CastItem(character: String, name: String, profilePath: String?) {
             )
         Text(
             text = character,
+            modifier = Modifier.widthIn(max = 100.dp),
             style = MaterialTheme.typography.labelMedium,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
