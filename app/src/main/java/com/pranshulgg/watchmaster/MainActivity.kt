@@ -18,8 +18,10 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingToolbarDefaults.ScreenOffset
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.motionScheme
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -70,11 +72,22 @@ class MainActivity : ComponentActivity() {
             val snackbarHostState = remember { SnackbarHostState() }
 
             LaunchedEffect(Unit) {
-                SnackbarManager.messages.collectLatest { message ->
+                SnackbarManager.events.collectLatest { event ->
                     snackbarHostState.currentSnackbarData?.dismiss()
-                    snackbarHostState.showSnackbar(message, withDismissAction = true)
+
+                    val result = snackbarHostState.showSnackbar(
+                        message = event.message,
+                        actionLabel = event.actionLabel,
+                        withDismissAction = event.actionLabel == null,
+                        duration = SnackbarDuration.Short
+                    )
+
+                    if (result == SnackbarResult.ActionPerformed) {
+                        event.onAction?.invoke()
+                    }
                 }
             }
+
 
 
             CompositionLocalProvider(
