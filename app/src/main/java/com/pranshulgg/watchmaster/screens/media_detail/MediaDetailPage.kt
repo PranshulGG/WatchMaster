@@ -1,5 +1,6 @@
 package com.pranshulgg.watchmaster.screens.media_detail
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -8,13 +9,19 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -26,6 +33,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingToolbarDefaults
 import androidx.compose.material3.FloatingToolbarExitDirection.Companion.Bottom
 import androidx.compose.material3.HorizontalDivider
@@ -48,6 +56,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -90,6 +99,7 @@ import com.pranshulgg.watchmaster.screens.media_detail.ui.MovieDetailActionsTop
 import com.pranshulgg.watchmaster.screens.media_detail.ui.MovieDetailFloatingToolBar
 import com.pranshulgg.watchmaster.screens.media_detail.ui.MovieHeroHeader
 import com.pranshulgg.watchmaster.screens.media_detail.ui.SectionCard
+import com.pranshulgg.watchmaster.screens.media_detail.ui.UserNoteField
 import com.pranshulgg.watchmaster.ui.components.DialogBasic
 import com.pranshulgg.watchmaster.ui.components.PosterBox
 import com.pranshulgg.watchmaster.ui.components.RateMovieDialogContent
@@ -164,19 +174,20 @@ fun MediaDetailPage(
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surfaceContainer,
         bottomBar = {
-            if (!showLoading)
+            if (!showLoading) {
                 MovieDetailFloatingToolBar(
                     scrollBehavior,
                     movieId,
                     liveItem,
                     startWatching = { watchlistViewModel.start(movieId) },
                     resetWatching = { watchlistViewModel.reset(movieId) },
-//                    finishWatching = { watchlistViewModel.finish(movieId) },
                     finishWatching = { showRatingDialog = true },
                     interruptWatching = { watchlistViewModel.interrupt(movieId) },
                 )
+            }
         },
-    ) { paddingValues ->
+
+        ) { paddingValues ->
         if (showLoading) {
             Box(
                 modifier = Modifier
@@ -186,41 +197,36 @@ fun MediaDetailPage(
                 contentAlignment = Alignment.Center
             ) {
                 LoadingIndicator(modifier = Modifier.size(60.dp))
+                Box(Modifier.padding(bottom = paddingValues.calculateBottomPadding()))
             }
         }
+
+
         viewModel.state?.let {
-            Column(
+            LazyColumn(
                 modifier = Modifier
                     .nestedScroll(scrollBehavior)
-                    .verticalScroll(rememberScrollState())
-                    .padding(
-                        bottom = paddingValues.calculateBottomPadding(),
-                    )
+                    .imePadding()
             )
             {
-                MovieHeroHeader(
-                    movie = it,
-                    navController,
-                    isFinished = liveItem?.status == WatchStatus.FINISHED,
-                    userRating = liveItem?.userRating,
-                    onUpdateRating = { newRating ->
-                        watchlistViewModel.setUserRating(movieId, newRating)
-                        scope.launch {
-                            SnackbarManager.show("User rating updated")
+
+
+                item {
+                    MovieHeroHeader(
+                        movie = it,
+                        navController,
+                        isFinished = liveItem?.status == WatchStatus.FINISHED,
+                        userRating = liveItem?.userRating,
+                        onUpdateRating = { newRating ->
+                            watchlistViewModel.setUserRating(movieId, newRating)
+                            scope.launch {
+                                SnackbarManager.show("User rating updated")
+                            }
+
                         }
-
-                    }
-                )
-                MovieDetailActionsTop(status = liveItem?.status ?: WatchStatus.WATCHING)
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(
-                            16.dp
-                        )
-                ) {
-
-
+                    )
+                    MovieDetailActionsTop(status = liveItem?.status ?: WatchStatus.WATCHING)
+                    Spacer(Modifier.height(16.dp))
                     SectionCard(
                         title = "Overview",
                         titleIcon = R.drawable.overview_24px,
@@ -228,31 +234,23 @@ fun MediaDetailPage(
                         Text(
                             modifier = Modifier.padding(horizontal = 16.dp),
                             text = it.overview,
+                            color = MaterialTheme.colorScheme.onSurface,
                             style = MaterialTheme.typography.bodyMedium,
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(12.dp))
+                    SectionCard(
+                        title = "Notes",
+                        titleIcon = R.drawable.sticky_note_2_24px,
+                    ) {
+                        UserNoteField(
+                            onNoteSave = { note ->
+                                watchlistViewModel.setNote(movieId, note)
+                            }
                         )
                     }
 
                     Spacer(modifier = Modifier.height(12.dp))
-                    SectionCard(
-                        title = "User note",
-                        titleIcon = R.drawable.edit_note_24px,
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            OutlinedTextField(
-                                modifier = Modifier.fillMaxWidth(),
-                                value = "",
-                                onValueChange = {},
-                                placeholder = { Text("Add a note") }
-                            )
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(12.dp))
-
                     SectionCard(
                         title = "Cast",
                         titleIcon = R.drawable.groups_2_24px,
@@ -287,9 +285,17 @@ fun MediaDetailPage(
                                 item {
                                     Spacer(Modifier.width(8.dp))
                                 }
+
                             }
                         }
                     }
+                    Spacer(
+                        modifier = Modifier.height(12.dp)
+                    )
+                    Spacer(
+                        modifier = Modifier
+                            .windowInsetsBottomHeight(WindowInsets.navigationBars)
+                    )
                 }
             }
 
