@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.model.WatchStatus
+import com.pranshulgg.watchmaster.ui.snackbar.SnackbarManager
 import com.pranshulgg.watchmaster.ui.theme.LocalStatusColors
 import com.pranshulgg.watchmaster.utils.Radius
 import com.pranshulgg.watchmaster.utils.Symbol
@@ -93,6 +94,7 @@ fun MovieDetailActionsTop(status: WatchStatus) {
                 .height(48.dp)
                 .weight(1f),
             onClick = {
+              
             },
             contentPadding = ButtonDefaults.contentPaddingFor(48.dp),
             shapes = ButtonDefaults.shapes()
