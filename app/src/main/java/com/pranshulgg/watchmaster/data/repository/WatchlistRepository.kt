@@ -79,6 +79,8 @@ class WatchlistRepository(
 
     suspend fun updateUserRating(id: Long, rating: Double) = dao.updateUserRating(id, rating)
 
+    suspend fun updateNote(id: Long, note: String) = dao.setUserNote(id, note)
+
     fun getItemById(id: Long): Flow<WatchlistItemEntity?> {
         return dao.getById(id)
     }
