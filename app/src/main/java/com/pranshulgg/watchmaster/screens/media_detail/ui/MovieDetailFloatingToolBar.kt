@@ -108,6 +108,9 @@ fun MovieDetailFloatingToolBar(
     resetWatching: () -> Unit,
     finishWatching: () -> Unit,
     interruptWatching: () -> Unit,
+    onDeleteMovie: () -> Unit,
+    onMoviePin: () -> Unit,
+    isPinned: Boolean = false,
 ) {
     val systemInsets = WindowInsets.systemBars.asPaddingValues()
     var expanded by remember { mutableStateOf(false) }
@@ -121,11 +124,16 @@ fun MovieDetailFloatingToolBar(
             leading = R.drawable.pause_24px,
             action = { interruptWatching() }, isInterruptOption = true
         ),
-        MenuItemOptionList(title = "Pin", leading = R.drawable.keep_24px, action = {}),
-        MenuItemOptionList(title = "Rate", leading = R.drawable.star_24px, action = {}),
+        MenuItemOptionList(
+            title = if (!isPinned) "Unpin" else "Pin",
+            leading = R.drawable.keep_24px,
+            action = { onMoviePin() }),
         MenuItemOptionList(title = "Folder", leading = R.drawable.folder_24px, action = {}),
         MenuItemOptionList(title = "Share", leading = R.drawable.share_24px, action = {}),
-        MenuItemOptionList(title = "Delete", leading = R.drawable.delete_24px, action = {})
+        MenuItemOptionList(
+            title = "Delete",
+            leading = R.drawable.delete_24px,
+            action = { onDeleteMovie() })
     )
 
     var showDialog by remember { mutableStateOf(false) }
