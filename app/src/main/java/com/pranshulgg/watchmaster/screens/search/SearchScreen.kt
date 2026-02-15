@@ -275,10 +275,11 @@ fun SearchScreen(
                     onCancel = { closeDialog() },
                     onConfirm = {
                         viewModel.addToWatchlist(selectedItem.value!!)
-                        scope.launch {
-                            SnackbarManager.show("Added to watchlist")
-                        }
                         closeDialog()
+                        SnackbarManager.show(
+                            "Added to watchlist",
+                            actionLabel = "View"
+                        ) { navController.popBackStack() }
                     }
                 )
             }
