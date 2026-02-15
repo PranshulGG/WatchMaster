@@ -1,6 +1,7 @@
 package com.pranshulgg.watchmaster.screens.media_detail
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -99,7 +101,6 @@ import com.pranshulgg.watchmaster.screens.media_detail.ui.MovieDetailActionsTop
 import com.pranshulgg.watchmaster.screens.media_detail.ui.MovieDetailFloatingToolBar
 import com.pranshulgg.watchmaster.screens.media_detail.ui.MovieHeroHeader
 import com.pranshulgg.watchmaster.screens.media_detail.ui.SectionCard
-import com.pranshulgg.watchmaster.screens.media_detail.ui.UserNoteField
 import com.pranshulgg.watchmaster.ui.components.DialogBasic
 import com.pranshulgg.watchmaster.ui.components.PosterBox
 import com.pranshulgg.watchmaster.ui.components.RateMovieDialogContent
@@ -145,6 +146,8 @@ fun MediaDetailPage(
 
     val scope = rememberCoroutineScope()
 
+    var noteText by remember { mutableStateOf("") }
+
 
     val context = LocalContext.current
     val repository = remember {
@@ -171,6 +174,17 @@ fun MediaDetailPage(
     val liveItem by watchlistViewModel.currentItem.collectAsStateWithLifecycle()
     var showRatingDialog by remember { mutableStateOf(false) }
 
+
+    val existingNoteContent = liveItem?.notes;
+    var showNoteDialog by remember { mutableStateOf(false) }
+    var note by remember { mutableStateOf("") }
+    var showConfirmationDialog by remember { mutableStateOf(false) }
+
+    note = existingNoteContent ?: ""
+
+
+    val isMoviePinned = liveItem?.isPinned != true
+
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surfaceContainer,
         bottomBar = {
@@ -183,7 +197,16 @@ fun MediaDetailPage(
                     resetWatching = { watchlistViewModel.reset(movieId) },
                     finishWatching = { showRatingDialog = true },
                     interruptWatching = { watchlistViewModel.interrupt(movieId) },
-                )
+                    onDeleteMovie = {
+                        showConfirmationDialog = true
+                    },
+                    onMoviePin = {
+                        watchlistViewModel.setPinned(movieId, isMoviePinned)
+                        SnackbarManager.show(if (isMoviePinned) "Movie pinned" else "Movie unpinned")
+                    },
+                    isPinned = isMoviePinned,
+
+                    )
             }
         },
 
@@ -242,12 +265,40 @@ fun MediaDetailPage(
                     SectionCard(
                         title = "Notes",
                         titleIcon = R.drawable.sticky_note_2_24px,
+                        showAction = true,
+                        actionOnClick = {
+                            showNoteDialog = true
+                        },
+                        actionText = "Edit note"
                     ) {
-                        UserNoteField(
-                            onNoteSave = { note ->
-                                watchlistViewModel.setNote(movieId, note)
+
+                        if (!existingNoteContent.isNullOrBlank()) {
+                            Column(
+                                modifier = Modifier.padding(horizontal = 16.dp)
+                            ) {
+                                Surface(
+                                    color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                                    border = BorderStroke(
+                                        width = 1.dp,
+                                        color = MaterialTheme.colorScheme.outlineVariant
+                                    ),
+                                    shape = RoundedCornerShape(Radius.Medium),
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .heightIn(min = 64.dp)
+                                ) {
+                                    Text(
+                                        existingNoteContent,
+                                        modifier = Modifier.padding(10.dp),
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
                             }
-                        )
+
+                        }
+
+
                     }
 
                     Spacer(modifier = Modifier.height(12.dp))
@@ -317,6 +368,44 @@ fun MediaDetailPage(
             }
         )
     }
+
+    DialogBasic(
+        show = showNoteDialog,
+        title = "Add a note",
+        showDefaultActions = true,
+        onDismiss = {
+            showNoteDialog = false
+            note = existingNoteContent ?: ""
+        },
+        onConfirm = {
+            watchlistViewModel.setNote(movieId, note)
+        },
+        confirmText = "Save",
+        content = {
+            OutlinedTextField(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(Radius.Large),
+                value = note,
+                onValueChange = { note = it },
+                placeholder = { Text("Note...") }
+            )
+        }
+    )
+
+    TextAlertDialog(
+        show = showConfirmationDialog,
+        title = "Delete movie",
+        message = "Are you sure you want to delete this movie? this action cannot be undone",
+        confirmText = "Confirm",
+        onConfirm = {
+            watchlistViewModel.delete(movieId)
+            SnackbarManager.show("Movie deleted ${liveItem?.title}")
+            navController.popBackStack()
+        },
+        onDismiss = {
+            showConfirmationDialog = false
+        }
+    )
 
 }
 
