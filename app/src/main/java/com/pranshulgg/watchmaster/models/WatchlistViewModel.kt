@@ -63,6 +63,10 @@ class WatchlistViewModel(
         repository.updateUserRating(id, rating)
     }
 
+    fun setNote(id: Long, note: String) = viewModelScope.launch {
+        repository.updateNote(id, note)
+    }
+
     private val _currentItem = MutableStateFlow<WatchlistItemEntity?>(null)
     val currentItem = _currentItem.asStateFlow()
 
