@@ -57,5 +57,7 @@ interface WatchlistDao {
     @Query("SELECT * FROM watchlist WHERE id = :id LIMIT 1")
     fun getById(id: Long): Flow<WatchlistItemEntity?>
 
+    @Query("UPDATE watchlist SET notes = :note WHERE id = :id")
+    suspend fun setUserNote(id: Long, note: String)
 
 }
