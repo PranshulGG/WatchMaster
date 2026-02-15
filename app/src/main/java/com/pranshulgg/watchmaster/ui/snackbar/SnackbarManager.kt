@@ -1,17 +1,32 @@
 package com.pranshulgg.watchmaster.ui.snackbar
 
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 
 object SnackbarManager {
 
-    private val _messages = MutableSharedFlow<String>(
+    data class SnackbarEvent(
+        val message: String,
+        val actionLabel: String? = null,
+        val onAction: (() -> Unit)? = null
+    )
+
+    private val _events = MutableSharedFlow<SnackbarEvent>(
         extraBufferCapacity = 1
     )
-    val messages = _messages.asSharedFlow()
+    val events = _events.asSharedFlow()
 
-    fun show(message: String) {
-        _messages.tryEmit(message)
+    fun show(
+        message: String,
+        actionLabel: String? = null,
+        onAction: (() -> Unit)? = null
+    ) {
+        _events.tryEmit(
+            SnackbarEvent(
+                message = message,
+                actionLabel = actionLabel,
+                onAction = onAction
+            )
+        )
     }
 }
