@@ -141,11 +141,12 @@ fun SettingSection(
         }
 
 
+        val nonNullTiles = tiles.filterNotNull()
 
-        tiles.forEachIndexed { index, tile ->
+        nonNullTiles.forEachIndexed { index, tile ->
             val isFirst = index == 0
-            val isLast = index == tiles.lastIndex
-            val isOnly = tiles.size == 1
+            val isLast = index == nonNullTiles.lastIndex
+            val isOnly = nonNullTiles.size == 1
             val primarySwitch = primarySwitch
 
 
