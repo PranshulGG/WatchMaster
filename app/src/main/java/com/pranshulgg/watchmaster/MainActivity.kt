@@ -122,8 +122,7 @@ class MainActivity : ComponentActivity() {
                                     bottom =
                                         WindowInsets.navigationBars
                                             .asPaddingValues()
-                                            .calculateBottomPadding() + ScreenOffset +
-                                                64.dp
+                                            .calculateBottomPadding()
                                 )
                         )
                         NavHost(
