@@ -28,6 +28,7 @@ object NavTransitions {
             targetOffsetX = { -it }
         ) + fadeOut(tween(FADE_OUT))
 
+
     @OptIn(ExperimentalMaterial3ExpressiveApi::class)
     fun popEnter(motionScheme: MotionScheme): EnterTransition =
         slideInHorizontally(
