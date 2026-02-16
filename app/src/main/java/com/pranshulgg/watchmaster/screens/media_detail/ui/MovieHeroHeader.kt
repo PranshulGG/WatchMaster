@@ -103,14 +103,19 @@ fun MovieHeroHeader(
             verticalAlignment = Alignment.Bottom
         ) {
 
-            AsyncImage(
-                model = posterUrl(movie),
-                contentDescription = movie.title,
+            Box(
                 modifier = Modifier
                     .height(180.dp)
                     .width(120.dp)
                     .clip(RoundedCornerShape(Radius.Large))
-            )
+            ) {
+                AsyncImage(
+                    model = posterUrl(movie),
+                    contentDescription = movie.title,
+                    modifier = Modifier.matchParentSize()
+
+                )
+            }
             Spacer(modifier = Modifier.width(16.dp))
 
             Column(
