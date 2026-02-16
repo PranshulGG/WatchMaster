@@ -16,6 +16,7 @@ import com.pranshulgg.watchmaster.ui.components.SettingSection
 import com.pranshulgg.watchmaster.ui.components.SettingTile
 import com.pranshulgg.watchmaster.ui.components.SettingsTileIcon
 import com.pranshulgg.watchmaster.ui.components.TextAlertDialog
+import com.pranshulgg.watchmaster.ui.snackbar.SnackbarManager
 
 @Composable
 fun WatchlistItemOptionsSheetContent(
@@ -23,6 +24,7 @@ fun WatchlistItemOptionsSheetContent(
     hideSheet: () -> Unit,
     onMovieDelete: (Long?) -> Unit,
     onMovieFinish: (Long?) -> Unit,
+    onUpdateRating: (Float, Long) -> Unit,
 ) {
 
     val watchlistViewModel: WatchlistViewModel = viewModel()
@@ -34,6 +36,8 @@ fun WatchlistItemOptionsSheetContent(
         WatchStatus.INTERRUPTED -> "Continue watching"
         else -> "Mark as watching"
     }
+
+    val isMoviePinned = selectedMovieItem?.isPinned != true
 
     SettingSection(
         isModalOption = true,
@@ -87,17 +91,29 @@ fun WatchlistItemOptionsSheetContent(
             ),
             SettingTile.ActionTile(
                 leading = { SettingsTileIcon(R.drawable.keep_24px) },
-                title = "Pin",
+                title = if (!isMoviePinned) "Unpin" else "Pin",
                 onClick = {
+                    if (selectedMovieItem != null) {
+                        watchlistViewModel.setPinned(selectedMovieItem.id, isMoviePinned)
+                        SnackbarManager.show(if (isMoviePinned) "Movie pinned" else "Movie unpinned")
+                    }
+                    hideSheet()
                 }
             ),
 
-            SettingTile.ActionTile(
-                leading = { SettingsTileIcon(R.drawable.star_24px) },
-                title = "Rate",
-                onClick = {
-                }
-            )
+            if (selectedMovieItem?.status == WatchStatus.FINISHED) {
+                SettingTile.ActionTile(
+                    leading = { SettingsTileIcon(R.drawable.star_24px) },
+                    title = "Update Rating",
+                    onClick = {
+                        onUpdateRating(
+                            selectedMovieItem.userRating?.toFloat() ?: 0f,
+                            selectedMovieItem.id
+                        )
+                        hideSheet()
+                    }
+                )
+            } else null
         )
     )
 
