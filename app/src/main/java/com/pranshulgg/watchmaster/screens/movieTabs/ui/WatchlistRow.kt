@@ -1,5 +1,6 @@
 package com.pranshulgg.watchmaster.screens.movieTabs.ui
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -121,10 +122,6 @@ fun WatchlistRow(
         else -> RoundedCornerShape(4.dp)
     }
 
-    if (isFirst) {
-        Spacer(Modifier.height(20.dp))
-    }
-
     Surface(
         shape = shape,
         modifier = Modifier
@@ -188,9 +185,13 @@ fun WatchlistRow(
                     fontSize = 17.sp,
                     maxLines = titleMaxLines,
                     overflow = TextOverflow.Ellipsis,
-                    onTextLayout = { textLayoutResult: TextLayoutResult ->
-                        overviewMaxLines.value = if (textLayoutResult.lineCount == 1) 2 else 1
+                    onTextLayout = { result ->
+                        val newLines = if (result.lineCount == 1) 2 else 1
+                        if (overviewMaxLines.value != newLines) {
+                            overviewMaxLines.value = newLines
+                        }
                     }
+
                 )
                 Text(
                     item.overview ?: "No overview found",
@@ -260,15 +261,6 @@ fun WatchlistRow(
                 }
             }
         }
-    }
-
-    if (isLast) {
-        Spacer(
-            Modifier.height(
-                WindowInsets.systemBars.asPaddingValues().calculateBottomPadding()
-                        + ScreenOffset + 30.dp
-            )
-        )
     }
 
 
