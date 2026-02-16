@@ -46,6 +46,9 @@ fun SectionCard(
             .fillMaxWidth()
             .padding(horizontal = 16.dp),
         shape = RoundedCornerShape(Radius.ExtraLarge),
+//        colors = CardDefaults.cardColors(
+//            containerColor = MaterialTheme.colorScheme.surface
+//        )
     ) {
         Column(
             modifier = Modifier.padding(bottom = 16.dp),
