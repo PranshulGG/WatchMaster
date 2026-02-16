@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
+import com.pranshulgg.watchmaster.screens.movieTabs.ui.MovieItems
 import com.pranshulgg.watchmaster.screens.movieTabs.ui.WatchlistRow
 import com.pranshulgg.watchmaster.ui.components.EmptyContainerPlaceholder
 
@@ -38,22 +39,16 @@ fun WatchingMovies(
         )
     }
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .nestedScroll(scrollBehavior)
-            .nestedScroll(scrollBehaviorTopBar.nestedScrollConnection)
-            .padding(horizontal = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(2.dp)
-    ) {
-        itemsIndexed(items) { index, item ->
-            WatchlistRow(
-                item,
-                index,
-                items,
-                navController,
-                onLongActionMovieRequest = { onLongActionMovieRequest(item) })
-        }
+    val pinnedItems = items.filter { it.isPinned }
+    val normalItems = items.filter { !it.isPinned }
 
-    }
+    MovieItems(
+        scrollBehavior,
+        scrollBehaviorTopBar,
+        navController,
+        onLongActionMovieRequest,
+        pinnedItems,
+        normalItems
+    )
+    
 }
