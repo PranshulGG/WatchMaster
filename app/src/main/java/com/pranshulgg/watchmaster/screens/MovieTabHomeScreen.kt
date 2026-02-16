@@ -79,6 +79,7 @@ fun MovieTabHomeScreen(
     var dialogTitle by remember { mutableStateOf("") }
     var actionSheetItem by remember { mutableStateOf<WatchlistItemEntity?>(null) }
 
+
     val deleteMovieFun: (Long) -> Unit = { id ->
         longPressedItemId = id
         dialogTitle = "Delete movie";
@@ -92,6 +93,10 @@ fun MovieTabHomeScreen(
             sheetState.show()
         }
     }
+
+    var updateRating by remember { mutableStateOf(false) }
+    var originalRating by remember { mutableFloatStateOf(0f) }
+
 
 
 
@@ -124,22 +129,24 @@ fun MovieTabHomeScreen(
         HorizontalPager(
             state = pagerState,
             modifier = Modifier
-                .padding(innerPadding)
+                .padding(top = innerPadding.calculateTopPadding())
                 .fillMaxSize(),
             verticalAlignment = Alignment.Top
         ) { page ->
             when (page) {
-                0 -> WatchlistMovies(
-                    items = items.filter {
-                        it.status == WatchStatus.WANT_TO_WATCH && it.mediaType != "tv"
-                    },
-                    scrollBehavior,
-                    scrollBehaviorTopBar,
-                    navController,
-                    onLongActionMovieRequest = { item ->
-                        launchSheet(item)
-                    }
-                )
+                0 ->
+                    WatchlistMovies(
+                        items = items.filter {
+                            it.status == WatchStatus.WANT_TO_WATCH && it.mediaType != "tv"
+                        },
+                        scrollBehavior,
+                        scrollBehaviorTopBar,
+                        navController,
+                        onLongActionMovieRequest = { item ->
+                            launchSheet(item)
+                        }
+                    )
+
 
                 1 -> WatchingMovies(
                     items = items.filter {
@@ -205,9 +212,17 @@ fun MovieTabHomeScreen(
                 },
                 onMovieFinish = { id ->
                     if (id != null) {
+                        dialogTitle = "Rate this movie"
                         longPressedItemId = id
                         showRatingDialog = true
                     }
+                },
+                onUpdateRating = { rating, id ->
+                    dialogTitle = "Update rating"
+                    longPressedItemId = id
+                    originalRating = rating
+                    updateRating = true
+                    showRatingDialog = true
                 }
             )
         }
@@ -216,16 +231,24 @@ fun MovieTabHomeScreen(
 
     DialogBasic(
         show = showRatingDialog,
-        title = "Rate this movie",
+        title = dialogTitle,
         showDefaultActions = false,
-        onDismiss = { showRatingDialog = false },
+        onDismiss = {
+            showRatingDialog = false
+            updateRating = false
+        },
         content = {
             RateMovieDialogContent(
                 onCancel = { showRatingDialog = false },
+                updateRating = updateRating,
+                originalRating = originalRating,
                 onConfirm = { rating ->
                     longPressedItemId?.let {
                         viewModel.setUserRating(it, rating)
                         viewModel.finish(it)
+                    }
+                    if (updateRating) {
+                        SnackbarManager.show("User rating updated")
                     }
                 },
             )
