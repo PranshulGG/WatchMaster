@@ -278,10 +278,6 @@ fun MediaDetailPage(
                             ) {
                                 Surface(
                                     color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                                    border = BorderStroke(
-                                        width = 1.dp,
-                                        color = MaterialTheme.colorScheme.outlineVariant
-                                    ),
                                     shape = RoundedCornerShape(Radius.Medium),
                                     modifier = Modifier
                                         .fillMaxWidth()
