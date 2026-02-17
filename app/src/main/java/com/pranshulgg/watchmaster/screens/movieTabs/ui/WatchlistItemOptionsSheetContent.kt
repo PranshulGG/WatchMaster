@@ -47,6 +47,8 @@ fun WatchlistItemOptionsSheetContent(
                 leading = { SettingsTileIcon(R.drawable.play_arrow_24px) },
                 title = markAsActionLabel,
                 onClick = {
+                    hideSheet()
+
                     if (selectedMovieItem != null) {
                         when (selectedMovieItem.status) {
                             WatchStatus.WANT_TO_WATCH -> {
@@ -66,8 +68,6 @@ fun WatchlistItemOptionsSheetContent(
                             }
                         }
                     }
-
-                    hideSheet()
                 }
             ),
             if (selectedMovieItem?.status == WatchStatus.WATCHING) {
@@ -75,8 +75,8 @@ fun WatchlistItemOptionsSheetContent(
                     leading = { SettingsTileIcon(R.drawable.pause_24px) },
                     title = "Mark as interrupted",
                     onClick = {
-                        watchlistViewModel.interrupt(selectedMovieItem.id)
                         hideSheet()
+                        watchlistViewModel.interrupt(selectedMovieItem.id)
                     }
                 )
             } else null,
