@@ -25,7 +25,8 @@ class WatchlistRepository(
                 genreIds = item.genreIds,
                 releaseDate = item.releaseDate,
                 addedDate = Instant.now(),
-                avgRating = item.avg_rating
+                avgRating = item.avg_rating,
+                backdropPath = item.backdropPath
             )
         )
     }
