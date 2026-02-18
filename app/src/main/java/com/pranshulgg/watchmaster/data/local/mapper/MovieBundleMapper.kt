@@ -18,13 +18,11 @@ fun MovieBundle.toEntity(): MovieBundleEntity =
         backdrop_path = backdrop_path,
         genresJson = gson.toJson(genres),
         creditsJson = gson.toJson(credits),
-        videosJson = gson.toJson(videos),
         imagesJson = gson.toJson(images),
         watchProvidersJson = watchProviders?.let { gson.toJson(it) },
         similarJson = gson.toJson(similar),
         recommendationsJson = gson.toJson(recommendations),
         reviewsJson = gson.toJson(reviews),
-        releaseDatesJson = gson.toJson(releaseDates),
         cachedAt = System.currentTimeMillis()
     )
 
@@ -41,7 +39,6 @@ fun MovieBundleEntity.toDomain(): MovieBundle =
             object : TypeToken<List<Genre>>() {}.type
         ),
         credits = gson.fromJson(creditsJson, CreditsDto::class.java),
-        videos = gson.fromJson(videosJson, VideosDto::class.java),
         images = gson.fromJson(imagesJson, ImagesDto::class.java),
         watchProviders = watchProvidersJson?.let {
             gson.fromJson(it, WatchProvidersDto::class.java)
@@ -49,5 +46,4 @@ fun MovieBundleEntity.toDomain(): MovieBundle =
         similar = gson.fromJson(similarJson, MovieListDto::class.java),
         recommendations = gson.fromJson(recommendationsJson, MovieListDto::class.java),
         reviews = gson.fromJson(reviewsJson, ReviewsDto::class.java),
-        releaseDates = gson.fromJson(releaseDatesJson, ReleaseDatesDto::class.java)
     )
