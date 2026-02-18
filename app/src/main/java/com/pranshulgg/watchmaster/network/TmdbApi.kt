@@ -14,9 +14,7 @@ import com.pranshulgg.watchmaster.data.CreditsDto
 import com.pranshulgg.watchmaster.data.Genre
 import com.pranshulgg.watchmaster.data.ImagesDto
 import com.pranshulgg.watchmaster.data.MovieListDto
-import com.pranshulgg.watchmaster.data.ReleaseDatesDto
 import com.pranshulgg.watchmaster.data.ReviewsDto
-import com.pranshulgg.watchmaster.data.VideosDto
 import com.pranshulgg.watchmaster.data.WatchProvidersDto
 import retrofit2.http.Path
 import retrofit2.http.Url
@@ -38,6 +36,7 @@ data class TmdbResult(
     val poster_path: String?,
     val profile_path: String?,
     val known_for: List<KnownFor>?,
+    val backdrop_path: String?,
     @SerializedName("original_language")
     val originalLanguage: String?,
     @SerializedName("genre_ids")
@@ -76,7 +75,6 @@ data class MovieBundleDto(
     val genres: List<Genre>,
 
     val credits: CreditsDto,
-    val videos: VideosDto,
     val images: ImagesDto,
     val poster_path: String?,
     val backdrop_path: String?,
@@ -88,7 +86,6 @@ data class MovieBundleDto(
     val similar: MovieListDto,
     val recommendations: MovieListDto,
     val reviews: ReviewsDto,
-    val release_dates: ReleaseDatesDto
 )
 
 
@@ -110,6 +107,14 @@ interface TmdbApi {
         @Query("language") language: String = "en-US"
     ): Response<MovieBundleDto>
 
+
+    @GET("tv/{tv_id}/season/{season_count}")
+    suspend fun getWholeTvData(
+        @Path("tv_id") tvId: Long,
+        @Query("append_to_response") append: String =
+            "credits,videos,images,watch/providers,similar,recommendations,reviews,content_ratings,external_ids",
+        @Query("language") language: String = "en-US"
+    )
 
     companion object {
         private const val BASE = "https://api.themoviedb.org/3/"
