@@ -6,6 +6,7 @@ data class SearchItem(
     val title: String,
     val overview: String?,
     val posterPath: String?,
+    val backdropPath: String,
     val genreIds: List<Int>? = null,
     val releaseDate: String? = null,
     val originalLanguage: String? = "English",
