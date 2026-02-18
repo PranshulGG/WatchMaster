@@ -64,6 +64,7 @@ class SearchRepository(
                     title = title,
                     overview = r.overview,
                     posterPath = poster,
+                    backdropPath = r.backdrop_path ?: "",
                     genreIds = genreIds,
                     releaseDate = releaseDate,
                     originalLanguage = originalLanguage,
