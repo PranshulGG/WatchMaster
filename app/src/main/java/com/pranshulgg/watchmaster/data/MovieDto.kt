@@ -20,20 +20,6 @@ data class CrewMember(
     val profile_path: String?
 )
 
-
-data class VideosDto(
-    val results: List<VideoItem>
-)
-
-data class VideoItem(
-    val id: String,
-    val key: String,
-    val name: String,
-    val site: String,
-    val type: String
-)
-
-
 data class ImagesDto(
     val backdrops: List<ImageItem>,
     val posters: List<ImageItem>
@@ -95,18 +81,3 @@ data class ReviewItem(
     val url: String
 )
 
-data class ReleaseDatesDto(
-    val results: List<ReleaseDatesByCountry>
-)
-
-data class ReleaseDatesByCountry(
-    val iso_3166_1: String,
-    val release_dates: List<ReleaseDateInfo>
-)
-
-data class ReleaseDateInfo(
-    val certification: String?,
-    val iso_639_1: String?,
-    val release_date: String,
-    val type: Int
-)
