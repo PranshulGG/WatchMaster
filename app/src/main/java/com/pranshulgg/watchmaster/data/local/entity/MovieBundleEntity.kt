@@ -13,12 +13,10 @@ data class MovieBundleEntity(
     val backdrop_path: String?,
     val genresJson: String,
     val creditsJson: String,
-    val videosJson: String,
     val imagesJson: String,
     val watchProvidersJson: String?,
     val similarJson: String,
     val recommendationsJson: String,
     val reviewsJson: String,
-    val releaseDatesJson: String,
     val cachedAt: Long
 )
