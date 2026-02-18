@@ -13,6 +13,7 @@ data class WatchlistItemEntity(
     val title: String,
     val overview: String?,
     val posterPath: String?,
+    val backdropPath: String?,
     val genreIds: List<Int>?,
     val releaseDate: String?,
 
