@@ -166,7 +166,7 @@ class MainActivity : ComponentActivity() {
                                 )
                             ) { backStackEntry ->
                                 val id = backStackEntry.arguments!!.getLong("id")
-                                MediaDetailPage(movieId = id, navController)
+                                MediaDetailPage(id = id, navController)
                             }
 
                             composable(
