@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel
 
 class HomeNavViewModel : ViewModel() {
 
-    var currentDefaultSelectedTab = "movies"
+    var currentDefaultSelectedTab = "tv_series"
     var selectedTab = when (currentDefaultSelectedTab) {
         "home" -> 0
         "movies" -> 1
