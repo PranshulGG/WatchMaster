@@ -11,10 +11,14 @@ import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
 import com.pranshulgg.watchmaster.BuildConfig
 import com.pranshulgg.watchmaster.data.CreditsDto
+import com.pranshulgg.watchmaster.data.EpisodeListDto
 import com.pranshulgg.watchmaster.data.Genre
 import com.pranshulgg.watchmaster.data.ImagesDto
 import com.pranshulgg.watchmaster.data.MovieListDto
 import com.pranshulgg.watchmaster.data.ReviewsDto
+import com.pranshulgg.watchmaster.data.TvCreditsDto
+import com.pranshulgg.watchmaster.data.TvReviewsDto
+import com.pranshulgg.watchmaster.data.TvWatchProvidersDto
 import com.pranshulgg.watchmaster.data.WatchProvidersDto
 import retrofit2.http.Path
 import retrofit2.http.Url
@@ -88,6 +92,22 @@ data class MovieBundleDto(
     val reviews: ReviewsDto,
 )
 
+data class TvBundleDto(
+    val id: Long,
+    val name: String,
+    val overview: String,
+    val runtime: Int?,
+    val poster_path: String?,
+    val backdrop_path: String?,
+    val genres: List<Genre>,
+    val season_number: Int,
+    val credits: TvCreditsDto,
+    @SerializedName("watch/providers")
+    val watchProviders: TvWatchProvidersDto?,
+    val reviews: TvReviewsDto,
+    val episodes: EpisodeListDto,
+)
+
 
 interface TmdbApi {
     @GET
@@ -111,10 +131,11 @@ interface TmdbApi {
     @GET("tv/{tv_id}/season/{season_count}")
     suspend fun getWholeTvData(
         @Path("tv_id") tvId: Long,
+        @Path("season_number") seasonNumber: Int,
         @Query("append_to_response") append: String =
             "credits,videos,images,watch/providers,similar,recommendations,reviews,content_ratings,external_ids",
         @Query("language") language: String = "en-US"
-    )
+    ): Response<TvBundleDto>
 
     companion object {
         private const val BASE = "https://api.themoviedb.org/3/"
