@@ -5,13 +5,15 @@ import androidx.annotation.RequiresApi
 import com.pranshulgg.watchmaster.data.local.dao.WatchlistDao
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 import com.pranshulgg.watchmaster.model.WatchStatus
+import com.pranshulgg.watchmaster.network.TmdbApi
 import com.pranshulgg.watchmaster.screens.search.SearchItem
 import kotlinx.coroutines.flow.Flow
 import java.time.Instant
 
 class WatchlistRepository(
     private val dao: WatchlistDao,
-    private val movieRepository: MovieRepository
+    private val movieRepository: MovieRepository,
+    private val tvRepository: TvRepository? = null
 ) {
 
     suspend fun addFromSearch(item: SearchItem) {
@@ -68,6 +70,7 @@ class WatchlistRepository(
     suspend fun deleteItem(id: Long) {
         dao.deleteById(id)
         movieRepository.deleteCachedMovie(id)
+        tvRepository?.deleteCachedTv(id)
     }
 
     suspend fun deleteFinishedItems() = dao.deleteFinished()
