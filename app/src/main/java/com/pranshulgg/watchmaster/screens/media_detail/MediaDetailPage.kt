@@ -89,13 +89,16 @@ import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.data.local.WatchMasterDatabase
 import com.pranshulgg.watchmaster.data.local.entity.MovieBundle
 import com.pranshulgg.watchmaster.data.repository.MovieRepository
+import com.pranshulgg.watchmaster.data.repository.TvRepository
 import com.pranshulgg.watchmaster.data.repository.WatchlistRepository
 import com.pranshulgg.watchmaster.model.WatchStatus
 import com.pranshulgg.watchmaster.models.MovieDetailsViewModel
+import com.pranshulgg.watchmaster.models.TvDetailsViewModel
 import com.pranshulgg.watchmaster.models.WatchlistViewModel
 import com.pranshulgg.watchmaster.models.WatchlistViewModelFactory
 import com.pranshulgg.watchmaster.network.TmdbApi
 import com.pranshulgg.watchmaster.screens.media_detail.factory.MovieDetailsViewModelFactory
+import com.pranshulgg.watchmaster.screens.media_detail.factory.TvDetailsViewModelFactory
 import com.pranshulgg.watchmaster.screens.media_detail.ui.CastItem
 import com.pranshulgg.watchmaster.screens.media_detail.ui.MovieDetailActionsTop
 import com.pranshulgg.watchmaster.screens.media_detail.ui.MovieDetailFloatingToolBar
@@ -119,17 +122,18 @@ import kotlin.math.roundToInt
 )
 @Composable
 fun MediaDetailPage(
-    movieId: Long,
+    id: Long,
     navController: NavController
 ) {
     val viewModel: MovieDetailsViewModel = viewModel(
         factory = MovieDetailsViewModelFactory(LocalContext.current)
     )
-    LaunchedEffect(movieId) {
-        viewModel.load(movieId)
+
+
+    LaunchedEffect(id) {
+        viewModel.load(id)
     }
 
-    val movie = viewModel.state
 
     val loading = viewModel.loading
     var minLoadingDone by remember { mutableStateOf(false) }
@@ -161,14 +165,15 @@ fun MediaDetailPage(
         )
     }
 
+
     val factory = remember {
         WatchlistViewModelFactory(repository)
     }
 
     val watchlistViewModel: WatchlistViewModel = viewModel(factory = factory)
 
-    LaunchedEffect(movieId) {
-        watchlistViewModel.observeItem(movieId)
+    LaunchedEffect(id) {
+        watchlistViewModel.observeItem(id)
     }
 
     val liveItem by watchlistViewModel.currentItem.collectAsStateWithLifecycle()
@@ -191,17 +196,17 @@ fun MediaDetailPage(
             if (!showLoading) {
                 MovieDetailFloatingToolBar(
                     scrollBehavior,
-                    movieId,
+                    id,
                     liveItem,
-                    startWatching = { watchlistViewModel.start(movieId) },
-                    resetWatching = { watchlistViewModel.reset(movieId) },
+                    startWatching = { watchlistViewModel.start(id) },
+                    resetWatching = { watchlistViewModel.reset(id) },
                     finishWatching = { showRatingDialog = true },
-                    interruptWatching = { watchlistViewModel.interrupt(movieId) },
+                    interruptWatching = { watchlistViewModel.interrupt(id) },
                     onDeleteMovie = {
                         showConfirmationDialog = true
                     },
                     onMoviePin = {
-                        watchlistViewModel.setPinned(movieId, isMoviePinned)
+                        watchlistViewModel.setPinned(id, isMoviePinned)
                         SnackbarManager.show(if (isMoviePinned) "Movie pinned" else "Movie unpinned")
                     },
                     isPinned = isMoviePinned,
@@ -241,7 +246,7 @@ fun MediaDetailPage(
                         isFinished = liveItem?.status == WatchStatus.FINISHED,
                         userRating = liveItem?.userRating,
                         onUpdateRating = { newRating ->
-                            watchlistViewModel.setUserRating(movieId, newRating)
+                            watchlistViewModel.setUserRating(id, newRating)
                             scope.launch {
                                 SnackbarManager.show("User rating updated")
                             }
@@ -357,8 +362,8 @@ fun MediaDetailPage(
                 RateMovieDialogContent(
                     onCancel = { showRatingDialog = false },
                     onConfirm = { rating ->
-                        watchlistViewModel.setUserRating(movieId, rating)
-                        watchlistViewModel.finish(movieId)
+                        watchlistViewModel.setUserRating(id, rating)
+                        watchlistViewModel.finish(id)
                     }
                 )
             }
@@ -374,7 +379,7 @@ fun MediaDetailPage(
             note = existingNoteContent ?: ""
         },
         onConfirm = {
-            watchlistViewModel.setNote(movieId, note)
+            watchlistViewModel.setNote(id, note)
         },
         confirmText = "Save",
         content = {
@@ -394,7 +399,7 @@ fun MediaDetailPage(
         message = "Are you sure you want to delete this movie? this action cannot be undone",
         confirmText = "Confirm",
         onConfirm = {
-            watchlistViewModel.delete(movieId)
+            watchlistViewModel.delete(id)
             SnackbarManager.show("Movie deleted ${liveItem?.title}")
             navController.popBackStack()
         },
