@@ -100,7 +100,10 @@ fun MainScreen(
         ) {
 
             when (selectedItem) {
-                0 -> HomeTabScreen()
+                0 -> HomeTabScreen(
+                    navController
+                )
+
                 1 -> MovieTabHomeScreen(
                     navController,
                     motionScheme,
