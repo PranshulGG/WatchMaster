@@ -10,5 +10,5 @@ data class SearchItem(
     val genreIds: List<Int>? = null,
     val releaseDate: String? = null,
     val originalLanguage: String? = "English",
-    val avg_rating: Double? = null
+    val avg_rating: Double? = null,
 )
