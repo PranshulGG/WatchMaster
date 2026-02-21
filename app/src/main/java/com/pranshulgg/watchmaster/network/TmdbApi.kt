@@ -20,6 +20,7 @@ import com.pranshulgg.watchmaster.data.TvCreditsDto
 import com.pranshulgg.watchmaster.data.TvReviewsDto
 import com.pranshulgg.watchmaster.data.TvWatchProvidersDto
 import com.pranshulgg.watchmaster.data.WatchProvidersDto
+import com.pranshulgg.watchmaster.screens.search.SearchTvEntity
 import retrofit2.http.Path
 import retrofit2.http.Url
 import java.util.concurrent.TimeUnit
@@ -108,6 +109,11 @@ data class TvBundleDto(
     val episodes: EpisodeListDto,
 )
 
+data class TvSeasonsResponse(
+    val id: Long,
+    val seasons: List<SearchTvEntity>
+)
+
 
 interface TmdbApi {
     @GET
@@ -118,6 +124,13 @@ interface TmdbApi {
         @Query("include_adult") includeAdult: Boolean = false,
         @Query("language") language: String = "en-US"
     ): Response<MultiSearchResponse>
+
+    @GET("tv/{tv_id}")
+    suspend fun getTvSeasons(
+        @Path("tv_id") tvId: Long,
+        @Query("language") language: String = "en-US"
+    ): Response<TvSeasonsResponse>
+
 
     @GET("movie/{movie_id}")
     suspend fun getWholeMovieData(
