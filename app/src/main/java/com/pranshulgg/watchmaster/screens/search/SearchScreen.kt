@@ -231,7 +231,11 @@ fun SearchScreen(
                                     if (viewModelWatchList.exists(item.id)) {
                                         SnackbarManager.show("Already in watchlist")
                                     } else {
+
                                         selectedItem.value = item
+                                        if (item.mediaType == "tv") {
+                                            viewModel.fetchSeasonData(item.id)
+                                        }
                                         showDialog.value = true
                                     }
                                 }
@@ -272,6 +276,8 @@ fun SearchScreen(
             ) {
                 AddToWatchlistDialogContent(
                     item = selectedItem.value!!,
+                    seasonLoading = viewModel.seasonLoading,
+                    seasonData = viewModel.seasonData,
                     onCancel = { closeDialog() },
                     onConfirm = {
                         viewModel.addToWatchlist(selectedItem.value!!)
