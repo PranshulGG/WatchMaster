@@ -68,8 +68,18 @@ class SearchRepository(
                     genreIds = genreIds,
                     releaseDate = releaseDate,
                     originalLanguage = originalLanguage,
-                    avg_rating = r.vote_average
+                    avg_rating = r.vote_average,
+//                    seasons = r.seasons
                 )
             } ?: emptyList()
     }
+
+
+    suspend fun getSeasonData(tvId: Long): List<SearchTvEntity> {
+        val resp = api.getTvSeasons(tvId)
+        if (!resp.isSuccessful) return emptyList()
+        return resp.body()?.seasons ?: emptyList()
+    }
+
+
 }
