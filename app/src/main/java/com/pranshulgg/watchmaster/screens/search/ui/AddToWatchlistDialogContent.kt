@@ -51,6 +51,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.data.getGenreNames
 import com.pranshulgg.watchmaster.screens.search.SearchItem
+import com.pranshulgg.watchmaster.screens.search.SearchTvEntity
 import com.pranshulgg.watchmaster.ui.components.PosterPlaceholder
 import com.pranshulgg.watchmaster.ui.components.rememberScrollbarAlpha
 import com.pranshulgg.watchmaster.ui.components.verticalColumnScrollbar
@@ -59,7 +60,13 @@ import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun AddToWatchlistDialogContent(item: SearchItem, onCancel: () -> Unit, onConfirm: () -> Unit) {
+fun AddToWatchlistDialogContent(
+    item: SearchItem,
+    onCancel: () -> Unit,
+    onConfirm: () -> Unit,
+    seasonLoading: Boolean = true,
+    seasonData: List<SearchTvEntity>
+) {
     val scrollState = rememberScrollState()
     val scrollbarAlpha = rememberScrollbarAlpha(scrollState)
 
@@ -69,6 +76,7 @@ fun AddToWatchlistDialogContent(item: SearchItem, onCancel: () -> Unit, onConfir
     }
 
     val genreList = item.genreIds?.let { getGenreNames(it) }
+
 //    val btnSize = ButtonDefaults.MediumContainerHeight
 
     Column(
@@ -163,6 +171,10 @@ fun AddToWatchlistDialogContent(item: SearchItem, onCancel: () -> Unit, onConfir
                 GenreChip(it)
             }
 
+        }
+
+        seasonData?.forEach {
+            Text(it.name)
         }
 
         Row(
