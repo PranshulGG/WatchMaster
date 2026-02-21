@@ -36,7 +36,7 @@ fun HomeTabScreen(
                 Text("Nothing here yet")
 
                 Button(onClick = {
-                    navController.navigate(NavRoutes.mediaDetail(243875, false))
+                    navController.navigate(NavRoutes.mediaDetail(243875))
                 }) {
                     Text("GO TO IDK TV")
                 }
