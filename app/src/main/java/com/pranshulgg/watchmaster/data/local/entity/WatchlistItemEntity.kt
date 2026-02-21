@@ -34,4 +34,5 @@ data class WatchlistItemEntity(
     val notes: String? = null,
 
     val folder: String? = null
+
 )
