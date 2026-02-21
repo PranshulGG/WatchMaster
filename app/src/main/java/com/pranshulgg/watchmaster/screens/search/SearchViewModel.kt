@@ -26,6 +26,12 @@ class SearchViewModel(
     var showNoResultsSnack by mutableStateOf(false)
         private set
 
+    var seasonData by mutableStateOf<List<SearchTvEntity>>(emptyList())
+        private set
+
+    var seasonLoading by mutableStateOf(false)
+        private set
+
 
     fun onQueryChange(q: String) {
         query = q
@@ -107,6 +113,19 @@ class SearchViewModel(
 
             showNoResultsSnack = res.isEmpty()
         }
+    }
+
+
+    fun fetchSeasonData(tvId: Long) {
+        viewModelScope.launch {
+            seasonLoading = true
+            seasonData = repo.getSeasonData(tvId)
+            seasonLoading = false
+        }
+    }
+
+    fun clearSeasonData() {
+        seasonData = emptyList()
     }
 
 
