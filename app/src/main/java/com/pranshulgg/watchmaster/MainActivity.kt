@@ -130,7 +130,7 @@ class MainActivity : ComponentActivity() {
                                 .background(MaterialTheme.colorScheme.surfaceContainer),
                             navController = navController,
 //                            startDestination = NavRoutes.mediaDetail(10681),
-                            startDestination = NavRoutes.MAIN,
+                            startDestination = NavRoutes.SEARCH,
                             enterTransition = {
                                 NavTransitions.enter(motionScheme)
                             },
