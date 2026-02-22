@@ -397,7 +397,12 @@ fun SplitButtonWithDropdownMenuSample(seasonData: List<SearchTvEntity>) {
                         selectedContainerColor = MaterialTheme.colorScheme.tertiaryContainer
                     ),
                     selected = index == selectedSeason,
-                    checkedLeadingIcon = { Symbol(R.drawable.check_24px) },
+                    checkedLeadingIcon = {
+                        Symbol(
+                            R.drawable.check_24px,
+                            color = MaterialTheme.colorScheme.onTertiaryContainer
+                        )
+                    },
                     text = {
                         Text(
                             item.name,
