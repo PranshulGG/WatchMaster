@@ -15,17 +15,19 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun Symbol(
     icon: Int,
+    modifier: Modifier = Modifier,
+
     desc: String? = null,
     color: Color = MaterialTheme.colorScheme.onSurface,
     size: Dp = 24.dp,
-    paddingStart: Dp = 0.dp
+    paddingStart: Dp = 0.dp,
 ) {
     Box(modifier = Modifier.padding(start = paddingStart)) {
         Icon(
             painter = painterResource(icon),
             contentDescription = desc,
             tint = color,
-            modifier = Modifier.size(size)
+            modifier = modifier.size(size)
         )
     }
 }
