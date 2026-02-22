@@ -69,7 +69,6 @@ fun SearchFloatingBarContent(
         ),
 
         trailingIcon = {
-
             if (query.isNotEmpty()) {
                 Box(Modifier.padding(end = 6.dp)) {
                     IconButton(
