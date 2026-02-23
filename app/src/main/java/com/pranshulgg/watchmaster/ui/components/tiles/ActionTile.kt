@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.pranshulgg.watchmaster.utils.Radius
 
 @Composable
 fun ActionTile(
@@ -19,13 +20,15 @@ fun ActionTile(
     leading: @Composable (() -> Unit)? = null,
     shapes: RoundedCornerShape,
     onClick: () -> Unit,
-    colorDesc: Color = Color.Unspecified,
+    colorDesc: Color = MaterialTheme.colorScheme.onSurfaceVariant,
     danger: Boolean = false,
-    itemBgColor: Color
+    itemBgColor: Color,
+    selected: Boolean = false,
+    trailing: @Composable (() -> Unit)? = null
 ) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
-        shape = shapes,
+        shape = if (selected) RoundedCornerShape(Radius.Large) else shapes,
     ) {
         ListItem(
             modifier = Modifier.clickable(
@@ -33,20 +36,25 @@ fun ActionTile(
             ),
             leadingContent = leading,
             colors = ListItemDefaults.colors(
-                containerColor = if (danger) MaterialTheme.colorScheme.errorContainer else itemBgColor
+                containerColor = if (selected) MaterialTheme.colorScheme.secondaryContainer else if (danger) MaterialTheme.colorScheme.errorContainer else itemBgColor
             ),
             headlineContent = {
                 Text(
                     headline,
-                    color = if (danger) MaterialTheme.colorScheme.onErrorContainer else MaterialTheme.colorScheme.onSurface
+                    color = if (selected) MaterialTheme.colorScheme.onSecondaryContainer else if (danger) MaterialTheme.colorScheme.onErrorContainer else MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.bodyLarge
                 )
             },
             supportingContent = {
-
                 if (description != null) {
-                    Text(description, color = colorDesc)
+                    Text(
+                        description,
+                        color = colorDesc,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
                 }
-            }
+            },
+            trailingContent = trailing
         )
     }
 }
