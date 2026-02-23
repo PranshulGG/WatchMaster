@@ -4,7 +4,11 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
+import com.pranshulgg.watchmaster.data.WatchlistWithSeasons
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
+import com.pranshulgg.watchmaster.data.local.entity.WatchlistTvEntity
+import com.pranshulgg.watchmaster.data.repository.WatchlistRepository
 import com.pranshulgg.watchmaster.model.WatchStatus
 import kotlinx.coroutines.flow.Flow
 import java.time.Instant
@@ -17,6 +21,11 @@ interface WatchlistDao {
 
     @Query("SELECT * FROM watchlist ORDER BY id DESC")
     fun getAll(): Flow<List<WatchlistItemEntity>>
+
+    @Transaction
+    @Query("SELECT * FROM watchlist ORDER BY id DESC")
+    fun getAllWithSeasons(): Flow<List<WatchlistWithSeasons>>
+
 
     @Query(
         """
@@ -60,4 +69,13 @@ interface WatchlistDao {
     @Query("UPDATE watchlist SET notes = :note WHERE id = :id")
     suspend fun setUserNote(id: Long, note: String)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertTvSeasons(seasons: List<WatchlistTvEntity>)
+
+    @Query("SELECT * FROM watchlist_tv WHERE watchlistId = :id")
+    fun getSeasonsForItem(id: Long): Flow<List<WatchlistTvEntity>>
+
+    @Transaction
+    @Query("SELECT * FROM watchlist WHERE id = :id LIMIT 1")
+    fun getByIdWithSeasons(id: Long): Flow<WatchlistWithSeasons?>
 }
