@@ -81,7 +81,9 @@ sealed class SettingTile {
         val leading: (@Composable (() -> Unit))? = null,
         val onClick: () -> Unit,
         val colorDesc: Color = Color.Unspecified,
-        val danger: Boolean = false
+        val danger: Boolean = false,
+        val selected: Boolean = false,
+        val trailing: (@Composable (() -> Unit))? = null,
     ) : SettingTile()
 
 
@@ -212,7 +214,9 @@ fun SettingSection(
                     onClick = tile.onClick,
                     colorDesc = tile.colorDesc,
                     danger = tile.danger,
-                    itemBgColor = itemBgColor
+                    itemBgColor = itemBgColor,
+                    selected = tile.selected,
+                    trailing = tile.trailing
                 )
 
                 is SettingTile.SwitchTile -> SwitchTile(
