@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.pranshulgg.watchmaster.data.local.entity.WatchlistTvEntity
 import com.pranshulgg.watchmaster.data.repository.WatchlistRepository
 import com.pranshulgg.watchmaster.model.SearchType
 import kotlinx.coroutines.launch
@@ -26,7 +27,7 @@ class SearchViewModel(
     var showNoResultsSnack by mutableStateOf(false)
         private set
 
-    var seasonData by mutableStateOf<List<SearchTvEntity>>(emptyList())
+    var seasonData by mutableStateOf<List<WatchlistTvEntity>>(emptyList())
         private set
 
     var seasonLoading by mutableStateOf(false)
@@ -36,6 +37,9 @@ class SearchViewModel(
     fun onQueryChange(q: String) {
         query = q
     }
+
+    private val seasonCache = mutableMapOf<Long, List<WatchlistTvEntity>>()
+
 
     private val mockResults = listOf(
         SearchItem(
@@ -96,11 +100,11 @@ class SearchViewModel(
         ),
     )
 
-
-    init {
-        results = mockResults
-        loading = false
-    }
+//
+//    init {
+//        results = mockResults
+//        loading = false
+//    }
 
     fun search(type: SearchType = SearchType.MULTI) {
         if (query.isBlank()) return
@@ -117,21 +121,23 @@ class SearchViewModel(
 
 
     fun fetchSeasonData(tvId: Long) {
+        seasonCache[tvId]?.let {
+            seasonData = it
+            return
+        }
+
         viewModelScope.launch {
             seasonLoading = true
-            seasonData = repo.getSeasonData(tvId)
+            val data = repo.getSeasonData(tvId)
+            seasonCache[tvId] = data
+            seasonData = data
             seasonLoading = false
         }
     }
 
-    fun clearSeasonData() {
-        seasonData = emptyList()
-    }
-
-
-    fun addToWatchlist(item: SearchItem) {
+    fun addToWatchlist(item: SearchItem, tvData: List<WatchlistTvEntity> = emptyList()) {
         viewModelScope.launch {
-            watchlistRepository.addFromSearch(item)
+            watchlistRepository.addFromSearch(item, tvData)
         }
     }
 
