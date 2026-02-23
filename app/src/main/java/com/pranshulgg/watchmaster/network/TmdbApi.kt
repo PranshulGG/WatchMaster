@@ -20,7 +20,7 @@ import com.pranshulgg.watchmaster.data.TvCreditsDto
 import com.pranshulgg.watchmaster.data.TvReviewsDto
 import com.pranshulgg.watchmaster.data.TvWatchProvidersDto
 import com.pranshulgg.watchmaster.data.WatchProvidersDto
-import com.pranshulgg.watchmaster.screens.search.SearchTvEntity
+import com.pranshulgg.watchmaster.data.local.entity.WatchlistTvEntity
 import retrofit2.http.Path
 import retrofit2.http.Url
 import java.util.concurrent.TimeUnit
@@ -111,7 +111,7 @@ data class TvBundleDto(
 
 data class TvSeasonsResponse(
     val id: Long,
-    val seasons: List<SearchTvEntity>
+    val seasons: List<WatchlistTvEntity>
 )
 
 
