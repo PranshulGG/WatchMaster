@@ -1,23 +1,19 @@
 package com.pranshulgg.watchmaster.screens.search.ui
 
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,99 +22,51 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonGroup
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuGroup
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.DropdownMenuPopup
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MenuDefaults
-import androidx.compose.material3.MenuGroupShapes
-import androidx.compose.material3.MenuItemColors
-import androidx.compose.material3.MenuItemShapes
-import androidx.compose.material3.PlainTooltip
-import androidx.compose.material3.SplitButtonDefaults
-import androidx.compose.material3.SplitButtonLayout
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TooltipAnchorPosition
-import androidx.compose.material3.TooltipBox
-import androidx.compose.material3.TooltipDefaults
-import androidx.compose.material3.rememberTooltipState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.util.fastForEachIndexed
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.data.getGenreNames
 import com.pranshulgg.watchmaster.screens.search.SearchItem
-import com.pranshulgg.watchmaster.screens.search.SearchTvEntity
+import com.pranshulgg.watchmaster.data.local.entity.WatchlistTvEntity
+import com.pranshulgg.watchmaster.ui.components.ActionBottomSheet
 import com.pranshulgg.watchmaster.ui.components.PosterPlaceholder
+import com.pranshulgg.watchmaster.ui.components.SettingSection
+import com.pranshulgg.watchmaster.ui.components.SettingTile
 import com.pranshulgg.watchmaster.ui.components.rememberScrollbarAlpha
 import com.pranshulgg.watchmaster.ui.components.verticalColumnScrollbar
 import com.pranshulgg.watchmaster.utils.Radius
 import com.pranshulgg.watchmaster.utils.Symbol
-
-
-private val mockResults = listOf(
-    SearchTvEntity(
-        season_number = 1,
-        episode_count = 10,
-        name = "Season 1",
-        poster_path = "/3z2mYFxUkzanb2eeIcVyfJq0G3q.jpg",
-        air_date = "2024-10-17",
-    ),
-    SearchTvEntity(
-        season_number = 2,
-        episode_count = 10,
-        name = "Season 2",
-        poster_path = "/3z2mYFxUkzanb2eeIcVyfJq0G3q.jpg",
-        air_date = "2024-10-17",
-    ),
-    SearchTvEntity(
-        season_number = 3,
-        episode_count = 10,
-        name = "Season 3",
-        poster_path = "/3z2mYFxUkzanb2eeIcVyfJq0G3q.jpg",
-        air_date = "2024-10-17",
-    ),
-    SearchTvEntity(
-        season_number = 4,
-        episode_count = 10,
-        name = "Season 4",
-        poster_path = "/3z2mYFxUkzanb2eeIcVyfJq0G3q.jpg",
-        air_date = "2024-10-17",
-    )
-)
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun AddToWatchlistDialogContent(
+fun AddToWatchlistSheetContent(
     item: SearchItem,
     onCancel: () -> Unit,
     onConfirm: () -> Unit,
     seasonLoading: Boolean = true,
-    seasonData: List<SearchTvEntity> = emptyList()
+    seasonData: List<WatchlistTvEntity> = emptyList()
 ) {
     val scrollState = rememberScrollState()
     val scrollbarAlpha = rememberScrollbarAlpha(scrollState)
@@ -197,6 +145,13 @@ fun AddToWatchlistDialogContent(
         }
 
         Spacer(Modifier.height(16.dp))
+        if (!seasonLoading) {
+            SeasonBtn(seasonData)
+        }
+        Spacer(Modifier.height(12.dp))
+        HorizontalDivider()
+        Spacer(Modifier.height(12.dp))
+
         Box(
             Modifier
                 .weight(1f, fill = false)
@@ -215,20 +170,19 @@ fun AddToWatchlistDialogContent(
             }
         }
 
-//        if (!seasonLoading) {
-        SplitButtonWithDropdownMenuSample(mockResults)
-//        }
+
         Spacer(Modifier.height(12.dp))
-//
-//        FlowRow(
-//            verticalArrangement = Arrangement.spacedBy(6.dp),
-//            horizontalArrangement = Arrangement.spacedBy(6.dp)
-//        ) {
-//            genreList?.forEach {
-//                GenreChip(it)
-//            }
-//
-//        }
+
+        FlowRow(
+            verticalArrangement = Arrangement.spacedBy(6.dp),
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            genreList?.forEach {
+                GenreChip(it)
+            }
+
+        }
+        Spacer(Modifier.height(16.dp))
 
 //        seasonData?.forEach {
 //            Text(it.name)
@@ -274,7 +228,7 @@ fun AddToWatchlistDialogContent(
                             .heightIn(size)
                             .animateWidth(interactionSources[1]),
                         onClick = {
-//                            onConfirm()
+                            onConfirm()
                         },
                         shapes = ButtonDefaults.shapes(),
                         contentPadding = ButtonDefaults.contentPaddingFor(size),
@@ -293,6 +247,28 @@ fun AddToWatchlistDialogContent(
 
 }
 
+@Composable
+private fun GenreChip(text: String) {
+    val schemeColor = MaterialTheme.colorScheme
+
+    Surface(
+        color = schemeColor.tertiaryContainer,
+        shape = CircleShape
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(start = 8.dp, end = 8.dp)
+        ) {
+            Text(
+                text,
+                color = schemeColor.onTertiaryContainer,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
+    }
+}
 
 @Composable
 private fun StarDateChip(text: String, isDate: Boolean = false) {
@@ -324,98 +300,90 @@ private fun StarDateChip(text: String, isDate: Boolean = false) {
 }
 
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun SplitButtonWithDropdownMenuSample(seasonData: List<SearchTvEntity>) {
-    var checked by remember { mutableStateOf(false) }
+private fun SeasonBtn(seasonData: List<WatchlistTvEntity>) {
     var selectedSeason by remember { mutableIntStateOf(0) }
+    val size = ButtonDefaults.MediumContainerHeight
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val scope = rememberCoroutineScope()
+
+
     Box(
+        modifier = Modifier.fillMaxWidth(),
+        contentAlignment = Alignment.Center
     ) {
-        SplitButtonLayout(
-            leadingButton = {
-                SplitButtonDefaults.TonalLeadingButton(onClick = { /* Do Nothing */ }) {
-                    Text(seasonData[selectedSeason].name)
+        FilledTonalButton(
+            modifier = Modifier
+                .heightIn(size)
+                .fillMaxWidth(),
+            shapes = ButtonDefaults.shapes(),
+            onClick = {
+                scope.launch {
+                    sheetState.show()
                 }
             },
-            trailingButton = {
-                val description = "Toggle Button"
-                TooltipBox(
-                    positionProvider =
-                        TooltipDefaults.rememberTooltipPositionProvider(
-                            TooltipAnchorPosition.Above
-                        ),
-                    tooltip = { PlainTooltip { Text(description) } },
-                    state = rememberTooltipState(),
-                ) {
-                    SplitButtonDefaults.TonalTrailingButton(
-                        checked = checked,
-                        onCheckedChange = { checked = it },
-                        modifier =
-                            Modifier.semantics {
-                                stateDescription = if (checked) "Expanded" else "Collapsed"
-                                contentDescription = description
-                            },
-                    ) {
-                        val rotation: Float by
-                        animateFloatAsState(
-                            targetValue = if (checked) 180f else 0f,
-                            label = "Trailing Icon Rotation",
-                        )
-                        Box(
-                            modifier =
-                                Modifier
-                                    .size(SplitButtonDefaults.TrailingIconSize)
-                                    .graphicsLayer {
-                                        this.rotationZ = rotation
-                                    },
-                        ) {
-                            Symbol(R.drawable.close_24px)
-
-                        }
-
-                    }
-                }
-            },
-        )
-        DropdownMenu(
-            expanded = checked,
-            onDismissRequest = { checked = false },
-            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-            shape = RoundedCornerShape(Radius.Large),
+            contentPadding = ButtonDefaults.contentPaddingFor(size)
         ) {
-
-
-            seasonData.forEachIndexed { index, item ->
-                DropdownMenuItem(
-                    modifier = Modifier.padding(horizontal = 4.dp),
-                    shapes = MenuItemShapes(
-                        MenuDefaults.standaloneItemShape,
-                        MenuDefaults.selectedItemShape
-                    ),
-                    colors = MenuDefaults.selectableItemColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                        selectedContainerColor = MaterialTheme.colorScheme.tertiaryContainer
-                    ),
-                    selected = index == selectedSeason,
-                    checkedLeadingIcon = {
-                        Symbol(
-                            R.drawable.check_24px,
-                            color = MaterialTheme.colorScheme.onTertiaryContainer
-                        )
-                    },
-                    text = {
-                        Text(
-                            item.name,
-                            color = if (index == selectedSeason) MaterialTheme.colorScheme.onTertiaryContainer else MaterialTheme.colorScheme.onSurface
-                        )
-                    },
-                    onClick = {
-                        selectedSeason = index
-                        checked = false
-                    },
-                )
-
-            }
+            Symbol(
+                R.drawable.list_alt_24px,
+                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                size = ButtonDefaults.iconSizeFor(size)
+            )
+            Spacer(Modifier.size(ButtonDefaults.iconSpacingFor(size)))
+            Text(seasonData[selectedSeason].name, style = ButtonDefaults.textStyleFor(size))
         }
+    }
+
+
+    ActionBottomSheet(
+        sheetState = sheetState,
+        onCancel = {
+            scope.launch { sheetState.hide() }
+        },
+        onConfirm = {
+            scope.launch { sheetState.hide() }
+        },
+        showActions = false,
+    ) {
+        SettingSection(
+            title = "All seasons",
+            isModalOption = true,
+            tiles = seasonData.mapIndexed { index, item ->
+                SettingTile.ActionTile(
+                    title = item.name,
+                    leading = {
+                        if (index == selectedSeason) {
+                            Symbol(
+                                R.drawable.check_24px,
+                                color = MaterialTheme.colorScheme.onSecondaryContainer
+                            )
+                        }
+                    },
+                    description = item.air_date,
+                    selected = index == selectedSeason,
+                    onClick = {
+                        scope.launch { sheetState.hide() }
+                        selectedSeason = index
+                    },
+                    trailing = {
+                        Surface(
+                            color = if (index == selectedSeason) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.surfaceBright,
+                            shape = RoundedCornerShape(if (index == selectedSeason) Radius.Small else Radius.Full)
+                        ) {
+                            Text(
+                                item.episode_count.toString() + " episodes",
+                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
+                                color = if (index == selectedSeason) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.onSurface,
+                                style = MaterialTheme.typography.labelMedium
+                            )
+                        }
+                    },
+                    colorDesc = if (index == selectedSeason) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        )
+
+
     }
 }
