@@ -1,6 +1,5 @@
 package com.pranshulgg.watchmaster.screens.search
 
-import android.graphics.Movie
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -79,7 +78,7 @@ import com.pranshulgg.watchmaster.helpers.provideWatchlistRepository
 import com.pranshulgg.watchmaster.model.SearchType
 import com.pranshulgg.watchmaster.models.WatchlistViewModel
 import com.pranshulgg.watchmaster.models.WatchlistViewModelFactory
-import com.pranshulgg.watchmaster.screens.search.ui.AddToWatchlistDialogContent
+import com.pranshulgg.watchmaster.screens.search.ui.AddToWatchlistSheetContent
 import com.pranshulgg.watchmaster.screens.search.ui.SearchFloatingBarContent
 import com.pranshulgg.watchmaster.screens.search.ui.SearchRow
 import com.pranshulgg.watchmaster.ui.components.ActionBottomSheet
@@ -235,12 +234,11 @@ fun SearchScreen(
                                     } else {
 
                                         selectedItem.value = item
-//                                        if (item.mediaType == "tv") {
-//                                            viewModel.fetchSeasonData(item.id)
-//                                        }
-                                        scope.launch {
-                                            sheetState.show()
+                                        if (item.mediaType == "tv") {
+                                            viewModel.fetchSeasonData(item.id)
                                         }
+                                        sheetState.show()
+
                                     }
                                 }
                             }
@@ -259,74 +257,37 @@ fun SearchScreen(
 
 
     val closeSheet = {
-        scope.launch { sheetState.hide() }
-        viewModel.clearSeasonData()
-        selectedItem.value = null
+        scope.launch {
+            sheetState.hide()
+        }
     }
-//
-//    if (showDialog.value && selectedItem.value != null) {
-//        Dialog(
-//            onDismissRequest = {
-//                closeDialog()
-//            }
-//        ) {
-//
-//            Surface(
-//                modifier = Modifier
-//                    .width(300.dp)
-//                    .heightIn(max = 500.dp),
-//                shape = RoundedCornerShape(26.dp),
-//                color = MaterialTheme.colorScheme.surfaceContainerHigh,
-//                shadowElevation = 6.dp
-//            ) {
-//                AddToWatchlistDialogContent(
-//                    item = selectedItem.value!!,
-//                    seasonLoading = viewModel.seasonLoading,
-//                    seasonData = viewModel.seasonData,
-//                    onCancel = {
-//                        closeDialog()
-//                        viewModel.clearSeasonData()
-//                    },
-//                    onConfirm = {
-//                        viewModel.addToWatchlist(selectedItem.value!!)
-//                        closeDialog()
-//                        SnackbarManager.show(
-//                            "Added to watchlist",
-//                            actionLabel = "View"
-//                        ) { navController.popBackStack() }
-//                    }
-//                )
-//            }
-//        }
-//    }
-
-
     ActionBottomSheet(
         showActions = false,
         sheetState = sheetState,
         onCancel = {
-            closeSheet()
         },
         onConfirm = {
-            scope.launch { sheetState.hide() }
         }
     ) {
-        AddToWatchlistDialogContent(
-            item = selectedItem.value!!,
-//            seasonLoading = viewModel.seasonLoading,
-//            seasonData = viewModel.seasonData,
-            onCancel = {
-                closeSheet()
-            },
-            onConfirm = {
-                viewModel.addToWatchlist(selectedItem.value!!)
-                closeSheet()
-                SnackbarManager.show(
-                    "Added to watchlist",
-                    actionLabel = "View"
-                ) { navController.popBackStack() }
-            }
-        )
+        val item = selectedItem.value
+        if (item != null) {
+            AddToWatchlistSheetContent(
+                item = item,
+                seasonLoading = viewModel.seasonLoading,
+                seasonData = viewModel.seasonData,
+                onCancel = {
+                    closeSheet()
+                },
+                onConfirm = {
+                    viewModel.addToWatchlist(item, viewModel.seasonData)
+                    SnackbarManager.show(
+                        "Added to watchlist",
+                        actionLabel = "View"
+                    ) { navController.popBackStack() }
+                    closeSheet()
+                }
+            )
+        }
     }
 
 
