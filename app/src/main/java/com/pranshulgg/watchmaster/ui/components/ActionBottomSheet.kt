@@ -47,13 +47,14 @@ fun ActionBottomSheet(
             onDismissRequest = onCancel,
             scrimColor = MaterialTheme.colorScheme.scrim.copy(alpha = 0.5f),
             dragHandle = {
-                Box(
+                Surface(
                     Modifier
                         .padding(top = 22.dp, bottom = 12.dp)
                         .height(4.dp)
-                        .width(32.dp)
-                        .background(MaterialTheme.colorScheme.onSurfaceVariant, shape = CircleShape)
-                )
+                        .width(32.dp),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    shape = CircleShape
+                ) {}
             }
         ) {
             Column(
