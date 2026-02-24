@@ -34,12 +34,6 @@ fun HomeTabScreen(
         Column(modifier = Modifier.padding(innerPadding)) {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text("Nothing here yet")
-
-                Button(onClick = {
-                    navController.navigate(NavRoutes.mediaDetail(243875))
-                }) {
-                    Text("GO TO IDK TV")
-                }
             }
 
         }
