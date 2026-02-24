@@ -5,9 +5,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.pranshulgg.watchmaster.data.local.entity.WatchlistTvEntity
 import com.pranshulgg.watchmaster.data.repository.WatchlistRepository
 import com.pranshulgg.watchmaster.model.SearchType
+import com.pranshulgg.watchmaster.network.TvSeasonDto
 import kotlinx.coroutines.launch
 
 class SearchViewModel(
@@ -27,7 +27,7 @@ class SearchViewModel(
     var showNoResultsSnack by mutableStateOf(false)
         private set
 
-    var seasonData by mutableStateOf<List<WatchlistTvEntity>>(emptyList())
+    var seasonData by mutableStateOf<List<TvSeasonDto>>(emptyList())
         private set
 
     var seasonLoading by mutableStateOf(false)
@@ -38,7 +38,7 @@ class SearchViewModel(
         query = q
     }
 
-    private val seasonCache = mutableMapOf<Long, List<WatchlistTvEntity>>()
+    private val seasonCache = mutableMapOf<Long, List<TvSeasonDto>>()
 
 
     private val mockResults = listOf(
@@ -135,9 +135,9 @@ class SearchViewModel(
         }
     }
 
-    fun addToWatchlist(item: SearchItem, tvData: List<WatchlistTvEntity> = emptyList()) {
+    fun addToWatchlist(item: SearchItem, tvDetails: List<TvSeasonDto>? = null) {
         viewModelScope.launch {
-            watchlistRepository.addFromSearch(item, tvData)
+            watchlistRepository.addFromSearch(item, tvDetails)
         }
     }
 
