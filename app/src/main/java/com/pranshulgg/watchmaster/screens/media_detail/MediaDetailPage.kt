@@ -177,6 +177,8 @@ fun MediaDetailPage(
     }
 
     val liveItem by watchlistViewModel.currentItem.collectAsStateWithLifecycle()
+
+
     var showRatingDialog by remember { mutableStateOf(false) }
 
 
