@@ -1,17 +1,15 @@
 package com.pranshulgg.watchmaster.data.repository
 
 import android.os.Build
-import android.provider.SyncStateContract.Helpers.insert
 import androidx.annotation.RequiresApi
-import androidx.room.Embedded
-import androidx.room.Relation
-import androidx.room.Transaction
 import com.pranshulgg.watchmaster.data.local.dao.WatchlistDao
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
+import com.pranshulgg.watchmaster.data.local.mapper.SeasonDataMapper
+import com.pranshulgg.watchmaster.model.SeasonDataModel
 import com.pranshulgg.watchmaster.model.WatchStatus
 import com.pranshulgg.watchmaster.network.TmdbApi
+import com.pranshulgg.watchmaster.network.TvSeasonDto
 import com.pranshulgg.watchmaster.screens.search.SearchItem
-import com.pranshulgg.watchmaster.data.local.entity.WatchlistTvEntity
 import kotlinx.coroutines.flow.Flow
 import java.time.Instant
 
@@ -21,7 +19,19 @@ class WatchlistRepository(
     private val tvRepository: TvRepository? = null
 ) {
 
-    suspend fun addFromSearch(item: SearchItem, tvData: List<WatchlistTvEntity> = emptyList()) {
+    suspend fun addFromSearch(item: SearchItem, tvDetails: List<TvSeasonDto>? = null) {
+
+        val seasons = tvDetails?.map {
+            SeasonDataModel(
+                seasonNumber = it.season_number,
+                name = it.name,
+                episodeCount = it.episode_count,
+                airDate = it.air_date,
+                posterPath = it.poster_path
+            )
+        }
+
+        val seasonsJson = SeasonDataMapper.toJson(seasons)
         dao.insert(
             WatchlistItemEntity(
                 id = item.id,
@@ -34,29 +44,12 @@ class WatchlistRepository(
                 addedDate = Instant.now(),
                 avgRating = item.avg_rating,
                 backdropPath = item.backdropPath,
+                seasonsJson = seasonsJson,
             )
         )
-        if (item.mediaType == "tv" && tvData.isNotEmpty()) {
-            dao.insertTvSeasons(
-                tvData.map {
-                    it.copy(watchlistId = item.id)
-                }
-            )
-        }
     }
 
-//    data class WatchlistWithSeasons(
-//        @Embedded val item: WatchlistItemEntity,
-//
-//        @Relation(
-//            parentColumn = "id",
-//            entityColumn = "watchlistId"
-//        )
-//        val seasons: List<WatchlistTvEntity>
-//    )
-
-    fun getWatchlist() = dao.getAllWithSeasons()
-
+    fun getWatchlist() = dao.getAll()
 
     suspend fun markStarted(id: Long) {
         dao.updateStatus(
@@ -108,7 +101,9 @@ class WatchlistRepository(
 
     suspend fun updateNote(id: Long, note: String) = dao.setUserNote(id, note)
 
+    fun getItemById(id: Long): Flow<WatchlistItemEntity?> {
+        return dao.getById(id)
+    }
 
-    fun getItemById(id: Long) = dao.getByIdWithSeasons(id)
 
 }
