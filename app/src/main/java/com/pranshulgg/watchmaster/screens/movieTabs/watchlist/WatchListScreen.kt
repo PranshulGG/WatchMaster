@@ -45,11 +45,13 @@ import com.pranshulgg.watchmaster.models.WatchlistViewModel
 import com.pranshulgg.watchmaster.screens.movieTabs.ui.MovieItems
 import com.pranshulgg.watchmaster.screens.movieTabs.ui.WatchlistRow
 import com.pranshulgg.watchmaster.ui.components.EmptyContainerPlaceholder
+import com.pranshulgg.watchmaster.ui.components.LoadingScreenPlaceholder
 import com.pranshulgg.watchmaster.ui.components.TextAlertDialog
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun WatchlistMovies(
+    isLoading: Boolean = true,
     items: List<WatchlistItemEntity>,
     scrollBehavior: FloatingToolbarScrollBehavior,
     scrollBehaviorTopBar: TopAppBarScrollBehavior,
@@ -57,8 +59,9 @@ fun WatchlistMovies(
     onLongActionMovieRequest: (WatchlistItemEntity) -> Unit
 ) {
 
-    val watchlistViewModel: WatchlistViewModel = viewModel()
-
+    if (isLoading) {
+        LoadingScreenPlaceholder()
+    }
 
     if (items.isEmpty()) {
         EmptyContainerPlaceholder(
