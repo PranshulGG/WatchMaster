@@ -20,17 +20,23 @@ import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 import com.pranshulgg.watchmaster.screens.movieTabs.ui.MovieItems
 import com.pranshulgg.watchmaster.screens.movieTabs.ui.WatchlistRow
 import com.pranshulgg.watchmaster.ui.components.EmptyContainerPlaceholder
+import com.pranshulgg.watchmaster.ui.components.LoadingScreenPlaceholder
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun FinishedMovies(
+    isLoading: Boolean = true,
     items: List<WatchlistItemEntity>, scrollBehavior: FloatingToolbarScrollBehavior,
     scrollBehaviorTopBar: TopAppBarScrollBehavior,
     navController: NavController,
     onLongActionMovieRequest: (WatchlistItemEntity) -> Unit
 
 ) {
+
+    if (isLoading) {
+        LoadingScreenPlaceholder()
+    }
 
     if (items.isEmpty()) {
         EmptyContainerPlaceholder(
