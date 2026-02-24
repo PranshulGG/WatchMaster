@@ -38,17 +38,15 @@ fun SectionCard(
     showAction: Boolean = false,
     actionText: String = "",
     actionOnClick: () -> Unit = {},
+    noPadding: Boolean = false,
     content: @Composable () -> Unit,
 ) {
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = if (noPadding) 0.dp else 16.dp),
         shape = RoundedCornerShape(Radius.ExtraLarge),
-//        colors = CardDefaults.cardColors(
-//            containerColor = MaterialTheme.colorScheme.surface
-//        )
     ) {
         Column(
             modifier = Modifier.padding(bottom = 16.dp),
