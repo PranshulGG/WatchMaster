@@ -78,6 +78,7 @@ import com.pranshulgg.watchmaster.helpers.provideWatchlistRepository
 import com.pranshulgg.watchmaster.model.SearchType
 import com.pranshulgg.watchmaster.models.WatchlistViewModel
 import com.pranshulgg.watchmaster.models.WatchlistViewModelFactory
+import com.pranshulgg.watchmaster.network.TvSeasonDto
 import com.pranshulgg.watchmaster.screens.search.ui.AddToWatchlistSheetContent
 import com.pranshulgg.watchmaster.screens.search.ui.SearchFloatingBarContent
 import com.pranshulgg.watchmaster.screens.search.ui.SearchRow
@@ -110,6 +111,7 @@ fun SearchScreen(
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val selectedItem = remember { mutableStateOf<SearchItem?>(null) }
+    val selectedSeasonItem = remember { mutableStateOf<List<TvSeasonDto>?>(null) }
 
     val repositoryWatchList = provideWatchlistRepository(LocalContext.current)
 
@@ -230,7 +232,12 @@ fun SearchScreen(
                             SearchRow(item, index, results, onAddToWatchlist = {
                                 scope.launch {
                                     if (viewModelWatchList.exists(item.id)) {
-                                        SnackbarManager.show("Already in watchlist")
+                                        SnackbarManager.show(
+                                            "Already in watchlist",
+                                            actionLabel = "Delete",
+                                            onAction = {
+                                                viewModelWatchList.delete(item.id)
+                                            })
                                     } else {
 
                                         selectedItem.value = item
@@ -279,12 +286,15 @@ fun SearchScreen(
                     closeSheet()
                 },
                 onConfirm = {
-                    viewModel.addToWatchlist(item, viewModel.seasonData)
+                    viewModel.addToWatchlist(item, selectedSeasonItem.value)
                     SnackbarManager.show(
                         "Added to watchlist",
                         actionLabel = "View"
                     ) { navController.popBackStack() }
                     closeSheet()
+                },
+                onSelectedSeason = { item ->
+                    selectedSeasonItem.value = item
                 }
             )
         }
