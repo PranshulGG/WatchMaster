@@ -1,8 +1,8 @@
 package com.pranshulgg.watchmaster.screens.search
 
-import com.pranshulgg.watchmaster.data.local.entity.WatchlistTvEntity
 import com.pranshulgg.watchmaster.model.SearchType
 import com.pranshulgg.watchmaster.network.TmdbApi
+import com.pranshulgg.watchmaster.network.TvSeasonDto
 
 class SearchRepository(
     private val api: TmdbApi
@@ -70,13 +70,12 @@ class SearchRepository(
                     releaseDate = releaseDate,
                     originalLanguage = originalLanguage,
                     avg_rating = r.vote_average,
-//                    seasons = r.seasons
                 )
             } ?: emptyList()
     }
 
 
-    suspend fun getSeasonData(tvId: Long): List<WatchlistTvEntity> {
+    suspend fun getSeasonData(tvId: Long): List<TvSeasonDto> {
         val resp = api.getTvSeasons(tvId)
         if (!resp.isSuccessful) return emptyList()
         return resp.body()?.seasons ?: emptyList()
