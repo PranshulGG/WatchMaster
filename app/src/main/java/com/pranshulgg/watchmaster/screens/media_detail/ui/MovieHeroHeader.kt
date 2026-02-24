@@ -68,7 +68,6 @@ fun MovieHeroHeader(
 
     val watchlistItem by watchlistViewModel.currentItem.collectAsState()
 
-
     Box(modifier = Modifier.fillMaxWidth()) {
 
         AsyncImage(
