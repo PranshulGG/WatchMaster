@@ -17,7 +17,7 @@ import com.pranshulgg.watchmaster.data.local.entity.TvBundleEntity
 
 @Database(
     entities = [WatchlistItemEntity::class, MovieBundleEntity::class, TvBundleEntity::class],
-    version = 12
+    version = 16
 )
 @TypeConverters(
     GenreIdsConverter::class,
