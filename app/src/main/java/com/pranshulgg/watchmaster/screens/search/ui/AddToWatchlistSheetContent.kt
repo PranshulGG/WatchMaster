@@ -33,6 +33,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -41,6 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImagePainter
@@ -48,7 +50,8 @@ import coil.compose.rememberAsyncImagePainter
 import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.data.getGenreNames
 import com.pranshulgg.watchmaster.screens.search.SearchItem
-import com.pranshulgg.watchmaster.data.local.entity.WatchlistTvEntity
+import com.pranshulgg.watchmaster.network.TvSeasonDto
+import com.pranshulgg.watchmaster.screens.media_detail.ui.SectionCard
 import com.pranshulgg.watchmaster.ui.components.ActionBottomSheet
 import com.pranshulgg.watchmaster.ui.components.PosterPlaceholder
 import com.pranshulgg.watchmaster.ui.components.SettingSection
@@ -66,7 +69,8 @@ fun AddToWatchlistSheetContent(
     onCancel: () -> Unit,
     onConfirm: () -> Unit,
     seasonLoading: Boolean = true,
-    seasonData: List<WatchlistTvEntity> = emptyList()
+    seasonData: List<TvSeasonDto>,
+    onSelectedSeason: (List<TvSeasonDto>) -> Unit
 ) {
     val scrollState = rememberScrollState()
     val scrollbarAlpha = rememberScrollbarAlpha(scrollState)
@@ -143,34 +147,6 @@ fun AddToWatchlistSheetContent(
 
             }
         }
-
-        Spacer(Modifier.height(16.dp))
-        if (!seasonLoading) {
-            SeasonBtn(seasonData)
-        }
-        Spacer(Modifier.height(12.dp))
-        HorizontalDivider()
-        Spacer(Modifier.height(12.dp))
-
-        Box(
-            Modifier
-                .weight(1f, fill = false)
-                .verticalColumnScrollbar(
-                    scrollState = scrollState,
-                    alpha = scrollbarAlpha
-                )
-                .verticalScroll(scrollState)
-        ) {
-            item.overview?.let {
-                Text(
-                    it,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-        }
-
-
         Spacer(Modifier.height(12.dp))
 
         FlowRow(
@@ -182,6 +158,36 @@ fun AddToWatchlistSheetContent(
             }
 
         }
+        if (!seasonLoading && item.mediaType == "tv") {
+            Spacer(Modifier.height(12.dp))
+            SeasonBtn(seasonData, onSelectedSeason)
+        }
+        Spacer(Modifier.height(12.dp))
+//
+//        Box(
+//            Modifier
+//                .weight(1f, fill = false)
+//                .verticalColumnScrollbar(
+//                    scrollState = scrollState,
+//                    alpha = scrollbarAlpha
+//                )
+//                .verticalScroll(scrollState)
+//        ) {
+//
+//        }
+
+
+        item.overview?.let {
+            Text(
+                it,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 15,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+
+
         Spacer(Modifier.height(16.dp))
 
 //        seasonData?.forEach {
@@ -302,12 +308,19 @@ private fun StarDateChip(text: String, isDate: Boolean = false) {
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
-private fun SeasonBtn(seasonData: List<WatchlistTvEntity>) {
+private fun SeasonBtn(
+    seasonData: List<TvSeasonDto>,
+    onSelectedSeason: (List<TvSeasonDto>) -> Unit
+) {
     var selectedSeason by remember { mutableIntStateOf(0) }
     val size = ButtonDefaults.MediumContainerHeight
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
+    var seasonChanged by remember { mutableStateOf(false) }
 
+    if (!seasonChanged) {
+        onSelectedSeason(listOf(seasonData[0]))
+    }
 
     Box(
         modifier = Modifier.fillMaxWidth(),
@@ -350,6 +363,7 @@ private fun SeasonBtn(seasonData: List<WatchlistTvEntity>) {
             title = "All seasons",
             isModalOption = true,
             tiles = seasonData.mapIndexed { index, item ->
+
                 SettingTile.ActionTile(
                     title = item.name,
                     leading = {
@@ -363,8 +377,10 @@ private fun SeasonBtn(seasonData: List<WatchlistTvEntity>) {
                     description = item.air_date,
                     selected = index == selectedSeason,
                     onClick = {
+                        seasonChanged = true
                         scope.launch { sheetState.hide() }
                         selectedSeason = index
+                        onSelectedSeason(listOf(item))
                     },
                     trailing = {
                         Surface(
