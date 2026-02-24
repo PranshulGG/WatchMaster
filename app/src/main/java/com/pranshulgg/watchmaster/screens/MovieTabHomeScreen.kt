@@ -38,6 +38,7 @@ import com.pranshulgg.watchmaster.screens.movieTabs.watching.WatchingMovies
 import com.pranshulgg.watchmaster.screens.movieTabs.watchlist.WatchlistMovies
 import com.pranshulgg.watchmaster.ui.components.ActionBottomSheet
 import com.pranshulgg.watchmaster.ui.components.DialogBasic
+import com.pranshulgg.watchmaster.ui.components.LoadingScreenPlaceholder
 import com.pranshulgg.watchmaster.ui.components.RateMovieDialogContent
 import com.pranshulgg.watchmaster.ui.components.TextAlertDialog
 import com.pranshulgg.watchmaster.ui.snackbar.SnackbarManager
@@ -69,7 +70,7 @@ fun MovieTabHomeScreen(
     )
 
     val items by viewModel.watchlist.collectAsState()
-
+    val isLoading by viewModel.isLoading.collectAsState()
 
     var showConfirmationDialog by remember { mutableStateOf(false) }
     var showRatingDialog by remember { mutableStateOf(false) }
@@ -96,6 +97,7 @@ fun MovieTabHomeScreen(
 
     var updateRating by remember { mutableStateOf(false) }
     var originalRating by remember { mutableFloatStateOf(0f) }
+
 
 
 
@@ -133,9 +135,12 @@ fun MovieTabHomeScreen(
                 .fillMaxSize(),
             verticalAlignment = Alignment.Top
         ) { page ->
+
+
             when (page) {
                 0 ->
                     WatchlistMovies(
+                        isLoading,
                         items = items.filter {
                             it.status == WatchStatus.WANT_TO_WATCH && it.mediaType != "tv"
                         },
@@ -149,6 +154,7 @@ fun MovieTabHomeScreen(
 
 
                 1 -> WatchingMovies(
+                    isLoading,
                     items = items.filter {
                         (it.status == WatchStatus.WATCHING || it.status == WatchStatus.INTERRUPTED) && it.mediaType != "tv"
 
@@ -163,6 +169,7 @@ fun MovieTabHomeScreen(
                 )
 
                 2 -> FinishedMovies(
+                    isLoading,
                     items = items.filter {
                         it.status == WatchStatus.FINISHED && it.mediaType != "tv"
                     },
