@@ -23,7 +23,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import com.pranshulgg.watchmaster.screens.search.ui.AddToWatchlistDialogContent
 import com.pranshulgg.watchmaster.ui.snackbar.SnackbarManager
 import com.pranshulgg.watchmaster.utils.Radius
 
