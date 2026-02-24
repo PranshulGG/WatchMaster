@@ -60,7 +60,7 @@ fun ActionBottomSheet(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(max = 500.dp)
+                    .heightIn(max = 800.dp)
             ) {
 
                 content()
