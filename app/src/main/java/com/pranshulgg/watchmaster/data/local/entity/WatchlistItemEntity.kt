@@ -35,4 +35,5 @@ data class WatchlistItemEntity(
 
     val folder: String? = null,
 
-    )
+    val seasonsJson: String? = null
+)
