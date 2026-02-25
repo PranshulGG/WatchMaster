@@ -1,4 +1,4 @@
-package com.pranshulgg.watchmaster.screens.search.ui
+package com.pranshulgg.watchmaster.feature.search.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
@@ -23,10 +23,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.pranshulgg.watchmaster.R
-import com.pranshulgg.watchmaster.model.SearchType
-import com.pranshulgg.watchmaster.screens.search.SearchViewModel
-import com.pranshulgg.watchmaster.screens.search.SearchViewModelFactory
-import com.pranshulgg.watchmaster.utils.Symbol
+import com.pranshulgg.watchmaster.feature.search.SearchType
+import com.pranshulgg.watchmaster.feature.search.SearchViewModel
+import com.pranshulgg.watchmaster.feature.search.SearchViewModelFactory
+import com.pranshulgg.watchmaster.core.ui.components.Symbol
 
 @Composable
 fun SearchFloatingBarContent(
