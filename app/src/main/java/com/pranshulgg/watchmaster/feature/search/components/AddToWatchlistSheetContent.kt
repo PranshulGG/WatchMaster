@@ -1,4 +1,4 @@
-package com.pranshulgg.watchmaster.screens.search.ui
+package com.pranshulgg.watchmaster.feature.search.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonGroup
@@ -25,7 +24,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -49,17 +47,14 @@ import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.data.getGenreNames
-import com.pranshulgg.watchmaster.screens.search.SearchItem
-import com.pranshulgg.watchmaster.network.TvSeasonDto
-import com.pranshulgg.watchmaster.screens.media_detail.ui.SectionCard
-import com.pranshulgg.watchmaster.ui.components.ActionBottomSheet
-import com.pranshulgg.watchmaster.ui.components.PosterPlaceholder
-import com.pranshulgg.watchmaster.ui.components.SettingSection
-import com.pranshulgg.watchmaster.ui.components.SettingTile
-import com.pranshulgg.watchmaster.ui.components.rememberScrollbarAlpha
-import com.pranshulgg.watchmaster.ui.components.verticalColumnScrollbar
-import com.pranshulgg.watchmaster.utils.Radius
-import com.pranshulgg.watchmaster.utils.Symbol
+import com.pranshulgg.watchmaster.feature.search.SearchItem
+import com.pranshulgg.watchmaster.core.network.TvSeasonDto
+import com.pranshulgg.watchmaster.core.ui.components.ActionBottomSheet
+import com.pranshulgg.watchmaster.core.ui.components.SettingSection
+import com.pranshulgg.watchmaster.core.ui.components.SettingTile
+import com.pranshulgg.watchmaster.core.ui.theme.Radius
+import com.pranshulgg.watchmaster.core.ui.components.Symbol
+import com.pranshulgg.watchmaster.core.ui.components.media.PosterPlaceholder
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -73,8 +68,6 @@ fun AddToWatchlistSheetContent(
     onSelectedSeason: (List<TvSeasonDto>) -> Unit
 ) {
     val scrollState = rememberScrollState()
-    val scrollbarAlpha = rememberScrollbarAlpha(scrollState)
-
 
     val poster = item.posterPath?.let {
         "https://image.tmdb.org/t/p/w154$it"
