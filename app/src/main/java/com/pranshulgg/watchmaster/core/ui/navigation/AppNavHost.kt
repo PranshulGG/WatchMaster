@@ -1,0 +1,115 @@
+package com.pranshulgg.watchmaster.core.ui.navigation
+
+import android.content.Context
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MotionScheme
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.zIndex
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import com.pranshulgg.watchmaster.feature.main.MainScreen
+import com.pranshulgg.watchmaster.feature.movie.detail.MovieDetailPage
+import com.pranshulgg.watchmaster.feature.search.SearchScreen
+import com.pranshulgg.watchmaster.feature.search.SearchType
+import com.pranshulgg.watchmaster.feature.search.SearchViewModel
+import com.pranshulgg.watchmaster.feature.search.SearchViewModelFactory
+import com.pranshulgg.watchmaster.feature.setting.SettingsScreen
+import com.pranshulgg.watchmaster.core.ui.navigation.NavRoutes
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+fun AppNavHost(
+    navController: NavHostController,
+    snackbarHostState: SnackbarHostState,
+    motionScheme: MotionScheme,
+    context: Context
+) {
+    Box(
+        Modifier.fillMaxSize()
+    ) {
+        SnackbarHost(
+            hostState = snackbarHostState,
+            Modifier
+                .fillMaxWidth()
+                .zIndex(1f)
+                .align(Alignment.BottomCenter)
+                .padding(
+                    bottom =
+                        WindowInsets.navigationBars
+                            .asPaddingValues()
+                            .calculateBottomPadding()
+                )
+        )
+        NavHost(
+            navController = navController,
+            startDestination = NavRoutes.MAIN,
+            modifier = Modifier.background(MaterialTheme.colorScheme.surfaceContainer),
+            enterTransition = { NavTransitions.enter(motionScheme) },
+            exitTransition = { NavTransitions.exit(motionScheme) },
+            popEnterTransition = { NavTransitions.popEnter(motionScheme) },
+            popExitTransition = { NavTransitions.popExit(motionScheme) }
+        ) {
+            composable(
+                NavRoutes.MAIN,
+            ) {
+                MainScreen(
+                    navController,
+                    motionScheme = MaterialTheme.motionScheme,
+                )
+            }
+            composable(
+                NavRoutes.SETTINGS,
+            ) {
+                SettingsScreen(navController)
+            }
+            composable(
+                route = "${NavRoutes.MEDIA_DETAIL_PAGE}/{id}",
+                arguments = listOf(
+                    navArgument("id") { type = NavType.LongType }
+                )
+            ) { backStackEntry ->
+                val id = backStackEntry.arguments!!.getLong("id")
+                MovieDetailPage(id = id, navController)
+            }
+            composable(
+                route = "${NavRoutes.SEARCH}?type={type}",
+                arguments = listOf(
+                    navArgument("type") {
+                        type = NavType.StringType
+                        defaultValue = SearchType.MULTI.name
+                    }
+                )
+            ) { backStackEntry ->
+
+                val type = backStackEntry.arguments
+                    ?.getString("type")
+                    ?.let { SearchType.valueOf(it) }
+                    ?: SearchType.MULTI
+
+                SearchScreen(
+                    navController = navController,
+                    type = type
+                )
+            }
+
+        }
+    }
+
+}
