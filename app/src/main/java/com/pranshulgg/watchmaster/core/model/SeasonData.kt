@@ -1,6 +1,6 @@
-package com.pranshulgg.watchmaster.model
+package com.pranshulgg.watchmaster.core.model
 
-data class SeasonDataModel(
+data class SeasonData(
     val seasonNumber: Int,
     val name: String,
     val episodeCount: Int,
