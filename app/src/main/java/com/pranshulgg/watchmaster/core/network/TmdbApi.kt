@@ -1,4 +1,4 @@
-package com.pranshulgg.watchmaster.network
+package com.pranshulgg.watchmaster.core.network
 
 import com.google.gson.annotations.SerializedName
 import retrofit2.http.GET
