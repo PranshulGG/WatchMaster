@@ -1,6 +1,6 @@
-package com.pranshulgg.watchmaster.prefs
+package com.pranshulgg.watchmaster.core.prefs
 
-import com.pranshulgg.watchmaster.model.ThemeVariantType
+import com.pranshulgg.watchmaster.core.ui.theme.ThemeVariantType
 
 data class AppPrefsState(
     val appTheme: String,
