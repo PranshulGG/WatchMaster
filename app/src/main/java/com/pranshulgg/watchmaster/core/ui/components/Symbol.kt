@@ -1,4 +1,4 @@
-package com.pranshulgg.watchmaster.utils
+package com.pranshulgg.watchmaster.core.ui.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
@@ -16,7 +16,6 @@ import androidx.compose.ui.unit.dp
 fun Symbol(
     icon: Int,
     modifier: Modifier = Modifier,
-
     desc: String? = null,
     color: Color = MaterialTheme.colorScheme.onSurface,
     size: Dp = 24.dp,
