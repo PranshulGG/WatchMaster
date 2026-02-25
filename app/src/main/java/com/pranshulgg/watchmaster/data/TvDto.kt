@@ -1,6 +1,6 @@
 package com.pranshulgg.watchmaster.data
 
-import com.pranshulgg.watchmaster.model.WatchStatus
+import com.pranshulgg.watchmaster.core.model.WatchStatus
 
 data class TvCreditsDto(
     val cast: List<TvCastMember>,
