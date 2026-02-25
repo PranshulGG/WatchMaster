@@ -1,6 +1,5 @@
-package com.pranshulgg.watchmaster.utils
+package com.pranshulgg.watchmaster.core.ui.theme
 
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.unit.dp
 
 object Radius {
