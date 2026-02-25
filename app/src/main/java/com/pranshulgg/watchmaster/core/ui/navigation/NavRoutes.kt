@@ -1,6 +1,6 @@
-package com.pranshulgg.watchmaster.helpers
+package com.pranshulgg.watchmaster.core.ui.navigation
 
-import com.pranshulgg.watchmaster.model.SearchType
+import com.pranshulgg.watchmaster.feature.search.SearchType
 
 object NavRoutes {
     const val MAIN = "main"
