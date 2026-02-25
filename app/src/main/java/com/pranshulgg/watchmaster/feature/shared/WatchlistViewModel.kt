@@ -1,13 +1,11 @@
-package com.pranshulgg.watchmaster.models
+package com.pranshulgg.watchmaster.feature.shared
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 import com.pranshulgg.watchmaster.data.repository.WatchlistRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -17,7 +15,8 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class WatchlistViewModel(
+@HiltViewModel
+class WatchlistViewModel @Inject constructor(
     private val repository: WatchlistRepository
 ) : ViewModel() {
 
@@ -31,7 +30,7 @@ class WatchlistViewModel(
         }
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
+            started = SharingStarted.Companion.WhileSubscribed(5_000),
             initialValue = emptyList()
         )
 
@@ -87,4 +86,3 @@ class WatchlistViewModel(
 
 
 }
-
