@@ -1,19 +1,11 @@
 package com.pranshulgg.watchmaster.data.local.entity
 
-import com.pranshulgg.watchmaster.data.CreditsDto
 import com.pranshulgg.watchmaster.data.EpisodeListDto
 import com.pranshulgg.watchmaster.data.Genre
-import com.pranshulgg.watchmaster.data.ImagesDto
-import com.pranshulgg.watchmaster.data.MovieListDto
-import com.pranshulgg.watchmaster.data.ReviewsDto
 import com.pranshulgg.watchmaster.data.TvCreditsDto
-import com.pranshulgg.watchmaster.data.TvListDto
 import com.pranshulgg.watchmaster.data.TvReviewsDto
 import com.pranshulgg.watchmaster.data.TvWatchProvidersDto
-import com.pranshulgg.watchmaster.data.WatchProvidersDto
-import com.pranshulgg.watchmaster.data.local.dao.TvBundleDao
-import com.pranshulgg.watchmaster.network.MovieBundleDto
-import com.pranshulgg.watchmaster.network.TvBundleDto
+import com.pranshulgg.watchmaster.core.network.TvBundleDto
 
 data class TvBundle(
     val id: Long,
