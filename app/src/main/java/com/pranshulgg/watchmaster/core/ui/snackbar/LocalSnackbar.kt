@@ -1,4 +1,4 @@
-package com.pranshulgg.watchmaster.ui.snackbar
+package com.pranshulgg.watchmaster.core.ui.snackbar
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.staticCompositionLocalOf
