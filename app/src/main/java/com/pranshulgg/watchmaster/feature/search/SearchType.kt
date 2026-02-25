@@ -1,4 +1,4 @@
-package com.pranshulgg.watchmaster.model
+package com.pranshulgg.watchmaster.feature.search
 
 enum class SearchType(val endpoint: String) {
     MULTI("search/multi"),
