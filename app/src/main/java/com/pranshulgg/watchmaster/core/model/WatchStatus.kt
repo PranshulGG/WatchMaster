@@ -1,4 +1,4 @@
-package com.pranshulgg.watchmaster.model
+package com.pranshulgg.watchmaster.core.model
 
 enum class WatchStatus {
     WANT_TO_WATCH,
