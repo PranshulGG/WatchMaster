@@ -1,6 +1,5 @@
-package com.pranshulgg.watchmaster.utils
+package com.pranshulgg.watchmaster.feature.setting.components
 
-import androidx.compose.animation.core.animateValueAsState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
@@ -21,42 +20,26 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.toColorInt
-import com.pranshulgg.watchmaster.prefs.LocalAppPrefs
-import androidx.compose.animation.core.animateDpAsState
+import com.pranshulgg.watchmaster.core.prefs.LocalAppPrefs
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.runtime.getValue
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.animateValueAsState
-import androidx.compose.animation.core.TwoWayConverter
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
-import androidx.compose.material3.ButtonGroupDefaults
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.ToggleButtonDefaults
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
-import com.pranshulgg.watchmaster.R
-import com.pranshulgg.watchmaster.model.ThemeVariantType
-import com.pranshulgg.watchmaster.ui.components.SettingSection
-import com.pranshulgg.watchmaster.ui.components.SettingTile
+import com.pranshulgg.watchmaster.core.ui.theme.ThemeVariantType
 
 
 val scheme = listOf(
