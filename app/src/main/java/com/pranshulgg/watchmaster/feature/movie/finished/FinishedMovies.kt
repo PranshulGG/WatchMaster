@@ -1,26 +1,16 @@
-package com.pranshulgg.watchmaster.screens.movieTabs.finished
+package com.pranshulgg.watchmaster.feature.movie.finished
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingToolbarScrollBehavior
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.pranshulgg.watchmaster.R
+import com.pranshulgg.watchmaster.core.ui.components.EmptyContainerPlaceholder
+import com.pranshulgg.watchmaster.core.ui.components.LoadingScreenPlaceholder
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
-import com.pranshulgg.watchmaster.screens.movieTabs.ui.MovieItems
-import com.pranshulgg.watchmaster.screens.movieTabs.ui.WatchlistRow
-import com.pranshulgg.watchmaster.ui.components.EmptyContainerPlaceholder
-import com.pranshulgg.watchmaster.ui.components.LoadingScreenPlaceholder
+import com.pranshulgg.watchmaster.feature.movie.components.MovieItems
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
