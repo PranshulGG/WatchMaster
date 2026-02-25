@@ -1,4 +1,4 @@
-package com.pranshulgg.watchmaster.ui.snackbar
+package com.pranshulgg.watchmaster.core.ui.snackbar
 
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
