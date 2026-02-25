@@ -1,11 +1,9 @@
-package com.pranshulgg.watchmaster.screens.search
+package com.pranshulgg.watchmaster.feature.search
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -13,81 +11,53 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.BottomSheetScaffold
-import androidx.compose.material3.BottomSheetScaffoldState
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.FilledIconButton
-import androidx.compose.material3.FilledTonalIconButton
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingToolbarDefaults
 import androidx.compose.material3.FloatingToolbarDefaults.ScreenOffset
 import androidx.compose.material3.FloatingToolbarExitDirection.Companion.Bottom
-import androidx.compose.material3.FloatingToolbarScrollBehavior
 import androidx.compose.material3.HorizontalFloatingToolbar
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.zIndex
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.pranshulgg.watchmaster.R
-import com.pranshulgg.watchmaster.helpers.NavRoutes
+import com.pranshulgg.watchmaster.feature.shared.WatchlistViewModel
+import com.pranshulgg.watchmaster.core.network.TvSeasonDto
+import com.pranshulgg.watchmaster.core.ui.components.ActionBottomSheet
+import com.pranshulgg.watchmaster.core.ui.components.EmptyContainerPlaceholder
+import com.pranshulgg.watchmaster.feature.search.components.AddToWatchlistSheetContent
+import com.pranshulgg.watchmaster.feature.search.components.SearchFloatingBarContent
+import com.pranshulgg.watchmaster.feature.search.components.SearchRow
+import com.pranshulgg.watchmaster.core.ui.components.NavigateUpBtn
+import com.pranshulgg.watchmaster.core.ui.components.Symbol
+import com.pranshulgg.watchmaster.core.ui.snackbar.SnackbarManager
 import com.pranshulgg.watchmaster.helpers.provideWatchlistRepository
-import com.pranshulgg.watchmaster.model.SearchType
-import com.pranshulgg.watchmaster.models.WatchlistViewModel
-import com.pranshulgg.watchmaster.models.WatchlistViewModelFactory
-import com.pranshulgg.watchmaster.network.TvSeasonDto
-import com.pranshulgg.watchmaster.screens.search.ui.AddToWatchlistSheetContent
-import com.pranshulgg.watchmaster.screens.search.ui.SearchFloatingBarContent
-import com.pranshulgg.watchmaster.screens.search.ui.SearchRow
-import com.pranshulgg.watchmaster.ui.components.ActionBottomSheet
-import com.pranshulgg.watchmaster.ui.components.BottomNav
-import com.pranshulgg.watchmaster.ui.components.EmptyContainerPlaceholder
-import com.pranshulgg.watchmaster.ui.snackbar.SnackbarManager
-import com.pranshulgg.watchmaster.utils.NavigateUpBtn
-import com.pranshulgg.watchmaster.utils.Symbol
 import kotlinx.coroutines.launch
 
 
@@ -97,10 +67,12 @@ import kotlinx.coroutines.launch
 )
 @Composable
 fun SearchScreen(
-    viewModel: SearchViewModel = viewModel(factory = SearchViewModelFactory(LocalContext.current)),
+//    viewModel: SearchViewModel = viewModel(factory = SearchViewModelFactory(LocalContext.current)),
     navController: NavController,
     type: SearchType
 ) {
+
+    val viewModel: SearchViewModel = hiltViewModel()
     val query = viewModel.query
     val results = viewModel.results
     val loading = viewModel.loading
@@ -113,11 +85,14 @@ fun SearchScreen(
     val selectedItem = remember { mutableStateOf<SearchItem?>(null) }
     val selectedSeasonItem = remember { mutableStateOf<List<TvSeasonDto>?>(null) }
 
-    val repositoryWatchList = provideWatchlistRepository(LocalContext.current)
+//    val repositoryWatchList = provideWatchlistRepository(LocalContext.current)
+//
+//    val viewModelWatchList: WatchlistViewModel = viewModel(
+//        factory = WatchlistViewModelFactory(repositoryWatchList)
+//    )
 
-    val viewModelWatchList: WatchlistViewModel = viewModel(
-        factory = WatchlistViewModelFactory(repositoryWatchList)
-    )
+    val viewModelWatchList: WatchlistViewModel = hiltViewModel()
+
     val systemInsets = WindowInsets.systemBars.asPaddingValues()
 
     val scrollBehaviorToolBar =
