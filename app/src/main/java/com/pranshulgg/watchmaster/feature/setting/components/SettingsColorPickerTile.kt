@@ -1,4 +1,4 @@
-package com.pranshulgg.watchmaster.screens.setting_pages.display
+package com.pranshulgg.watchmaster.feature.setting.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -15,11 +15,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.pranshulgg.watchmaster.prefs.LocalAppPrefs
+import com.pranshulgg.watchmaster.core.prefs.LocalAppPrefs
 import androidx.compose.ui.graphics.Color
 import androidx.core.graphics.toColorInt
-import com.pranshulgg.watchmaster.ui.components.ActionBottomSheet
-import com.pranshulgg.watchmaster.utils.SelectableThemeColors
+import com.pranshulgg.watchmaster.core.ui.components.ActionBottomSheet
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -36,7 +35,6 @@ fun ColorPickerBtn() {
         border = BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.outlineVariant)
     ) {
         Box(
-
             modifier = Modifier
                 .width(24.dp)
                 .height(36.dp)
