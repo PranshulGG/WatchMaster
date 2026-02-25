@@ -1,4 +1,4 @@
-package com.pranshulgg.watchmaster.screens.search
+package com.pranshulgg.watchmaster.feature.search
 
 data class SearchItem(
     val id: Long,
