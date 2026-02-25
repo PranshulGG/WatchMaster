@@ -1,4 +1,4 @@
-package com.pranshulgg.watchmaster.screens.movieTabs.ui
+package com.pranshulgg.watchmaster.feature.movie.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
