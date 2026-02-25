@@ -1,4 +1,4 @@
-package com.pranshulgg.watchmaster.helpers
+package com.pranshulgg.watchmaster.core.utils
 
 import android.content.Context
 import android.content.SharedPreferences
