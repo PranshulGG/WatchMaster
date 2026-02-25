@@ -1,4 +1,4 @@
-package com.pranshulgg.watchmaster.utils
+package com.pranshulgg.watchmaster.core.utils
 
 import java.time.Instant
 import java.time.ZoneId
@@ -11,6 +11,3 @@ val SYSTEM_ZONE: ZoneId = ZoneId.systemDefault()
 
 fun Instant.formatDate(): String =
     atZone(SYSTEM_ZONE).format(DEFAULT_DATE_FORMATTER)
-
-
-// USAGE - Text(item.finishedDate?.formatDate() ?: "Not finished")
