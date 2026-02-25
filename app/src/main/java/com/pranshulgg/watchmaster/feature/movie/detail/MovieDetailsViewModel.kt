@@ -1,16 +1,18 @@
-package com.pranshulgg.watchmaster.models
+package com.pranshulgg.watchmaster.feature.movie.detail
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.pranshulgg.watchmaster.data.repository.MovieRepository
-import kotlinx.coroutines.launch
 import com.pranshulgg.watchmaster.data.local.entity.MovieBundle
-import com.pranshulgg.watchmaster.network.MovieBundleDto
+import com.pranshulgg.watchmaster.data.repository.MovieRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MovieDetailsViewModel(
+@HiltViewModel
+class MovieDetailsViewModel @Inject constructor(
     private val repo: MovieRepository
 ) : ViewModel() {
 
