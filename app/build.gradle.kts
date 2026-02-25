@@ -2,9 +2,10 @@ import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
+//    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("com.google.devtools.ksp") version "2.3.4"
+    id("com.google.dagger.hilt.android")
 }
 val localProps = Properties().apply {
     val f = rootProject.file("local.properties")
@@ -47,12 +48,12 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
         isCoreLibraryDesugaringEnabled = true
     }
-
-    kotlin {
-        compilerOptions {
-            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
-        }
-    }
+//
+//    kotlin {
+//        compilerOptions {
+//            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+//        }
+//    }
 
     buildFeatures {
         compose = true
@@ -96,8 +97,8 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.okhttp.logging)
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
-
+    implementation(libs.androidx.hilt.navigation.compose)
     ksp(libs.room.compiler)
-
-
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
 }
