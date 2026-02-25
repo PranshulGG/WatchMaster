@@ -2,7 +2,7 @@ package com.pranshulgg.watchmaster.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.pranshulgg.watchmaster.model.WatchStatus
+import com.pranshulgg.watchmaster.core.model.WatchStatus
 import java.time.Instant
 
 @Entity(tableName = "watchlist")
