@@ -6,7 +6,7 @@ import com.pranshulgg.watchmaster.data.ImagesDto
 import com.pranshulgg.watchmaster.data.MovieListDto
 import com.pranshulgg.watchmaster.data.ReviewsDto
 import com.pranshulgg.watchmaster.data.WatchProvidersDto
-import com.pranshulgg.watchmaster.network.MovieBundleDto
+import com.pranshulgg.watchmaster.core.network.MovieBundleDto
 
 data class MovieBundle(
     val id: Long,
