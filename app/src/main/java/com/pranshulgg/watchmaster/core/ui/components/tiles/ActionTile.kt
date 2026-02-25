@@ -1,4 +1,4 @@
-package com.pranshulgg.watchmaster.ui.components.tiles
+package com.pranshulgg.watchmaster.core.ui.components.tiles
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,7 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.pranshulgg.watchmaster.utils.Radius
+import com.pranshulgg.watchmaster.core.ui.theme.Radius
 
 @Composable
 fun ActionTile(
