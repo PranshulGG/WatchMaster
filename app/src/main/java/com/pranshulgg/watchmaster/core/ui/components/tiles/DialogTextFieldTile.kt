@@ -1,4 +1,4 @@
-package com.pranshulgg.watchmaster.ui.components.tiles
+package com.pranshulgg.watchmaster.core.ui.components.tiles
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
