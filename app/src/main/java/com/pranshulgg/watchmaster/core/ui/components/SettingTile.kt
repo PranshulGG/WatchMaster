@@ -1,4 +1,4 @@
-package com.pranshulgg.watchmaster.ui.components
+package com.pranshulgg.watchmaster.core.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,21 +9,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.graphics.ColorUtils
-import com.pranshulgg.watchmaster.ui.components.tiles.ActionTile
-import com.pranshulgg.watchmaster.ui.components.tiles.CategoryTile
-import com.pranshulgg.watchmaster.ui.components.tiles.DialogOptionTile
-import com.pranshulgg.watchmaster.ui.components.tiles.DialogSliderTile
-import com.pranshulgg.watchmaster.ui.components.tiles.DialogTextFieldTile
-import com.pranshulgg.watchmaster.ui.components.tiles.SingleSwitchTile
-import com.pranshulgg.watchmaster.ui.components.tiles.SwitchTile
-import com.pranshulgg.watchmaster.ui.components.tiles.TextTile
-import com.pranshulgg.watchmaster.ui.theme.RobotoFlexWide
-import com.pranshulgg.watchmaster.utils.Radius
+import com.pranshulgg.watchmaster.core.ui.components.tiles.ActionTile
+import com.pranshulgg.watchmaster.core.ui.components.tiles.CategoryTile
+import com.pranshulgg.watchmaster.core.ui.components.tiles.DialogOptionTile
+import com.pranshulgg.watchmaster.core.ui.components.tiles.DialogSliderTile
+import com.pranshulgg.watchmaster.core.ui.components.tiles.DialogTextFieldTile
+import com.pranshulgg.watchmaster.core.ui.components.tiles.SingleSwitchTile
+import com.pranshulgg.watchmaster.core.ui.components.tiles.SwitchTile
+import com.pranshulgg.watchmaster.core.ui.components.tiles.TextTile
+import com.pranshulgg.watchmaster.core.ui.theme.Radius
 
 sealed class SettingTile {
     abstract val title: String
@@ -266,8 +263,6 @@ fun SettingSection(
                     isDescriptionAsValue = tile.isDescriptionAsValue,
                     itemBgColor = itemBgColor
                 )
-
-                else -> null
             }
         }
     }
