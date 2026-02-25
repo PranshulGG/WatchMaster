@@ -1,10 +1,10 @@
-package com.pranshulgg.watchmaster.prefs
+package com.pranshulgg.watchmaster.core.prefs
 
 import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
-import com.pranshulgg.watchmaster.helpers.PreferencesHelper
-import com.pranshulgg.watchmaster.model.ThemeVariantType
+import com.pranshulgg.watchmaster.core.utils.PreferencesHelper
+import com.pranshulgg.watchmaster.core.ui.theme.ThemeVariantType
 
 object AppPrefs {
     private val _appTheme = mutableStateOf("System")
