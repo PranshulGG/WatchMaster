@@ -1,20 +1,15 @@
-package com.pranshulgg.watchmaster.screens.media_detail.ui
+package com.pranshulgg.watchmaster.core.ui.components.media
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
@@ -24,15 +19,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.pranshulgg.watchmaster.R
-import com.pranshulgg.watchmaster.model.WatchStatus
-import com.pranshulgg.watchmaster.ui.snackbar.SnackbarManager
-import com.pranshulgg.watchmaster.ui.theme.LocalStatusColors
-import com.pranshulgg.watchmaster.utils.Radius
-import com.pranshulgg.watchmaster.utils.Symbol
+import com.pranshulgg.watchmaster.core.ui.theme.LocalStatusColors
+import com.pranshulgg.watchmaster.core.model.WatchStatus
+import com.pranshulgg.watchmaster.core.ui.theme.Radius
+import com.pranshulgg.watchmaster.core.ui.components.Symbol
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun MovieDetailActionsTop(status: WatchStatus) {
+fun MediaStatusSection(status: WatchStatus) {
     val colorScheme = MaterialTheme.colorScheme
     val statusColor = LocalStatusColors.current
 
@@ -57,6 +51,13 @@ fun MovieDetailActionsTop(status: WatchStatus) {
         else -> "Pending"
     }
 
+    val statusIcon = when (status) {
+        WatchStatus.INTERRUPTED -> R.drawable.play_arrow_24px
+        WatchStatus.WATCHING -> R.drawable.pause_24px
+        WatchStatus.FINISHED -> R.drawable.check_24px
+        else -> R.drawable.schedule_24px
+    }
+
     Row(
         modifier = Modifier
             .padding(start = 16.dp, end = 16.dp, top = 10.dp)
@@ -75,7 +76,7 @@ fun MovieDetailActionsTop(status: WatchStatus) {
                 horizontalArrangement = Arrangement.Center
             ) {
                 Symbol(
-                    R.drawable.schedule_24px,
+                    statusIcon,
                     color = statusContentColor
                 )
                 Spacer(Modifier.width(8.dp))
@@ -94,7 +95,7 @@ fun MovieDetailActionsTop(status: WatchStatus) {
                 .height(48.dp)
                 .weight(1f),
             onClick = {
-              
+
             },
             contentPadding = ButtonDefaults.contentPaddingFor(48.dp),
             shapes = ButtonDefaults.shapes()
