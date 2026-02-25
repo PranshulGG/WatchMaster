@@ -1,4 +1,4 @@
-package com.pranshulgg.watchmaster.ui.theme
+package com.pranshulgg.watchmaster.core.ui.theme
 
 import android.app.Activity
 import android.os.Build
@@ -7,10 +7,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialExpressiveTheme
 import androidx.compose.material3.MotionScheme
-import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
@@ -19,19 +17,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
-import com.materialkolor.PaletteStyle
 import com.materialkolor.dynamiccolor.ColorSpec
 import com.materialkolor.rememberDynamicColorScheme
-import com.pranshulgg.watchmaster.model.StatusColor
-import com.pranshulgg.watchmaster.model.StatusColors
-import com.pranshulgg.watchmaster.model.ThemeVariantType
 
 
 val LocalStatusColors = staticCompositionLocalOf {
-    StatusColors(
-        success = StatusColor(Color(0xFF16520E), Color(0xFFB1F49D)),
-        pending = StatusColor(Color(0xFFD4D4D4), Color(0xFF000000)),
-        warning = StatusColor(Color(0xFF5D4200), Color(0xFFFFDEA4)),
+    MediaStatusColors(
+        success = MediaStatusColor(Color(0xFF16520E), Color(0xFFB1F49D)),
+        pending = MediaStatusColor(Color(0xFFD4D4D4), Color(0xFF000000)),
+        warning = MediaStatusColor(Color(0xFF5D4200), Color(0xFFFFDEA4)),
     )
 }
 
@@ -69,16 +63,16 @@ fun WatchMasterTheme(
     }
 
     val statusColors = if (darkTheme) {
-        StatusColors(
-            success = StatusColor(Color(0xFF16520E), Color(0xFFB1F49D)),
-            pending = StatusColor(Color(0xFFD4D4D4), Color(0xFF000000)),
-            warning = StatusColor(Color(0xFF5D4200), Color(0xFFFFDEA4)),
+        MediaStatusColors(
+            success = MediaStatusColor(Color(0xFF16520E), Color(0xFFB1F49D)),
+            pending = MediaStatusColor(Color(0xFFD4D4D4), Color(0xFF000000)),
+            warning = MediaStatusColor(Color(0xFF5D4200), Color(0xFFFFDEA4)),
         )
     } else {
-        StatusColors(
-            success = StatusColor(Color(0xFFC4F18C), Color(0xFF304F00)),
-            pending = StatusColor(Color(0xFF3B3B3B), Color(0xFFFFFFFF)),
-            warning = StatusColor(Color(0xFFFFDEA4), Color(0xFF5D4200)),
+        MediaStatusColors(
+            success = MediaStatusColor(Color(0xFFC4F18C), Color(0xFF304F00)),
+            pending = MediaStatusColor(Color(0xFF3B3B3B), Color(0xFFFFFFFF)),
+            warning = MediaStatusColor(Color(0xFFFFDEA4), Color(0xFF5D4200)),
         )
     }
 
