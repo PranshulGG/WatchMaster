@@ -1,4 +1,4 @@
-package com.pranshulgg.watchmaster.prefs
+package com.pranshulgg.watchmaster.core.prefs
 
 import androidx.compose.runtime.staticCompositionLocalOf
 
