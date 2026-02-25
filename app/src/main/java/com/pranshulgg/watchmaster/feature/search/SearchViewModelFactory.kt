@@ -1,12 +1,11 @@
-package com.pranshulgg.watchmaster.screens.search
+package com.pranshulgg.watchmaster.feature.search
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.pranshulgg.watchmaster.data.local.WatchMasterDatabase
 import com.pranshulgg.watchmaster.data.repository.WatchlistRepository
-import com.pranshulgg.watchmaster.network.TmdbApi
-import com.pranshulgg.watchmaster.data.local.dao.WatchlistDao
+import com.pranshulgg.watchmaster.core.network.TmdbApi
 import com.pranshulgg.watchmaster.data.repository.MovieRepository
 
 class SearchViewModelFactory(
