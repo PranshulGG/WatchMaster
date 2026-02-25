@@ -1,4 +1,4 @@
-package com.pranshulgg.watchmaster.screens.search
+package com.pranshulgg.watchmaster.feature.search
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -6,11 +6,13 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pranshulgg.watchmaster.data.repository.WatchlistRepository
-import com.pranshulgg.watchmaster.model.SearchType
-import com.pranshulgg.watchmaster.network.TvSeasonDto
+import com.pranshulgg.watchmaster.core.network.TvSeasonDto
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SearchViewModel(
+@HiltViewModel
+class SearchViewModel @Inject constructor(
     private val repo: SearchRepository,
     private val watchlistRepository: WatchlistRepository
 ) : ViewModel() {
