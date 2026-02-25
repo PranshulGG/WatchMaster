@@ -1,7 +1,7 @@
 package com.pranshulgg.watchmaster.data.local.converters
 
 import androidx.room.TypeConverter
-import com.pranshulgg.watchmaster.model.WatchStatus
+import com.pranshulgg.watchmaster.core.model.WatchStatus
 
 class WatchStatusConverter {
 
