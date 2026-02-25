@@ -1,14 +1,8 @@
-package com.pranshulgg.watchmaster.screens.media_detail
+package com.pranshulgg.watchmaster.feature.movie.detail
 
-import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,118 +11,77 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingToolbarDefaults
 import androidx.compose.material3.FloatingToolbarExitDirection.Companion.Bottom
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Slider
-import androidx.compose.material3.SliderDefaults
-import androidx.compose.material3.SliderState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.VerticalSlider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.ExperimentalTextApi
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontVariation
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import coil.compose.AsyncImage
 import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.data.local.WatchMasterDatabase
-import com.pranshulgg.watchmaster.data.local.entity.MovieBundle
 import com.pranshulgg.watchmaster.data.repository.MovieRepository
-import com.pranshulgg.watchmaster.data.repository.TvRepository
 import com.pranshulgg.watchmaster.data.repository.WatchlistRepository
-import com.pranshulgg.watchmaster.model.WatchStatus
-import com.pranshulgg.watchmaster.models.MovieDetailsViewModel
-import com.pranshulgg.watchmaster.models.TvDetailsViewModel
-import com.pranshulgg.watchmaster.models.WatchlistViewModel
-import com.pranshulgg.watchmaster.models.WatchlistViewModelFactory
-import com.pranshulgg.watchmaster.network.TmdbApi
-import com.pranshulgg.watchmaster.screens.media_detail.factory.MovieDetailsViewModelFactory
-import com.pranshulgg.watchmaster.screens.media_detail.factory.TvDetailsViewModelFactory
-import com.pranshulgg.watchmaster.screens.media_detail.ui.CastItem
-import com.pranshulgg.watchmaster.screens.media_detail.ui.MovieDetailActionsTop
-import com.pranshulgg.watchmaster.screens.media_detail.ui.MovieDetailFloatingToolBar
-import com.pranshulgg.watchmaster.screens.media_detail.ui.MovieHeroHeader
-import com.pranshulgg.watchmaster.screens.media_detail.ui.SectionCard
-import com.pranshulgg.watchmaster.ui.components.DialogBasic
-import com.pranshulgg.watchmaster.ui.components.PosterBox
-import com.pranshulgg.watchmaster.ui.components.RateMovieDialogContent
-import com.pranshulgg.watchmaster.ui.components.TextAlertDialog
-import com.pranshulgg.watchmaster.ui.snackbar.SnackbarManager
-import com.pranshulgg.watchmaster.ui.theme.RobotoFlexWide
-import com.pranshulgg.watchmaster.utils.Radius
-import com.pranshulgg.watchmaster.utils.Symbol
+import com.pranshulgg.watchmaster.core.model.WatchStatus
+import com.pranshulgg.watchmaster.feature.movie.detail.MovieDetailsViewModel
+import com.pranshulgg.watchmaster.feature.shared.WatchlistViewModel
+import com.pranshulgg.watchmaster.core.network.TmdbApi
+import com.pranshulgg.watchmaster.core.ui.components.DialogBasic
+import com.pranshulgg.watchmaster.core.ui.components.TextAlertDialog
+import com.pranshulgg.watchmaster.core.ui.components.media.CastItem
+import com.pranshulgg.watchmaster.core.ui.components.media.MediaSectionCard
+import com.pranshulgg.watchmaster.core.ui.components.media.MediaStatusSection
+import com.pranshulgg.watchmaster.core.ui.components.media.RateMediaDialogContent
+import com.pranshulgg.watchmaster.core.ui.snackbar.SnackbarManager
+import com.pranshulgg.watchmaster.feature.movie.detail.components.MovieDetailFloatingToolBar
+import com.pranshulgg.watchmaster.feature.movie.detail.components.MovieHeroHeader
+import com.pranshulgg.watchmaster.core.ui.theme.Radius
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlin.math.roundToInt
 
 @OptIn(
     ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class,
     ExperimentalTextApi::class
 )
 @Composable
-fun MediaDetailPage(
+fun MovieDetailPage(
     id: Long,
     navController: NavController
 ) {
-    val viewModel: MovieDetailsViewModel = viewModel(
-        factory = MovieDetailsViewModelFactory(LocalContext.current)
-    )
+//    val viewModel: MovieDetailsViewModel = viewModel(
+//        factory = MovieDetailsViewModelFactory(LocalContext.current)
+//    )
 
+    val viewModel: MovieDetailsViewModel = hiltViewModel()
 
     LaunchedEffect(id) {
         viewModel.load(id)
@@ -153,24 +106,24 @@ fun MediaDetailPage(
     var noteText by remember { mutableStateOf("") }
 
 
-    val context = LocalContext.current
-    val repository = remember {
-        val db = WatchMasterDatabase.getInstance(context)
-        WatchlistRepository(
-            db.watchlistDao(),
-            MovieRepository(
-                api = TmdbApi.create(),
-                dao = db.movieBundleDao()
-            )
-        )
-    }
+//    val context = LocalContext.current
+//    val repository = remember {
+//        val db = WatchMasterDatabase.getInstance(context)
+//        WatchlistRepository(
+//            db.watchlistDao(),
+//            MovieRepository(
+//                api = TmdbApi.create(),
+//                dao = db.movieBundleDao()
+//            )
+//        )
+//    }
+//
+//
+//    val factory = remember {
+//        WatchlistViewModelFactory(repository)
+//    }
 
-
-    val factory = remember {
-        WatchlistViewModelFactory(repository)
-    }
-
-    val watchlistViewModel: WatchlistViewModel = viewModel(factory = factory)
+    val watchlistViewModel: WatchlistViewModel = hiltViewModel()
 
     LaunchedEffect(id) {
         watchlistViewModel.observeItem(id)
@@ -255,9 +208,9 @@ fun MediaDetailPage(
 
                         }
                     )
-                    MovieDetailActionsTop(status = liveItem?.status ?: WatchStatus.WATCHING)
+                    MediaStatusSection(status = liveItem?.status ?: WatchStatus.WATCHING)
                     Spacer(Modifier.height(16.dp))
-                    SectionCard(
+                    MediaSectionCard(
                         title = "Overview",
                         titleIcon = R.drawable.overview_24px,
                     ) {
@@ -269,7 +222,7 @@ fun MediaDetailPage(
                         )
                     }
                     Spacer(modifier = Modifier.height(12.dp))
-                    SectionCard(
+                    MediaSectionCard(
                         title = "Notes",
                         titleIcon = R.drawable.sticky_note_2_24px,
                         showAction = true,
@@ -305,7 +258,7 @@ fun MediaDetailPage(
                     }
 
                     Spacer(modifier = Modifier.height(12.dp))
-                    SectionCard(
+                    MediaSectionCard(
                         title = "Cast",
                         titleIcon = R.drawable.groups_2_24px,
                     ) {
@@ -361,7 +314,7 @@ fun MediaDetailPage(
             showDefaultActions = false,
             onDismiss = { showRatingDialog = false },
             content = {
-                RateMovieDialogContent(
+                RateMediaDialogContent(
                     onCancel = { showRatingDialog = false },
                     onConfirm = { rating ->
                         watchlistViewModel.setUserRating(id, rating)
