@@ -5,7 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
-import com.pranshulgg.watchmaster.model.WatchStatus
+import com.pranshulgg.watchmaster.core.model.WatchStatus
 import kotlinx.coroutines.flow.Flow
 import java.time.Instant
 
