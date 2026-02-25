@@ -1,4 +1,4 @@
-package com.pranshulgg.watchmaster.screens.media_detail.ui
+package com.pranshulgg.watchmaster.feature.movie.detail.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -10,15 +10,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.FilledIconButton
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -38,17 +33,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.pranshulgg.watchmaster.R
+import com.pranshulgg.watchmaster.core.ui.components.media.MediaDetailsScreenHeader
 import com.pranshulgg.watchmaster.data.local.entity.MovieBundle
-import com.pranshulgg.watchmaster.models.WatchlistViewModel
-import com.pranshulgg.watchmaster.utils.NavigateUpBtn
-import com.pranshulgg.watchmaster.utils.Radius
-import com.pranshulgg.watchmaster.utils.Symbol
-import com.pranshulgg.watchmaster.utils.topSysStatusPadding
+import com.pranshulgg.watchmaster.feature.shared.WatchlistViewModel
+import com.pranshulgg.watchmaster.core.ui.theme.Radius
+import com.pranshulgg.watchmaster.core.ui.components.Symbol
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -60,7 +54,7 @@ fun MovieHeroHeader(
     onUpdateRating: (Double) -> Unit
 ) {
 
-    val watchlistViewModel: WatchlistViewModel = viewModel()
+    val watchlistViewModel: WatchlistViewModel = hiltViewModel()
 
     LaunchedEffect(movie.id) {
         watchlistViewModel.observeItem(movie.id)
@@ -79,7 +73,7 @@ fun MovieHeroHeader(
             contentScale = ContentScale.Crop
         )
 
-        TopNavMovieDetailsScreenHeader(navController, isFinished, userRating, onUpdateRating)
+        MediaDetailsScreenHeader(navController, isFinished, userRating, onUpdateRating)
 
         Box(
             modifier = Modifier
