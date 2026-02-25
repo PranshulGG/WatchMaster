@@ -1,4 +1,4 @@
-package com.pranshulgg.watchmaster.utils
+package com.pranshulgg.watchmaster.core.ui.navigation
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
