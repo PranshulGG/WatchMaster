@@ -1,4 +1,4 @@
-package com.pranshulgg.watchmaster.ui.components
+package com.pranshulgg.watchmaster.core.ui.components.media
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -30,8 +30,8 @@ import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pranshulgg.watchmaster.R
-import com.pranshulgg.watchmaster.ui.theme.RobotoFlexWide
-import com.pranshulgg.watchmaster.utils.Radius
+import com.pranshulgg.watchmaster.core.ui.theme.RobotoFlexWide
+import com.pranshulgg.watchmaster.core.ui.theme.Radius
 import kotlin.math.roundToInt
 
 
@@ -40,7 +40,7 @@ import kotlin.math.roundToInt
     ExperimentalTextApi::class
 )
 @Composable
-fun RateMovieDialogContent(
+fun RateMediaDialogContent(
     onConfirm: (Double) -> Unit,
     onCancel: () -> Unit,
     updateRating: Boolean = false,
