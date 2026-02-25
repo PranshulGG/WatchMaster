@@ -1,8 +1,7 @@
-package com.pranshulgg.watchmaster.screens.search
+package com.pranshulgg.watchmaster.feature.search
 
-import com.pranshulgg.watchmaster.model.SearchType
-import com.pranshulgg.watchmaster.network.TmdbApi
-import com.pranshulgg.watchmaster.network.TvSeasonDto
+import com.pranshulgg.watchmaster.core.network.TmdbApi
+import com.pranshulgg.watchmaster.core.network.TvSeasonDto
 
 class SearchRepository(
     private val api: TmdbApi
