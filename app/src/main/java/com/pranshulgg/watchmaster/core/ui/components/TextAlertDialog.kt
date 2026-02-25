@@ -1,4 +1,4 @@
-package com.pranshulgg.watchmaster.ui.components
+package com.pranshulgg.watchmaster.core.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -19,12 +18,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import com.pranshulgg.watchmaster.ui.snackbar.SnackbarManager
-import com.pranshulgg.watchmaster.utils.Radius
+import com.pranshulgg.watchmaster.core.ui.theme.Radius
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
