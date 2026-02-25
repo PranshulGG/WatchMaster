@@ -1,4 +1,4 @@
-package com.pranshulgg.watchmaster.ui.components
+package com.pranshulgg.watchmaster.core.ui.components
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
