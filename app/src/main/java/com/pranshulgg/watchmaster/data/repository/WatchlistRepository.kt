@@ -1,15 +1,12 @@
 package com.pranshulgg.watchmaster.data.repository
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import com.pranshulgg.watchmaster.data.local.dao.WatchlistDao
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 import com.pranshulgg.watchmaster.data.local.mapper.SeasonDataMapper
-import com.pranshulgg.watchmaster.model.SeasonDataModel
-import com.pranshulgg.watchmaster.model.WatchStatus
-import com.pranshulgg.watchmaster.network.TmdbApi
-import com.pranshulgg.watchmaster.network.TvSeasonDto
-import com.pranshulgg.watchmaster.screens.search.SearchItem
+import com.pranshulgg.watchmaster.core.model.SeasonData
+import com.pranshulgg.watchmaster.core.model.WatchStatus
+import com.pranshulgg.watchmaster.core.network.TvSeasonDto
+import com.pranshulgg.watchmaster.feature.search.SearchItem
 import kotlinx.coroutines.flow.Flow
 import java.time.Instant
 
@@ -22,7 +19,7 @@ class WatchlistRepository(
     suspend fun addFromSearch(item: SearchItem, tvDetails: List<TvSeasonDto>? = null) {
 
         val seasons = tvDetails?.map {
-            SeasonDataModel(
+            SeasonData(
                 seasonNumber = it.season_number,
                 name = it.name,
                 episodeCount = it.episode_count,
