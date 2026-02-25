@@ -1,4 +1,4 @@
-package com.pranshulgg.watchmaster.ui.components.tiles
+package com.pranshulgg.watchmaster.core.ui.components.tiles
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
