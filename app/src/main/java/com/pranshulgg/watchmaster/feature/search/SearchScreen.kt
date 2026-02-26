@@ -57,7 +57,6 @@ import com.pranshulgg.watchmaster.feature.search.components.SearchRow
 import com.pranshulgg.watchmaster.core.ui.components.NavigateUpBtn
 import com.pranshulgg.watchmaster.core.ui.components.Symbol
 import com.pranshulgg.watchmaster.core.ui.snackbar.SnackbarManager
-import com.pranshulgg.watchmaster.helpers.provideWatchlistRepository
 import kotlinx.coroutines.launch
 
 
