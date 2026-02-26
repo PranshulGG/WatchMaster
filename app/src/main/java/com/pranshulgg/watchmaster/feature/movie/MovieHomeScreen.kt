@@ -43,17 +43,6 @@ fun MovieHomeScreen(
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
-//    val db = WatchMasterDatabase.getInstance(context)
-//    val repository = remember(context) {
-//        WatchlistRepository(
-//            db.watchlistDao(),
-//            MovieRepository(TmdbApi.create(), db.movieBundleDao())
-//        )
-//    }
-//    val viewModel: WatchlistViewModel = viewModel(
-//        factory = WatchlistViewModelFactory(repository)
-//    )
-
     val viewModel: WatchlistViewModel = hiltViewModel()
 
     val items by viewModel.watchlist.collectAsState()
@@ -82,7 +71,6 @@ fun MovieHomeScreen(
             sheetState.show()
         }
     }
-
 
     var updateRating by remember { mutableStateOf(false) }
     var originalRating by remember { mutableFloatStateOf(0f) }
