@@ -30,7 +30,6 @@ fun LargeTopBarScaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         containerColor = MaterialTheme.colorScheme.surfaceContainer,
         topBar = {
-
             LargeFlexibleTopAppBar(
                 title = { Text(text = title) },
                 navigationIcon = navigationIcon,
