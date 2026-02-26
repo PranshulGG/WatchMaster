@@ -28,6 +28,7 @@ import com.pranshulgg.watchmaster.feature.movie.MovieHomeScreen
 import com.pranshulgg.watchmaster.core.ui.navigation.NavRoutes
 import com.pranshulgg.watchmaster.core.ui.components.Symbol
 import com.pranshulgg.watchmaster.feature.home.HomeScreen
+import com.pranshulgg.watchmaster.feature.tv.TvHomeScreen
 
 @OptIn(
     ExperimentalMaterial3ExpressiveApi::class,
@@ -38,8 +39,6 @@ fun MainScreen(
     navController: NavController,
     motionScheme: MotionScheme,
 ) {
-
-
     val viewModel: MainScreenNavViewModel = viewModel()
 
     val selectedItem = viewModel.selectedItem
@@ -106,10 +105,13 @@ fun MainScreen(
                     scrollBehavior,
                     scrollBehaviorTopBar,
                 )
-            }
 
+                2 -> {
+                    TvHomeScreen(
+                        navController
+                    )
+                }
+            }
         }
     }
-
-
 }
