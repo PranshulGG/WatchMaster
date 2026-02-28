@@ -40,11 +40,13 @@ import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 import com.pranshulgg.watchmaster.core.ui.navigation.NavRoutes
 import com.pranshulgg.watchmaster.core.model.WatchStatus
+import com.pranshulgg.watchmaster.core.ui.components.MaterialListShape
 import com.pranshulgg.watchmaster.core.ui.theme.Radius
 import com.pranshulgg.watchmaster.core.ui.components.Symbol
 import com.pranshulgg.watchmaster.core.ui.components.media.PosterPlaceholder
 import com.pranshulgg.watchmaster.core.ui.theme.LocalStatusColors
 import com.pranshulgg.watchmaster.core.utils.formatDate
+import com.pranshulgg.watchmaster.feature.shared.media.toWatchListMediaStatusUi
 
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
@@ -60,6 +62,7 @@ fun WatchlistRow(
     val isOnly = items.singleOrNull() == item
     val isFirst = index == 0
     val isLast = index == items.lastIndex
+
     val titleMaxLines = 2
     val overviewMaxLines = remember { mutableIntStateOf(1) }
     val scope = rememberCoroutineScope()
@@ -69,52 +72,15 @@ fun WatchlistRow(
         "https://image.tmdb.org/t/p/w154$it"
     }
 
-    val movieStatusLabel = when (item.status) {
-        WatchStatus.WATCHING -> "Started • ${item.startedDate?.formatDate()}"
-        WatchStatus.FINISHED -> "Finished • ${item.finishedDate?.formatDate()}"
-        WatchStatus.INTERRUPTED -> "Interrupted • ${item.interruptedAt?.formatDate()}"
-        else -> "Added • ${item.addedDate.formatDate()}"
-    }
+    val status = item.status.toWatchListMediaStatusUi(item)
 
-    val statusColor = LocalStatusColors.current
+    val shape = MaterialListShape(isOnly, isFirst, isLast)
 
-    val statusContainerColor = when (item.status) {
-        WatchStatus.INTERRUPTED -> MaterialTheme.colorScheme.errorContainer
-        WatchStatus.WATCHING -> statusColor.warning.bg
-        WatchStatus.FINISHED -> statusColor.success.bg
-        else -> statusColor.pending.bg
-    }
-
-    val statusContentColor = when (item.status) {
-        WatchStatus.INTERRUPTED -> MaterialTheme.colorScheme.onErrorContainer
-        WatchStatus.WATCHING -> statusColor.warning.on
-        WatchStatus.FINISHED -> statusColor.success.on
-        else -> statusColor.pending.on
-    }
-
-
-    val shape = when {
-        isOnly -> RoundedCornerShape(16.dp)
-        isFirst -> RoundedCornerShape(
-            topStart = 16.dp,
-            topEnd = 16.dp,
-            bottomStart = 4.dp,
-            bottomEnd = 4.dp
-        )
-
-        isLast -> RoundedCornerShape(
-            topStart = 4.dp,
-            topEnd = 4.dp,
-            bottomStart = 16.dp,
-            bottomEnd = 16.dp
-        )
-
-        else -> RoundedCornerShape(4.dp)
-    }
 
     Surface(
         shape = shape,
         modifier = Modifier
+            .fillMaxWidth()
             .clip(shape)
             .combinedClickable(
                 onClick = {
@@ -177,15 +143,15 @@ fun WatchlistRow(
                     overflow = TextOverflow.Ellipsis,
                     onTextLayout = { result ->
                         val newLines = if (result.lineCount == 1) 2 else 1
-                        if (overviewMaxLines.value != newLines) {
-                            overviewMaxLines.value = newLines
+                        if (overviewMaxLines.intValue != newLines) {
+                            overviewMaxLines.intValue = newLines
                         }
                     }
 
                 )
                 Text(
                     item.overview ?: "No overview found",
-                    maxLines = overviewMaxLines.value,
+                    maxLines = overviewMaxLines.intValue,
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -193,15 +159,15 @@ fun WatchlistRow(
                 Spacer(Modifier.height(5.dp))
                 Row {
                     Surface(
-                        color = statusContainerColor,
+                        color = status.containerColor,
                         shape = if (item.status == WatchStatus.FINISHED) RoundedCornerShape(
                             topStart = Radius.Full,
                             bottomStart = Radius.Full
                         ) else CircleShape
                     ) {
                         Text(
-                            movieStatusLabel,
-                            color = statusContentColor,
+                            status.statusLabel,
+                            color = status.contentColor,
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(horizontal = 8.dp)
@@ -209,18 +175,6 @@ fun WatchlistRow(
                     }
 
                     if (item.status == WatchStatus.FINISHED) {
-//                    Surface(
-//                        color = MaterialTheme.colorScheme.primary,
-//                        shape = CircleShape
-//                    ) {
-//                        Text(
-//                            "${item.userRating}",
-//                            color = MaterialTheme.colorScheme.onPrimary,
-//                            fontSize = 12.sp,
-//                            fontWeight = FontWeight.Bold,
-//                            modifier = Modifier.padding(horizontal = 8.dp)
-//                        )
-//                    }
                         Surface(
                             color = MaterialTheme.colorScheme.primary,
                             shape = RoundedCornerShape(
@@ -252,6 +206,4 @@ fun WatchlistRow(
             }
         }
     }
-
-
 }
