@@ -15,36 +15,36 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.pranshulgg.watchmaster.core.model.SeasonData
 import com.pranshulgg.watchmaster.core.ui.components.media.PosterBox
 import com.pranshulgg.watchmaster.core.ui.theme.Radius
+import com.pranshulgg.watchmaster.data.local.entity.WatchlistSeasonEntity
 
 @Composable
-fun SeasonTvRow(seasonData: SeasonData, shape: Shape) {
+fun SeasonTvRow(seasonData: WatchlistSeasonEntity, shape: Shape) {
 
     Surface(
         shape = shape,
         modifier = Modifier
             .fillMaxWidth()
+            .padding(horizontal = 8.dp)
             .clip(shape)
             .combinedClickable(
                 onClick = {
 
                 },
             ),
-        color = Color.Transparent
+        color = MaterialTheme.colorScheme.surfaceContainer
     ) {
         Column() {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(115.dp)
+                    .height(100.dp)
                     .clipToBounds()
                     .padding(end = 16.dp),
                 horizontalArrangement = Arrangement.spacedBy(
@@ -55,7 +55,9 @@ fun SeasonTvRow(seasonData: SeasonData, shape: Shape) {
                 PosterBox(
                     posterUrl = "https://image.tmdb.org/t/p/w154${seasonData.posterPath}",
                     apiPath = seasonData.posterPath,
-                    cornerRadius = Radius.None
+                    cornerRadius = Radius.None,
+                    height = 100.dp,
+                    width = 65.dp
                 )
                 Column(
                     modifier = Modifier
