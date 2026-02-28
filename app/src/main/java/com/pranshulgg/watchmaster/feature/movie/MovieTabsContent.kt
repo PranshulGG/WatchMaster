@@ -29,7 +29,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun MovieTabsContent(
     navController: NavController,
-    motionScheme: MotionScheme,
     scrollBehavior: FloatingToolbarScrollBehavior,
     scrollBehaviorTopBar: TopAppBarScrollBehavior,
     state: MovieHomeState,
