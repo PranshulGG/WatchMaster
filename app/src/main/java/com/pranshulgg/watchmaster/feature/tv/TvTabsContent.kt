@@ -23,6 +23,7 @@ import com.pranshulgg.watchmaster.feature.movie.MovieTab
 import com.pranshulgg.watchmaster.feature.movie.finished.FinishedMovies
 import com.pranshulgg.watchmaster.feature.movie.watching.WatchingMovies
 import com.pranshulgg.watchmaster.feature.movie.watchlist.WatchlistMovies
+import com.pranshulgg.watchmaster.feature.shared.WatchlistViewModel
 import com.pranshulgg.watchmaster.feature.tv.finished.FinishedTv
 import com.pranshulgg.watchmaster.feature.tv.watching.WatchingTv
 import com.pranshulgg.watchmaster.feature.tv.watchlist.WatchlistTv
@@ -34,6 +35,7 @@ fun TvTabsContent(
     navController: NavController, state: TvHomeState,
     scrollBehavior: FloatingToolbarScrollBehavior,
     scrollBehaviorTopBar: TopAppBarScrollBehavior,
+    viewModel: WatchlistViewModel
 ) {
 
     val tabs = TvTab.entries
@@ -81,6 +83,7 @@ fun TvTabsContent(
                         scrollBehaviorTopBar,
                         navController,
                         onLongActionTvRequest = {},
+                        viewModel
                     )
                 }
 
@@ -91,9 +94,7 @@ fun TvTabsContent(
                 TvTab.FINISHED -> {
                     FinishedTv(state.isLoading, state.finished)
                 }
-
             }
-
 
         }
     }
