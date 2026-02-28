@@ -43,6 +43,33 @@ class SearchViewModel @Inject constructor(
     private val seasonCache = mutableMapOf<Long, List<TvSeasonDto>>()
 
 
+    private val seasonMockData = listOf(
+        TvSeasonDto(
+            id = 1,
+            name = "Season 1",
+            season_number = 1,
+            episode_count = 22,
+            poster_path = "/3z2mYFxUkzanb2eeIcVyfJq0G3q.jpg",
+            air_date = "",
+        ),
+        TvSeasonDto(
+            id = 2,
+            name = "Season 2",
+            season_number = 2,
+            episode_count = 25,
+            poster_path = "/3z2mYFxUkzanb2eeIcVyfJq0G3q.jpg",
+            air_date = "",
+        ),
+        TvSeasonDto(
+            id = 5,
+            name = "Season 3",
+            season_number = 3,
+            episode_count = 15,
+            poster_path = "/3z2mYFxUkzanb2eeIcVyfJq0G3q.jpg",
+            air_date = "",
+        )
+    )
+
     private val mockResults = listOf(
         SearchItem(
             id = 243875,
@@ -53,7 +80,6 @@ class SearchViewModel @Inject constructor(
             genreIds = listOf(35),
             overview = "Georgie and Mandy raise their young family in Texas while navigating the challenges of adulthood, parenting, and marriage.",
             backdropPath = "/pCr3YYJkkLt9fdGVD7I2Z1l6lzK.jpg"
-
         ),
         SearchItem(
             id = 12,
@@ -102,7 +128,6 @@ class SearchViewModel @Inject constructor(
         ),
     )
 
-//
 //    init {
 //        results = mockResults
 //        loading = false
