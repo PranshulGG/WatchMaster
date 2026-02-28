@@ -18,9 +18,11 @@ class SearchViewModelFactory(
 
         val db = WatchMasterDatabase.getInstance(context)
         val watchlistRepo = WatchlistRepository(
-            db.watchlistDao(), MovieRepository(
+            db.watchlistDao(),
+            db.seasonDao(),
+            MovieRepository(
                 api = TmdbApi.create(),
-                dao = db.movieBundleDao()
+                dao = db.movieBundleDao(),
             )
         )
 
