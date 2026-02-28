@@ -29,6 +29,12 @@ class WatchlistRepository(
         }
 
         val seasonsJson = SeasonDataMapper.toJson(seasons)
+
+        // Save season name so it's easier to check if the season already exists or not
+        val seasonName = tvDetails
+            ?.map { it.name }
+            ?.toSet()
+
         dao.insert(
             WatchlistItemEntity(
                 id = item.id,
@@ -42,6 +48,8 @@ class WatchlistRepository(
                 avgRating = item.avg_rating,
                 backdropPath = item.backdropPath,
                 seasonsJson = seasonsJson,
+                seasonNames = seasonName
+
             )
         )
     }
@@ -101,6 +109,6 @@ class WatchlistRepository(
     fun getItemById(id: Long): Flow<WatchlistItemEntity?> {
         return dao.getById(id)
     }
-
+    
 
 }
