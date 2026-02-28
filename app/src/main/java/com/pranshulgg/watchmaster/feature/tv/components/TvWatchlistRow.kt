@@ -170,7 +170,7 @@ fun TvWatchlistRow(
                 exit = shrinkVertically(animationSpec = motionScheme.slowSpatialSpec()),
             ) {
                 Column(
-                    modifier = Modifier.padding(bottom = 8.dp, top = 8.dp),
+                    modifier = Modifier.padding(bottom = 8.dp),
                     verticalArrangement = Arrangement.spacedBy(2.dp)
                 ) {
                     HorizontalDivider()
