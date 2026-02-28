@@ -168,4 +168,9 @@ class SearchViewModel @Inject constructor(
         }
     }
 
+    fun addSeasonToWatchlist(id: Long, tvDetails: List<TvSeasonDto>) {
+        viewModelScope.launch {
+            watchlistRepository.insertSeason(id, tvDetails)
+        }
+    }
 }
