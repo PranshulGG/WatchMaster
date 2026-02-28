@@ -2,10 +2,12 @@ package com.pranshulgg.watchmaster.feature.shared
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.pranshulgg.watchmaster.data.local.entity.WatchlistSeasonEntity
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 import com.pranshulgg.watchmaster.data.repository.WatchlistRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -82,6 +84,10 @@ class WatchlistViewModel @Inject constructor(
                 .distinctUntilChanged()
                 .collect { _currentItem.value = it }
         }
+    }
+
+    fun seasonsForShow(showId: Long): Flow<List<WatchlistSeasonEntity>> {
+        return repository.getSeasonsForShow(showId)
     }
 
 
