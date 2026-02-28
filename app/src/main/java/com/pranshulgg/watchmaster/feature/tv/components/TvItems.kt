@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 import com.pranshulgg.watchmaster.feature.movie.components.WatchlistRow
+import com.pranshulgg.watchmaster.feature.shared.WatchlistViewModel
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -35,7 +36,8 @@ fun TvItems(
     navController: NavController,
     onLongActionTvRequest: (WatchlistItemEntity) -> Unit,
     pinnedItems: List<WatchlistItemEntity>,
-    normalItems: List<WatchlistItemEntity>
+    normalItems: List<WatchlistItemEntity>,
+    viewModel: WatchlistViewModel
 ) {
     LazyColumn(
         modifier = Modifier
@@ -69,7 +71,8 @@ fun TvItems(
                     index,
                     pinnedItems,
                     navController,
-                    onLongActionTvRequest = { onLongActionTvRequest(item) }
+                    onLongActionTvRequest = { onLongActionTvRequest(item) },
+                    viewModel
                 )
             }
 
@@ -93,7 +96,8 @@ fun TvItems(
                 index,
                 normalItems,
                 navController,
-                onLongActionTvRequest = { onLongActionTvRequest(item) }
+                onLongActionTvRequest = { onLongActionTvRequest(item) },
+                viewModel
             )
         }
 
@@ -102,9 +106,10 @@ fun TvItems(
             Spacer(
                 Modifier.height(
                     WindowInsets.systemBars.asPaddingValues().calculateBottomPadding()
-                            + ScreenOffset + 30.dp
+                            + ScreenOffset + 80.dp
                 )
             )
+
         }
     }
 }
