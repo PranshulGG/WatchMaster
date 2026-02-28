@@ -26,6 +26,7 @@ import androidx.compose.material3.MotionScheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -46,6 +47,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.pranshulgg.watchmaster.R
+import com.pranshulgg.watchmaster.core.model.SeasonData
 import com.pranshulgg.watchmaster.core.model.WatchStatus
 import com.pranshulgg.watchmaster.core.ui.components.MaterialListShape
 import com.pranshulgg.watchmaster.core.ui.components.Symbol
@@ -55,6 +57,7 @@ import com.pranshulgg.watchmaster.core.ui.navigation.NavRoutes
 import com.pranshulgg.watchmaster.core.ui.theme.Radius
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 import com.pranshulgg.watchmaster.data.local.mapper.SeasonDataMapper
+import com.pranshulgg.watchmaster.feature.shared.WatchlistViewModel
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -63,7 +66,8 @@ fun TvWatchlistRow(
     index: Int,
     items: List<WatchlistItemEntity>,
     navController: NavController,
-    onLongActionTvRequest: () -> Unit
+    onLongActionTvRequest: () -> Unit,
+    viewModel: WatchlistViewModel
 ) {
     val isOnly = items.singleOrNull() == item
     val isFirst = index == 0
@@ -74,7 +78,12 @@ fun TvWatchlistRow(
     val titleMaxLines = 2
     val overviewMaxLines = remember { mutableIntStateOf(1) }
 
-    val seasonData = SeasonDataMapper.fromJson(item.seasonsJson)
+//    val seasonData = SeasonDataMapper.fromJson(item.seasonsJson)
+
+
+    val seasonsData by viewModel
+        .seasonsForShow(item.id)
+        .collectAsState(initial = emptyList())
 
     var expanded by remember { mutableStateOf(false) }
 
@@ -154,20 +163,23 @@ fun TvWatchlistRow(
 
             }
 
-
             AnimatedVisibility(
                 visible = expanded,
                 enter = expandVertically(animationSpec = motionScheme.slowSpatialSpec()),
                 exit = shrinkVertically(animationSpec = motionScheme.slowSpatialSpec()),
             ) {
-                seasonData.forEach { it ->
-                    val isOnly = seasonData.singleOrNull() == it
-                    val isFirst = seasonData.indexOf(it) == 0
-                    val isLast = seasonData.indexOf(it) == seasonData.lastIndex
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(2.dp)
+                ) {
+                    seasonsData.forEach { seasonDataItem ->
+                        val isOnly = seasonsData.singleOrNull() == seasonDataItem
+                        val isFirst = seasonsData.indexOf(seasonDataItem) == 0
+                        val isLast = seasonsData.indexOf(seasonDataItem) == seasonsData.lastIndex
 
-                    val shapeSeasonRow = MaterialListShape(isOnly, isFirst, isLast)
+                        val shapeSeasonRow = MaterialListShape(isOnly, isFirst, isLast)
 
-                    SeasonTvRow(it, shapeSeasonRow)
+                        SeasonTvRow(seasonDataItem, shapeSeasonRow)
+                    }
                 }
             }
         }
