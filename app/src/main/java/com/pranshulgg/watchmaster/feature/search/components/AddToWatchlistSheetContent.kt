@@ -29,6 +29,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -43,6 +45,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.pranshulgg.watchmaster.R
@@ -55,6 +58,8 @@ import com.pranshulgg.watchmaster.core.ui.components.SettingTile
 import com.pranshulgg.watchmaster.core.ui.theme.Radius
 import com.pranshulgg.watchmaster.core.ui.components.Symbol
 import com.pranshulgg.watchmaster.core.ui.components.media.PosterPlaceholder
+import com.pranshulgg.watchmaster.core.ui.snackbar.SnackbarManager
+import com.pranshulgg.watchmaster.feature.shared.WatchlistViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -75,6 +80,7 @@ fun AddToWatchlistSheetContent(
 
     val genreList = item.genreIds?.let { getGenreNames(it) }
     val size = ButtonDefaults.MediumContainerHeight
+
 
 //    val btnSize = ButtonDefaults.MediumContainerHeight
 
@@ -153,7 +159,7 @@ fun AddToWatchlistSheetContent(
         }
         if (!seasonLoading && item.mediaType == "tv") {
             Spacer(Modifier.height(12.dp))
-            SeasonBtn(seasonData, onSelectedSeason)
+            SeasonBtn(seasonData, onSelectedSeason, item.id)
         }
         Spacer(Modifier.height(12.dp))
 //
@@ -303,13 +309,24 @@ private fun StarDateChip(text: String, isDate: Boolean = false) {
 @Composable
 private fun SeasonBtn(
     seasonData: List<TvSeasonDto>,
-    onSelectedSeason: (List<TvSeasonDto>) -> Unit
+    onSelectedSeason: (List<TvSeasonDto>) -> Unit,
+    id: Long,
 ) {
     var selectedSeason by remember { mutableIntStateOf(0) }
     val size = ButtonDefaults.MediumContainerHeight
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
     var seasonChanged by remember { mutableStateOf(false) }
+
+    val watchlistViewModel: WatchlistViewModel = hiltViewModel()
+
+
+    LaunchedEffect(id) {
+        watchlistViewModel.observeItem(id)
+    }
+
+    val watchlistItem by watchlistViewModel.currentItem.collectAsState()
+
 
     if (!seasonChanged) {
         onSelectedSeason(listOf(seasonData[0]))
@@ -357,6 +374,9 @@ private fun SeasonBtn(
             isModalOption = true,
             tiles = seasonData.mapIndexed { index, item ->
 
+                val seasonExists =
+                    watchlistItem?.seasonNames?.contains(item.name) == true
+
                 SettingTile.ActionTile(
                     title = item.name,
                     leading = {
@@ -369,11 +389,14 @@ private fun SeasonBtn(
                     },
                     description = item.air_date,
                     selected = index == selectedSeason,
+
                     onClick = {
-                        seasonChanged = true
-                        scope.launch { sheetState.hide() }
-                        selectedSeason = index
-                        onSelectedSeason(listOf(item))
+                        if (!seasonExists) {
+                            seasonChanged = true
+                            scope.launch { sheetState.hide() }
+                            selectedSeason = index
+                            onSelectedSeason(listOf(item))
+                        }
                     },
                     trailing = {
                         Surface(
@@ -381,7 +404,7 @@ private fun SeasonBtn(
                             shape = RoundedCornerShape(if (index == selectedSeason) Radius.Small else Radius.Full)
                         ) {
                             Text(
-                                item.episode_count.toString() + " episodes",
+                                item.episode_count.toString() + " episodes ${if (seasonExists) "• Saved" else ""}",
                                 modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
                                 color = if (index == selectedSeason) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.onSurface,
                                 style = MaterialTheme.typography.labelMedium
