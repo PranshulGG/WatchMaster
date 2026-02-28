@@ -101,14 +101,15 @@ fun MainScreen(
 
                 1 -> MovieHomeScreen(
                     navController,
-                    motionScheme,
                     scrollBehavior,
                     scrollBehaviorTopBar,
                 )
 
                 2 -> {
                     TvHomeScreen(
-                        navController
+                        navController,
+                        scrollBehavior,
+                        scrollBehaviorTopBar,
                     )
                 }
             }
