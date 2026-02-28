@@ -83,7 +83,6 @@ fun SearchScreen(
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val selectedItem = remember { mutableStateOf<SearchItem?>(null) }
-//    val selectedSeasonItem = remember { mutableStateOf<List<TvSeasonDto>?>(null) }
 
 
     val selectedSeasonItem = remember {
@@ -264,7 +263,18 @@ fun SearchScreen(
                     closeSheet()
                 },
                 onConfirm = {
-                    viewModel.addToWatchlist(item, selectedSeasonItem.value)
+                    scope.launch {
+                        val exists = viewModelWatchList.exists(item.id)
+
+                        if (!exists) {
+                            viewModel.addToWatchlist(item)
+                        }
+
+                        if (item.mediaType == "tv") {
+                            viewModel.addSeasonToWatchlist(item.id, selectedSeasonItem.value)
+                        }
+
+                    }
                     SnackbarManager.show(
                         "Added to watchlist",
                         actionLabel = "View"
