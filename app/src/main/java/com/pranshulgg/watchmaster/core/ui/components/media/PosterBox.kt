@@ -25,7 +25,7 @@ fun PosterBox(
     cornerRadius: Dp = Radius.Medium,
     circular: Boolean = false,
     placeholder: @Composable () -> Unit = { PosterPlaceholder() },
-    apiPath: String? = null
+    apiPath: String? // to check if the API provided a valid image before loading
 ) {
     Box(
         modifier = modifier
