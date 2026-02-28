@@ -30,6 +30,7 @@ fun TvHomeScreen(
         TvHomeState(items, isLoading)
     }
 
-    TvTabsContent(navController, state, scrollBehavior, scrollBehaviorTopBar)
+
+    TvTabsContent(navController, state, scrollBehavior, scrollBehaviorTopBar, viewModel)
 
 }
