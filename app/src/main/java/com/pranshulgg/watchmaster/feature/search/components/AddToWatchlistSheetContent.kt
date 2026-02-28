@@ -326,6 +326,9 @@ private fun SeasonBtn(
 
     val watchlistViewModel: WatchlistViewModel = hiltViewModel()
 
+    val seasonsData by watchlistViewModel
+        .seasonsForShow(id)
+        .collectAsState(initial = emptyList())
 
 
     LaunchedEffect(id) {
@@ -384,13 +387,8 @@ private fun SeasonBtn(
             isModalOption = true,
             tiles = seasonData.mapIndexed { index, item ->
 
-//                val seasonExists =
-//                    watchlistItem?.seasonNames?.contains(item.name) == true
-//
-//                if (seasonExists && !totalSeasons.contains(item)) {
-//                    totalSeasons.add(item)
-//                }
 
+                val seasonExists = seasonsData.any { it.name == item.name }
 
                 SettingTile.ActionTile(
                     title = item.name,
@@ -406,15 +404,15 @@ private fun SeasonBtn(
                     selected = index == selectedSeason,
 
                     onClick = {
-//                        if (!seasonExists) {
-                        seasonChanged = true
-                        selectedSeason = index
-                        if (!totalSeasons.contains(item)) {
-                            totalSeasons.add(item)
+                        if (!seasonExists) {
+                            seasonChanged = true
+                            selectedSeason = index
+                            if (!totalSeasons.contains(item)) {
+                                totalSeasons.add(item)
+                            }
+                            onSelectedSeason(totalSeasons)
+                            scope.launch { sheetState.hide() }
                         }
-                        onSelectedSeason(totalSeasons)
-                        scope.launch { sheetState.hide() }
-//                        }
                     },
                     trailing = {
                         Surface(
@@ -422,8 +420,7 @@ private fun SeasonBtn(
                             shape = RoundedCornerShape(if (index == selectedSeason) Radius.Small else Radius.Full)
                         ) {
                             Text(
-//                                item.episode_count.toString() + " episodes ${if (seasonExists) "• Saved" else ""}",
-                                item.episode_count.toString() + " episodes",
+                                item.episode_count.toString() + " episodes ${if (seasonExists) "• Saved" else ""}",
                                 modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
                                 color = if (index == selectedSeason) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.onSurface,
                                 style = MaterialTheme.typography.labelMedium
