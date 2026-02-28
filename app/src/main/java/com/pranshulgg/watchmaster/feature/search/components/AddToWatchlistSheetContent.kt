@@ -24,6 +24,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -33,6 +34,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -49,6 +51,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.pranshulgg.watchmaster.R
+import com.pranshulgg.watchmaster.core.model.SeasonData
 import com.pranshulgg.watchmaster.data.getGenreNames
 import com.pranshulgg.watchmaster.feature.search.SearchItem
 import com.pranshulgg.watchmaster.core.network.TvSeasonDto
@@ -160,6 +163,8 @@ fun AddToWatchlistSheetContent(
         if (!seasonLoading && item.mediaType == "tv") {
             Spacer(Modifier.height(12.dp))
             SeasonBtn(seasonData, onSelectedSeason, item.id)
+        } else if (seasonLoading && item.mediaType == "tv") {
+            CircularProgressIndicator()
         }
         Spacer(Modifier.height(12.dp))
 //
@@ -227,6 +232,7 @@ fun AddToWatchlistSheetContent(
             customItem(
                 {
                     Button(
+                        enabled = !seasonLoading && item.mediaType == "tv",
                         interactionSource = interactionSources[1],
                         modifier = Modifier
                             .weight(1f)
@@ -321,6 +327,7 @@ private fun SeasonBtn(
     val watchlistViewModel: WatchlistViewModel = hiltViewModel()
 
 
+
     LaunchedEffect(id) {
         watchlistViewModel.observeItem(id)
     }
@@ -331,6 +338,8 @@ private fun SeasonBtn(
     if (!seasonChanged) {
         onSelectedSeason(listOf(seasonData[0]))
     }
+
+    val totalSeasons = remember { mutableStateListOf<TvSeasonDto>() }
 
     Box(
         modifier = Modifier.fillMaxWidth(),
@@ -369,13 +378,19 @@ private fun SeasonBtn(
         },
         showActions = false,
     ) {
+
         SettingSection(
             title = "All seasons",
             isModalOption = true,
             tiles = seasonData.mapIndexed { index, item ->
 
-                val seasonExists =
-                    watchlistItem?.seasonNames?.contains(item.name) == true
+//                val seasonExists =
+//                    watchlistItem?.seasonNames?.contains(item.name) == true
+//
+//                if (seasonExists && !totalSeasons.contains(item)) {
+//                    totalSeasons.add(item)
+//                }
+
 
                 SettingTile.ActionTile(
                     title = item.name,
@@ -391,12 +406,15 @@ private fun SeasonBtn(
                     selected = index == selectedSeason,
 
                     onClick = {
-                        if (!seasonExists) {
-                            seasonChanged = true
-                            scope.launch { sheetState.hide() }
-                            selectedSeason = index
-                            onSelectedSeason(listOf(item))
+//                        if (!seasonExists) {
+                        seasonChanged = true
+                        selectedSeason = index
+                        if (!totalSeasons.contains(item)) {
+                            totalSeasons.add(item)
                         }
+                        onSelectedSeason(totalSeasons)
+                        scope.launch { sheetState.hide() }
+//                        }
                     },
                     trailing = {
                         Surface(
@@ -404,7 +422,8 @@ private fun SeasonBtn(
                             shape = RoundedCornerShape(if (index == selectedSeason) Radius.Small else Radius.Full)
                         ) {
                             Text(
-                                item.episode_count.toString() + " episodes ${if (seasonExists) "• Saved" else ""}",
+//                                item.episode_count.toString() + " episodes ${if (seasonExists) "• Saved" else ""}",
+                                item.episode_count.toString() + " episodes",
                                 modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
                                 color = if (index == selectedSeason) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.onSurface,
                                 style = MaterialTheme.typography.labelMedium
