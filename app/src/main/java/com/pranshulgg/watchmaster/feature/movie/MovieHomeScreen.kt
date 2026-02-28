@@ -19,6 +19,7 @@ import com.pranshulgg.watchmaster.core.ui.components.TextAlertDialog
 import com.pranshulgg.watchmaster.core.ui.components.media.RateMediaDialogContent
 import com.pranshulgg.watchmaster.core.ui.snackbar.SnackbarManager
 import com.pranshulgg.watchmaster.feature.movie.components.WatchlistItemOptionsSheetContent
+import com.pranshulgg.watchmaster.feature.tv.TvHomeState
 
 
 data class MovieHomeUiState(
@@ -36,7 +37,6 @@ data class MovieHomeUiState(
 @Composable
 fun MovieHomeScreen(
     navController: NavController,
-    motionScheme: MotionScheme,
     scrollBehavior: FloatingToolbarScrollBehavior,
     scrollBehaviorTopBar: TopAppBarScrollBehavior,
 ) {
@@ -51,7 +51,6 @@ fun MovieHomeScreen(
     val state = remember(items, isLoading) {
         MovieHomeState(items, isLoading)
     }
-
 
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var uiState by remember { mutableStateOf(MovieHomeUiState()) }
@@ -72,14 +71,10 @@ fun MovieHomeScreen(
         }
     }
 
-    var updateRating by remember { mutableStateOf(false) }
-    var originalRating by remember { mutableFloatStateOf(0f) }
-
 
     // --- Main UI ---
     MovieTabsContent(
         navController = navController,
-        motionScheme = motionScheme,
         scrollBehavior = scrollBehavior,
         scrollBehaviorTopBar = scrollBehaviorTopBar,
         state = state,
