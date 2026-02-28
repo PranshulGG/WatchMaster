@@ -2,38 +2,40 @@ package com.pranshulgg.watchmaster.data.repository
 
 import com.pranshulgg.watchmaster.data.local.dao.WatchlistDao
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
-import com.pranshulgg.watchmaster.data.local.mapper.SeasonDataMapper
-import com.pranshulgg.watchmaster.core.model.SeasonData
 import com.pranshulgg.watchmaster.core.model.WatchStatus
 import com.pranshulgg.watchmaster.core.network.TvSeasonDto
+import com.pranshulgg.watchmaster.data.local.dao.SeasonDao
+import com.pranshulgg.watchmaster.data.local.entity.WatchlistSeasonEntity
 import com.pranshulgg.watchmaster.feature.search.SearchItem
 import kotlinx.coroutines.flow.Flow
 import java.time.Instant
 
 class WatchlistRepository(
     private val dao: WatchlistDao,
+    private val seasonDao: SeasonDao,
     private val movieRepository: MovieRepository,
     private val tvRepository: TvRepository? = null
 ) {
 
     suspend fun addFromSearch(item: SearchItem, tvDetails: List<TvSeasonDto>? = null) {
 
-        val seasons = tvDetails?.map {
-            SeasonData(
-                seasonNumber = it.season_number,
-                name = it.name,
-                episodeCount = it.episode_count,
-                airDate = it.air_date,
-                posterPath = it.poster_path
-            )
-        }
+//        val seasons = tvDetails?.map {
+//            SeasonEntity(
+//                seasonNumber = it.season_number,
+//                name = it.name,
+//                episodeCount = it.episode_count,
+//                airDate = it.air_date,
+//                posterPath = it.poster_path,
+//                showId = item.id
+//            )
+//        }
 
-        val seasonsJson = SeasonDataMapper.toJson(seasons)
+//        val seasonsJson = SeasonDataMapper.toJson(seasons)
 
         // Save season name so it's easier to check if the season already exists or not
-        val seasonName = tvDetails
-            ?.map { it.name }
-            ?.toSet()
+//        val seasonName = tvDetails
+//            ?.map { it.name }
+//            ?.toSet()
 
         dao.insert(
             WatchlistItemEntity(
@@ -47,12 +49,29 @@ class WatchlistRepository(
                 addedDate = Instant.now(),
                 avgRating = item.avg_rating,
                 backdropPath = item.backdropPath,
-                seasonsJson = seasonsJson,
-                seasonNames = seasonName
-
             )
         )
+
+//        if (seasons != null) {
+//            seasonDao.insertSeasons(seasons)
+//        }
     }
+
+    suspend fun insertSeason(showId: Long, tvDetails: List<TvSeasonDto>) {
+        val seasons = tvDetails.map {
+            WatchlistSeasonEntity(
+                seasonNumber = it.season_number,
+                name = it.name,
+                episodeCount = it.episode_count,
+                airDate = it.air_date,
+                posterPath = it.poster_path,
+                showId = showId
+            )
+        }
+
+        seasonDao.insertSeasons(seasons)
+    }
+
 
     fun getWatchlist() = dao.getAll()
 
@@ -109,6 +128,9 @@ class WatchlistRepository(
     fun getItemById(id: Long): Flow<WatchlistItemEntity?> {
         return dao.getById(id)
     }
-    
+
+    fun getSeasonsForShow(id: Long): Flow<List<WatchlistSeasonEntity>> {
+        return seasonDao.getSeasonForShow(id)
+    }
 
 }
