@@ -84,12 +84,6 @@ fun SearchScreen(
     val selectedItem = remember { mutableStateOf<SearchItem?>(null) }
     val selectedSeasonItem = remember { mutableStateOf<List<TvSeasonDto>?>(null) }
 
-//    val repositoryWatchList = provideWatchlistRepository(LocalContext.current)
-//
-//    val viewModelWatchList: WatchlistViewModel = viewModel(
-//        factory = WatchlistViewModelFactory(repositoryWatchList)
-//    )
-
     val viewModelWatchList: WatchlistViewModel = hiltViewModel()
 
     val systemInsets = WindowInsets.systemBars.asPaddingValues()
@@ -205,7 +199,8 @@ fun SearchScreen(
                         itemsIndexed(results) { index, item ->
                             SearchRow(item, index, results, onAddToWatchlist = {
                                 scope.launch {
-                                    if (viewModelWatchList.exists(item.id)) {
+
+                                    if (viewModelWatchList.exists(item.id) && item.mediaType != "tv") {
                                         SnackbarManager.show(
                                             "Already in watchlist",
                                             actionLabel = "Delete",
