@@ -35,7 +35,7 @@ data class WatchlistItemEntity(
 
     val folder: String? = null,
 
-    val seasonsJson: String? = null,
+//    val seasonsJson: String? = null,
 
-    val seasonNames: Set<String>? = null,
+//    val seasonNames: Set<String>? = null,
 )
