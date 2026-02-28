@@ -12,13 +12,15 @@ import com.pranshulgg.watchmaster.data.local.converters.InstantConverters
 import com.pranshulgg.watchmaster.data.local.converters.SeasonNameConverter
 import com.pranshulgg.watchmaster.data.local.converters.WatchStatusConverter
 import com.pranshulgg.watchmaster.data.local.dao.MovieBundleDao
+import com.pranshulgg.watchmaster.data.local.dao.SeasonDao
 import com.pranshulgg.watchmaster.data.local.dao.TvBundleDao
 import com.pranshulgg.watchmaster.data.local.entity.MovieBundleEntity
+import com.pranshulgg.watchmaster.data.local.entity.WatchlistSeasonEntity
 import com.pranshulgg.watchmaster.data.local.entity.TvBundleEntity
 
 @Database(
-    entities = [WatchlistItemEntity::class, MovieBundleEntity::class, TvBundleEntity::class],
-    version = 17
+    entities = [WatchlistItemEntity::class, MovieBundleEntity::class, TvBundleEntity::class, WatchlistSeasonEntity::class],
+    version = 18
 )
 @TypeConverters(
     GenreIdsConverter::class,
@@ -33,6 +35,7 @@ abstract class WatchMasterDatabase : RoomDatabase() {
 
     abstract fun tvBundleDao(): TvBundleDao
 
+    abstract fun seasonDao(): SeasonDao
 
     companion object {
         @Volatile
