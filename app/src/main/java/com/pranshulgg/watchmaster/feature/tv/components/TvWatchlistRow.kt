@@ -2,10 +2,13 @@ package com.pranshulgg.watchmaster.feature.tv.components
 
 import android.view.animation.RotateAnimation
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.animateIntSizeAsState
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -39,6 +42,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -91,6 +95,8 @@ fun TvWatchlistRow(
     val motionScheme = MaterialTheme.motionScheme
 
 
+
+
     Surface(
         shape = shape,
         modifier = Modifier
@@ -115,6 +121,7 @@ fun TvWatchlistRow(
                 ),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+
                 PosterBox(
                     posterUrl = "https://image.tmdb.org/t/p/w154${item.posterPath}",
                     apiPath = item.posterPath,
@@ -163,17 +170,17 @@ fun TvWatchlistRow(
                 )
 
             }
-
             AnimatedVisibility(
                 visible = expanded,
                 enter = expandVertically(animationSpec = motionScheme.slowSpatialSpec()),
                 exit = shrinkVertically(animationSpec = motionScheme.slowSpatialSpec()),
             ) {
                 Column(
-                    modifier = Modifier.padding(bottom = 8.dp),
+                    Modifier.padding(bottom = 8.dp),
                     verticalArrangement = Arrangement.spacedBy(2.dp)
                 ) {
-                    HorizontalDivider()
+                    HorizontalDivider(color = MaterialTheme.colorScheme.surfaceContainer)
+                    Spacer(Modifier.height(8.dp))
                     seasonsData.forEach { seasonDataItem ->
                         val isOnly = seasonsData.singleOrNull() == seasonDataItem
                         val isFirst = seasonsData.indexOf(seasonDataItem) == 0
@@ -186,7 +193,7 @@ fun TvWatchlistRow(
                 }
             }
         }
-
     }
+
 
 }
