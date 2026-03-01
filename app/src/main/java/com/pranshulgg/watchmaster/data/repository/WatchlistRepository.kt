@@ -65,7 +65,8 @@ class WatchlistRepository(
                 episodeCount = it.episode_count,
                 airDate = it.air_date,
                 posterPath = it.poster_path,
-                showId = showId
+                showId = showId,
+                seasonAddedDate = Instant.now()
             )
         }
 
@@ -131,6 +132,37 @@ class WatchlistRepository(
 
     fun getSeasonsForShow(id: Long): Flow<List<WatchlistSeasonEntity>> {
         return seasonDao.getSeasonForShow(id)
+    }
+
+    suspend fun markSeasonStatus(showId: Long, status: WatchStatus) {
+        val timestamp = Instant.now()
+
+        when (status) {
+            WatchStatus.WATCHING -> seasonDao.updateSeasonStatus(
+                id = showId,
+                status = WatchStatus.WATCHING,
+                started = timestamp
+            )
+
+            WatchStatus.INTERRUPTED -> seasonDao.updateSeasonStatus(
+                id = showId,
+                status = WatchStatus.INTERRUPTED,
+                interruptedAt = timestamp
+            )
+
+            WatchStatus.FINISHED -> seasonDao.updateSeasonStatus(
+                id = showId,
+                status = WatchStatus.FINISHED,
+                finished = timestamp
+            )
+
+            WatchStatus.WANT_TO_WATCH -> seasonDao.updateSeasonStatus(
+                id = showId,
+                status = WatchStatus.WANT_TO_WATCH
+            )
+        }
+
+
     }
 
 }
