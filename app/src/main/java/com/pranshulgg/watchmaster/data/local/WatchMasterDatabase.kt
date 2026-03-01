@@ -8,6 +8,8 @@ import com.pranshulgg.watchmaster.data.local.dao.WatchlistDao
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 import com.pranshulgg.watchmaster.data.local.converters.GenreIdsConverter
 import androidx.room.Room
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.pranshulgg.watchmaster.data.local.converters.InstantConverters
 import com.pranshulgg.watchmaster.data.local.converters.SeasonNameConverter
 import com.pranshulgg.watchmaster.data.local.converters.WatchStatusConverter
@@ -20,7 +22,7 @@ import com.pranshulgg.watchmaster.data.local.entity.TvBundleEntity
 
 @Database(
     entities = [WatchlistItemEntity::class, MovieBundleEntity::class, TvBundleEntity::class, WatchlistSeasonEntity::class],
-    version = 18
+    version = 19
 )
 @TypeConverters(
     GenreIdsConverter::class,
@@ -47,8 +49,10 @@ abstract class WatchMasterDatabase : RoomDatabase() {
                     context.applicationContext,
                     WatchMasterDatabase::class.java,
                     "watchmaster.db"
-                ).fallbackToDestructiveMigration(true).build().also { INSTANCE = it }
+                ).addMigrations().build().also { INSTANCE = it }
             }
         }
     }
 }
+
+
