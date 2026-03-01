@@ -2,12 +2,17 @@ package com.pranshulgg.watchmaster.feature.tv.components
 
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.CircularWavyProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -16,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -24,9 +30,15 @@ import androidx.compose.ui.unit.sp
 import com.pranshulgg.watchmaster.core.ui.components.media.PosterBox
 import com.pranshulgg.watchmaster.core.ui.theme.Radius
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistSeasonEntity
+import com.pranshulgg.watchmaster.feature.movie.ui.toWatchListMovieStatusUi
+import com.pranshulgg.watchmaster.feature.shared.media.components.WatchListStatusPill
+import com.pranshulgg.watchmaster.feature.tv.ui.toWatchListTvStatusUi
 
 @Composable
 fun SeasonTvRow(seasonData: WatchlistSeasonEntity, shape: Shape) {
+
+    val status = seasonData.status.toWatchListTvStatusUi(seasonData)
+
 
     Surface(
         shape = shape,
@@ -40,6 +52,7 @@ fun SeasonTvRow(seasonData: WatchlistSeasonEntity, shape: Shape) {
                 },
             ),
         color = MaterialTheme.colorScheme.surfaceContainer
+//        color = Color.Transparent
     ) {
         Column() {
             Row(
@@ -74,13 +87,36 @@ fun SeasonTvRow(seasonData: WatchlistSeasonEntity, shape: Shape) {
                         overflow = TextOverflow.Ellipsis,
                     )
                     Text(
-                        "${seasonData.episodeCount}",
+                        "${seasonData.episodeCount} episodes",
                         overflow = TextOverflow.Ellipsis,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
+                    Spacer(Modifier.height(5.dp))
+                    WatchListStatusPill(
+                        status.containerColor,
+                        status.contentColor,
+                        status.statusLabel,
+                        seasonData.status
+                    )
                 }
+//                SeasonProgress() // NOT READY YET
             }
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+private fun SeasonProgress() {
+    Box(contentAlignment = Alignment.Center) {
+        CircularWavyProgressIndicator(
+            progress = { 0.5f }
+        )
+        Text(
+            "50%",
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.secondary
+        )
     }
 }
