@@ -44,9 +44,8 @@ import com.pranshulgg.watchmaster.core.ui.components.MaterialListShape
 import com.pranshulgg.watchmaster.core.ui.theme.Radius
 import com.pranshulgg.watchmaster.core.ui.components.Symbol
 import com.pranshulgg.watchmaster.core.ui.components.media.PosterPlaceholder
-import com.pranshulgg.watchmaster.core.ui.theme.LocalStatusColors
-import com.pranshulgg.watchmaster.core.utils.formatDate
-import com.pranshulgg.watchmaster.feature.shared.media.toWatchListMediaStatusUi
+import com.pranshulgg.watchmaster.feature.movie.ui.toWatchListMovieStatusUi
+import com.pranshulgg.watchmaster.feature.shared.media.components.WatchListStatusPill
 
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
@@ -72,7 +71,7 @@ fun WatchlistRow(
         "https://image.tmdb.org/t/p/w154$it"
     }
 
-    val status = item.status.toWatchListMediaStatusUi(item)
+    val status = item.status.toWatchListMovieStatusUi(item)
 
     val shape = MaterialListShape(isOnly, isFirst, isLast)
 
@@ -157,52 +156,58 @@ fun WatchlistRow(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Spacer(Modifier.height(5.dp))
-                Row {
-                    Surface(
-                        color = status.containerColor,
-                        shape = if (item.status == WatchStatus.FINISHED) RoundedCornerShape(
-                            topStart = Radius.Full,
-                            bottomStart = Radius.Full
-                        ) else CircleShape
-                    ) {
-                        Text(
-                            status.statusLabel,
-                            color = status.contentColor,
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(horizontal = 8.dp)
-                        )
-                    }
-
-                    if (item.status == WatchStatus.FINISHED) {
-                        Surface(
-                            color = MaterialTheme.colorScheme.primary,
-                            shape = RoundedCornerShape(
-                                topEnd = Radius.Small,
-                                bottomEnd = Radius.Small
-                            )
-                        ) {
-                            Row(
-                                horizontalArrangement = Arrangement.Center,
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.padding(start = 6.dp, end = 8.dp)
-                            ) {
-                                Symbol(
-                                    R.drawable.star_24px,
-                                    size = 16.dp,
-                                    color = MaterialTheme.colorScheme.onPrimary
-                                )
-                                Spacer(Modifier.width(3.dp))
-                                Text(
-                                    "${if (item.userRating == 10.0) "10" else item.userRating}",
-                                    color = MaterialTheme.colorScheme.onPrimary,
-                                    fontSize = 12.sp,
-                                    fontWeight = FontWeight.Bold
-                                )
-                            }
-                        }
-                    }
-                }
+                WatchListStatusPill(
+                    status.containerColor,
+                    status.contentColor,
+                    status.statusLabel,
+                    item.status
+                )
+//                Row {
+//                    Surface(
+//                        color = status.containerColor,
+//                        shape = if (item.status == WatchStatus.FINISHED) RoundedCornerShape(
+//                            topStart = Radius.Full,
+//                            bottomStart = Radius.Full
+//                        ) else CircleShape
+//                    ) {
+//                        Text(
+//                            status.statusLabel,
+//                            color = status.contentColor,
+//                            fontSize = 12.sp,
+//                            fontWeight = FontWeight.Bold,
+//                            modifier = Modifier.padding(horizontal = 8.dp)
+//                        )
+//                    }
+//
+//                    if (item.status == WatchStatus.FINISHED) {
+//                        Surface(
+//                            color = MaterialTheme.colorScheme.primary,
+//                            shape = RoundedCornerShape(
+//                                topEnd = Radius.Small,
+//                                bottomEnd = Radius.Small
+//                            )
+//                        ) {
+//                            Row(
+//                                horizontalArrangement = Arrangement.Center,
+//                                verticalAlignment = Alignment.CenterVertically,
+//                                modifier = Modifier.padding(start = 6.dp, end = 8.dp)
+//                            ) {
+//                                Symbol(
+//                                    R.drawable.star_24px,
+//                                    size = 16.dp,
+//                                    color = MaterialTheme.colorScheme.onPrimary
+//                                )
+//                                Spacer(Modifier.width(3.dp))
+//                                Text(
+//                                    "${if (item.userRating == 10.0) "10" else item.userRating}",
+//                                    color = MaterialTheme.colorScheme.onPrimary,
+//                                    fontSize = 12.sp,
+//                                    fontWeight = FontWeight.Bold
+//                                )
+//                            }
+//                        }
+//                    }
+//                }
             }
         }
     }
