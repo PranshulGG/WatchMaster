@@ -85,6 +85,11 @@ fun AddToWatchlistSheetContent(
     val size = ButtonDefaults.MediumContainerHeight
 
 
+    val btnEnabled =
+        item.mediaType == "movie" ||
+                (item.mediaType == "tv" && !seasonLoading)
+
+
 //    val btnSize = ButtonDefaults.MediumContainerHeight
 
     Column(
@@ -232,7 +237,8 @@ fun AddToWatchlistSheetContent(
             customItem(
                 {
                     Button(
-                        enabled = !seasonLoading && item.mediaType == "tv",
+//                        enabled = item.mediaType == "tv" && !seasonLoading,
+                        enabled = btnEnabled,
                         interactionSource = interactionSources[1],
                         modifier = Modifier
                             .weight(1f)
@@ -334,8 +340,6 @@ private fun SeasonBtn(
     LaunchedEffect(id) {
         watchlistViewModel.observeItem(id)
     }
-
-    val watchlistItem by watchlistViewModel.currentItem.collectAsState()
 
 
     if (!seasonChanged) {
