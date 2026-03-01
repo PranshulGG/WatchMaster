@@ -4,6 +4,8 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.pranshulgg.watchmaster.core.model.WatchStatus
+import java.time.Instant
 
 @Entity(
     tableName = "tv_seasons", foreignKeys = [
@@ -24,5 +26,10 @@ data class WatchlistSeasonEntity(
     val name: String,
     val episodeCount: Int,
     val airDate: String?,
-    val posterPath: String?
+    val posterPath: String?,
+    val status: WatchStatus = WatchStatus.WANT_TO_WATCH,
+    val seasonStartedDate: Instant? = null,
+    val seasonFinishedDate: Instant? = null,
+    val seasonInterruptedAt: Instant? = null,
+    val seasonAddedDate: Instant,
 )
