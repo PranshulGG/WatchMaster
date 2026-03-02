@@ -7,10 +7,15 @@ object NavRoutes {
     const val SETTINGS = "settings"
     const val SEARCH = "search"
 
-    const val MEDIA_DETAIL_PAGE = "mediadetail"
+    const val MOVIE_DETAIL_SCREEN = "movie_detail"
+    const val TV_DETAIL_SCREEN = "tv_screen"
 
-    fun mediaDetail(id: Long): String {
-        return "$MEDIA_DETAIL_PAGE/$id"
+    fun movieDetail(id: Long): String {
+        return "$MOVIE_DETAIL_SCREEN/$id"
+    }
+
+    fun tvDetail(id: Long, season: Int): String {
+        return "$TV_DETAIL_SCREEN/$id/$season"
     }
 
     fun search(type: SearchType = SearchType.MULTI): String {
