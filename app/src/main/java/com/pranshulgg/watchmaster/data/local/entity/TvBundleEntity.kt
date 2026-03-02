@@ -10,7 +10,7 @@ data class TvBundleEntity(
     val overview: String,
     val runtime: Int?,
     val season_number: Int,
-    val episodeJson: String?,
+//    val episodeJson: String?,
     val poster_path: String?,
     val backdrop_path: String?,
     val genresJson: String,
