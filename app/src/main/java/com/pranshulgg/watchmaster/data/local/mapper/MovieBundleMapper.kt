@@ -36,7 +36,7 @@ fun MovieBundleEntity.toDomain(): MovieBundle =
         backdrop_path = backdrop_path,
         genres = gson.fromJson(
             genresJson,
-            object : TypeToken<List<Genre>>() {}.type
+            object : TypeToken<List<MovieGenre>>() {}.type
         ),
         credits = gson.fromJson(creditsJson, CreditsDto::class.java),
         images = gson.fromJson(imagesJson, ImagesDto::class.java),
