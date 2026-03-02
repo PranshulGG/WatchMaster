@@ -5,7 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.pranshulgg.watchmaster.core.model.WatchStatus
-import com.pranshulgg.watchmaster.data.local.entity.WatchlistSeasonEntity
+import com.pranshulgg.watchmaster.data.local.entity.SeasonEntity
 import kotlinx.coroutines.flow.Flow
 import java.time.Instant
 
@@ -13,7 +13,7 @@ import java.time.Instant
 interface SeasonDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertSeasons(seasons: List<WatchlistSeasonEntity>)
+    suspend fun insertSeasons(seasons: List<SeasonEntity>)
 
     @Query(
         """
@@ -22,7 +22,7 @@ interface SeasonDao {
         ORDER BY seasonNumber
     """
     )
-    fun getSeasonForShow(showId: Long): Flow<List<WatchlistSeasonEntity>>
+    fun getSeasonForShow(showId: Long): Flow<List<SeasonEntity>>
 
     @Query("DELETE FROM tv_seasons WHERE showId = :showId")
     suspend fun deleteForShow(showId: Long)
@@ -45,4 +45,9 @@ interface SeasonDao {
         interruptedAt: Instant? = null
     )
 
+    @Query("UPDATE tv_seasons SET seasonUserRating = :rating WHERE showId = :id")
+    suspend fun updateSeasonUserRating(id: Long, rating: Double)
+
+    @Query("UPDATE tv_seasons SET seasonNotes= :note WHERE showId = :id")
+    suspend fun setSeasonUserNote(id: Long, note: String)
 }
