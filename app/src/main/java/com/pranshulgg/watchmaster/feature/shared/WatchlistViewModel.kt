@@ -3,7 +3,7 @@ package com.pranshulgg.watchmaster.feature.shared
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pranshulgg.watchmaster.core.model.WatchStatus
-import com.pranshulgg.watchmaster.data.local.entity.WatchlistSeasonEntity
+import com.pranshulgg.watchmaster.data.local.entity.SeasonEntity
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 import com.pranshulgg.watchmaster.data.repository.WatchlistRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -87,7 +87,7 @@ class WatchlistViewModel @Inject constructor(
         }
     }
 
-    fun seasonsForShow(showId: Long): Flow<List<WatchlistSeasonEntity>> {
+    fun seasonsForShow(showId: Long): Flow<List<SeasonEntity>> {
         return repository.getSeasonsForShow(showId)
     }
 
@@ -95,6 +95,15 @@ class WatchlistViewModel @Inject constructor(
         viewModelScope.launch {
             repository.markSeasonStatus(showId, status)
         }
+    }
+
+
+    fun setSeasonUserRating(id: Long, rating: Double) = viewModelScope.launch {
+        repository.updateSeasonUserRating(id, rating)
+    }
+
+    fun setSeasonNote(id: Long, note: String) = viewModelScope.launch {
+        repository.updateSeasonNote(id, note)
     }
 
 
