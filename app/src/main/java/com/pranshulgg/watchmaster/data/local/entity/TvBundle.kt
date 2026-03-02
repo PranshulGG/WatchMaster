@@ -1,11 +1,12 @@
 package com.pranshulgg.watchmaster.data.local.entity
 
 import com.pranshulgg.watchmaster.data.EpisodeListDto
-import com.pranshulgg.watchmaster.data.Genre
 import com.pranshulgg.watchmaster.data.TvCreditsDto
 import com.pranshulgg.watchmaster.data.TvReviewsDto
 import com.pranshulgg.watchmaster.data.TvWatchProvidersDto
 import com.pranshulgg.watchmaster.core.network.TvBundleDto
+import com.pranshulgg.watchmaster.data.EpisodeItem
+import com.pranshulgg.watchmaster.data.TvGenre
 
 data class TvBundle(
     val id: Long,
@@ -15,8 +16,7 @@ data class TvBundle(
     val season_number: Int,
     val poster_path: String?,
     val backdrop_path: String?,
-    val episodes: EpisodeListDto,
-    val genres: List<Genre>,
+    val genres: List<TvGenre>,
     val credits: TvCreditsDto,
     val watchProviders: TvWatchProvidersDto?,
 //    val similar: TvListDto,
@@ -33,7 +33,7 @@ fun TvBundleDto.toDomain(): TvBundle = TvBundle(
     season_number = season_number,
     poster_path = poster_path,
     backdrop_path = backdrop_path,
-    episodes = episodes,
+//    episodes = episodes,
     genres = genres,
     credits = credits,
     watchProviders = watchProviders,
