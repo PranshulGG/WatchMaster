@@ -8,6 +8,7 @@ import com.pranshulgg.watchmaster.data.repository.MovieRepository
 import com.pranshulgg.watchmaster.data.repository.WatchlistRepository
 import com.pranshulgg.watchmaster.core.network.TmdbApi
 import com.pranshulgg.watchmaster.data.local.dao.SeasonDao
+import com.pranshulgg.watchmaster.data.local.dao.TvBundleDao
 import com.pranshulgg.watchmaster.feature.search.SearchRepository
 import dagger.Module
 import dagger.Provides
@@ -15,6 +16,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Singleton
+import com.pranshulgg.watchmaster.data.repository.TvRepository
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -34,6 +36,10 @@ object AppModule {
     @Provides
     fun provideMovieBundleDao(db: WatchMasterDatabase) =
         db.movieBundleDao()
+
+    @Provides
+    fun provideTvBundleDao(db: WatchMasterDatabase) =
+        db.tvBundleDao()
 
     @Provides
     fun provideSeasonDao(db: WatchMasterDatabase) =
@@ -67,4 +73,11 @@ object AppModule {
         api: TmdbApi
     ): SearchRepository =
         SearchRepository(api)
+
+    @Provides
+    @Singleton
+    fun providerTvRepository(
+        api: TmdbApi,
+        tvBundleDao: TvBundleDao
+    ): TvRepository = TvRepository(api, tvBundleDao)
 }
