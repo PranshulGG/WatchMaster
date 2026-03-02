@@ -7,9 +7,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pranshulgg.watchmaster.data.local.entity.TvBundle
 import com.pranshulgg.watchmaster.data.repository.TvRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class TvDetailsViewModel(
+@HiltViewModel
+class TvDetailsViewModel @Inject constructor(
     private val repo: TvRepository
 ) : ViewModel() {
 
