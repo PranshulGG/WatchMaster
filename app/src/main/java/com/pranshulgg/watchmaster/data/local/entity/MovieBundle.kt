@@ -1,12 +1,12 @@
 package com.pranshulgg.watchmaster.data.local.entity
 
 import com.pranshulgg.watchmaster.data.CreditsDto
-import com.pranshulgg.watchmaster.data.Genre
 import com.pranshulgg.watchmaster.data.ImagesDto
 import com.pranshulgg.watchmaster.data.MovieListDto
 import com.pranshulgg.watchmaster.data.ReviewsDto
 import com.pranshulgg.watchmaster.data.WatchProvidersDto
 import com.pranshulgg.watchmaster.core.network.MovieBundleDto
+import com.pranshulgg.watchmaster.data.MovieGenre
 
 data class MovieBundle(
     val id: Long,
@@ -15,7 +15,7 @@ data class MovieBundle(
     val runtime: Int?,
     val poster_path: String?,
     val backdrop_path: String?,
-    val genres: List<Genre>,
+    val genres: List<MovieGenre>,
     val credits: CreditsDto,
     val images: ImagesDto,
     val watchProviders: WatchProvidersDto?,
