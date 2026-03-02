@@ -80,9 +80,6 @@ fun TvWatchlistRow(
 
     val shape = MaterialListShape(isOnly, isFirst, isLast)
 
-    val titleMaxLines = 2
-    val overviewMaxLines = remember { mutableIntStateOf(1) }
-
 //    val seasonData = SeasonDataMapper.fromJson(item.seasonsJson)
 
 
@@ -138,19 +135,13 @@ fun TvWatchlistRow(
                         fontWeight = FontWeight.W900,
                         color = MaterialTheme.colorScheme.onSurface,
                         fontSize = 17.sp,
-                        maxLines = titleMaxLines,
+                        maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
-                        onTextLayout = { result ->
-                            val newLines = if (result.lineCount == 1) 2 else 1
-                            if (overviewMaxLines.intValue != newLines) {
-                                overviewMaxLines.intValue = newLines
-                            }
-                        }
 
-                    )
+                        )
                     Text(
                         item.overview ?: "No overview found",
-                        maxLines = overviewMaxLines.intValue,
+                        maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -188,7 +179,7 @@ fun TvWatchlistRow(
 
                         val shapeSeasonRow = MaterialListShape(isOnly, isFirst, isLast)
 
-                        SeasonTvRow(seasonDataItem, shapeSeasonRow)
+                        SeasonTvRow(seasonDataItem, shapeSeasonRow, navController)
                     }
                 }
             }
