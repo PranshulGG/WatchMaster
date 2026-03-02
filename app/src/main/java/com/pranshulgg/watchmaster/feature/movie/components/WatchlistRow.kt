@@ -83,7 +83,7 @@ fun WatchlistRow(
             .clip(shape)
             .combinedClickable(
                 onClick = {
-                    navController.navigate(NavRoutes.mediaDetail(item.id))
+                    navController.navigate(NavRoutes.movieDetail(item.id))
                 },
                 onLongClick = {
                     onLongActionMovieRequest()
