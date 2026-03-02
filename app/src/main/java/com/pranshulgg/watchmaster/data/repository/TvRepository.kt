@@ -18,7 +18,7 @@ class TvRepository(
             return it.toDomain()
         }
 
-        val response = api.getWholeTvData(tvId, seasonNumber)
+        val response = api.getWholeTvData(tvId)
         val body = response.body() ?: error("TV season not found")
 
         val domain = body.toDomain()
