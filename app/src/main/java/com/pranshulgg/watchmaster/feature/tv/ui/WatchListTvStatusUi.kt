@@ -6,8 +6,7 @@ import androidx.compose.runtime.Composable
 import com.pranshulgg.watchmaster.core.model.WatchStatus
 import com.pranshulgg.watchmaster.core.ui.theme.LocalStatusColors
 import com.pranshulgg.watchmaster.core.utils.formatDate
-import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
-import com.pranshulgg.watchmaster.data.local.entity.WatchlistSeasonEntity
+import com.pranshulgg.watchmaster.data.local.entity.SeasonEntity
 
 
 data class WatchListTvStatusUi(
@@ -17,7 +16,7 @@ data class WatchListTvStatusUi(
 )
 
 @Composable
-fun WatchStatus.toWatchListTvStatusUi(item: WatchlistSeasonEntity): WatchListTvStatusUi {
+fun WatchStatus.toWatchListTvStatusUi(item: SeasonEntity): WatchListTvStatusUi {
     val statusColor = LocalStatusColors.current
 
     return when (this) {
