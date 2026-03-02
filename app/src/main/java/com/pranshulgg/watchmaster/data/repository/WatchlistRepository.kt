@@ -5,7 +5,7 @@ import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 import com.pranshulgg.watchmaster.core.model.WatchStatus
 import com.pranshulgg.watchmaster.core.network.TvSeasonDto
 import com.pranshulgg.watchmaster.data.local.dao.SeasonDao
-import com.pranshulgg.watchmaster.data.local.entity.WatchlistSeasonEntity
+import com.pranshulgg.watchmaster.data.local.entity.SeasonEntity
 import com.pranshulgg.watchmaster.feature.search.SearchItem
 import kotlinx.coroutines.flow.Flow
 import java.time.Instant
@@ -59,14 +59,15 @@ class WatchlistRepository(
 
     suspend fun insertSeason(showId: Long, tvDetails: List<TvSeasonDto>) {
         val seasons = tvDetails.map {
-            WatchlistSeasonEntity(
+            SeasonEntity(
                 seasonNumber = it.season_number,
                 name = it.name,
                 episodeCount = it.episode_count,
                 airDate = it.air_date,
                 posterPath = it.poster_path,
                 showId = showId,
-                seasonAddedDate = Instant.now()
+                seasonAddedDate = Instant.now(),
+                seasonAvgRating = it.vote_average
             )
         }
 
@@ -130,7 +131,7 @@ class WatchlistRepository(
         return dao.getById(id)
     }
 
-    fun getSeasonsForShow(id: Long): Flow<List<WatchlistSeasonEntity>> {
+    fun getSeasonsForShow(id: Long): Flow<List<SeasonEntity>> {
         return seasonDao.getSeasonForShow(id)
     }
 
@@ -161,8 +162,11 @@ class WatchlistRepository(
                 status = WatchStatus.WANT_TO_WATCH
             )
         }
-
-
     }
+
+    suspend fun updateSeasonUserRating(id: Long, rating: Double) =
+        seasonDao.updateSeasonUserRating(id, rating)
+
+    suspend fun updateSeasonNote(id: Long, note: String) = seasonDao.setSeasonUserNote(id, note)
 
 }
