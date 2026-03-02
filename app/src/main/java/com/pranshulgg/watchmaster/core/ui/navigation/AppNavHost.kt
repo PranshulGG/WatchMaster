@@ -32,6 +32,7 @@ import com.pranshulgg.watchmaster.feature.search.SearchViewModel
 import com.pranshulgg.watchmaster.feature.search.SearchViewModelFactory
 import com.pranshulgg.watchmaster.feature.setting.SettingsScreen
 import com.pranshulgg.watchmaster.core.ui.navigation.NavRoutes
+import com.pranshulgg.watchmaster.feature.tv.detail.TvDetailsScreen
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -60,6 +61,7 @@ fun AppNavHost(
         NavHost(
             navController = navController,
             startDestination = NavRoutes.MAIN,
+//            startDestination = NavRoutes.tvDetail(60574, 1),
             modifier = Modifier.background(MaterialTheme.colorScheme.surfaceContainer),
             enterTransition = { NavTransitions.enter(motionScheme) },
             exitTransition = { NavTransitions.exit(motionScheme) },
@@ -68,7 +70,8 @@ fun AppNavHost(
         ) {
             composable(
                 NavRoutes.MAIN,
-            ) {
+
+                ) {
                 MainScreen(
                     navController,
                     motionScheme = MaterialTheme.motionScheme,
@@ -80,7 +83,7 @@ fun AppNavHost(
                 SettingsScreen(navController)
             }
             composable(
-                route = "${NavRoutes.MEDIA_DETAIL_PAGE}/{id}",
+                route = "${NavRoutes.MOVIE_DETAIL_SCREEN}/{id}",
                 arguments = listOf(
                     navArgument("id") { type = NavType.LongType }
                 )
@@ -106,6 +109,22 @@ fun AppNavHost(
                 SearchScreen(
                     navController = navController,
                     type = type
+                )
+            }
+            composable(
+                route = "${NavRoutes.TV_DETAIL_SCREEN}/{id}/{season}",
+                arguments = listOf(
+                    navArgument("id") { type = NavType.LongType },
+                    navArgument("season") { type = NavType.IntType }
+                )
+            ) { backStackEntry ->
+                val id = backStackEntry.arguments!!.getLong("id")
+                val season = backStackEntry.arguments!!.getInt("season")
+
+                TvDetailsScreen(
+                    id = id,
+                    seasonNumber = season,
+                    navController = navController
                 )
             }
 
