@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.CircularWavyProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
@@ -21,21 +19,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.pranshulgg.watchmaster.core.ui.components.media.PosterBox
+import com.pranshulgg.watchmaster.core.ui.navigation.NavRoutes
 import com.pranshulgg.watchmaster.core.ui.theme.Radius
-import com.pranshulgg.watchmaster.data.local.entity.WatchlistSeasonEntity
-import com.pranshulgg.watchmaster.feature.movie.ui.toWatchListMovieStatusUi
+import com.pranshulgg.watchmaster.data.local.entity.SeasonEntity
 import com.pranshulgg.watchmaster.feature.shared.media.components.WatchListStatusPill
 import com.pranshulgg.watchmaster.feature.tv.ui.toWatchListTvStatusUi
 
 @Composable
-fun SeasonTvRow(seasonData: WatchlistSeasonEntity, shape: Shape) {
+fun SeasonTvRow(seasonData: SeasonEntity, shape: Shape, navController: NavController) {
 
     val status = seasonData.status.toWatchListTvStatusUi(seasonData)
 
@@ -48,7 +46,12 @@ fun SeasonTvRow(seasonData: WatchlistSeasonEntity, shape: Shape) {
             .clip(shape)
             .combinedClickable(
                 onClick = {
-
+                    navController.navigate(
+                        NavRoutes.tvDetail(
+                            seasonData.showId,
+                            seasonData.seasonNumber
+                        )
+                    )
                 },
             ),
         color = MaterialTheme.colorScheme.surfaceContainer
@@ -100,7 +103,7 @@ fun SeasonTvRow(seasonData: WatchlistSeasonEntity, shape: Shape) {
                         seasonData.status
                     )
                 }
-//                SeasonProgress() // NOT READY YET
+                SeasonProgress() // NOT READY YET
             }
         }
     }
