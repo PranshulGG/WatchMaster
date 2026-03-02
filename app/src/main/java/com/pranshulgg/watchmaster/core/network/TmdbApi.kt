@@ -11,12 +11,14 @@ import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
 import com.pranshulgg.watchmaster.BuildConfig
 import com.pranshulgg.watchmaster.data.CreditsDto
+import com.pranshulgg.watchmaster.data.EpisodeItem
 import com.pranshulgg.watchmaster.data.EpisodeListDto
-import com.pranshulgg.watchmaster.data.Genre
 import com.pranshulgg.watchmaster.data.ImagesDto
+import com.pranshulgg.watchmaster.data.MovieGenre
 import com.pranshulgg.watchmaster.data.MovieListDto
 import com.pranshulgg.watchmaster.data.ReviewsDto
 import com.pranshulgg.watchmaster.data.TvCreditsDto
+import com.pranshulgg.watchmaster.data.TvGenre
 import com.pranshulgg.watchmaster.data.TvReviewsDto
 import com.pranshulgg.watchmaster.data.TvWatchProvidersDto
 import com.pranshulgg.watchmaster.data.WatchProvidersDto
@@ -76,7 +78,7 @@ data class MovieBundleDto(
     val title: String,
     val overview: String,
     val runtime: Int?,
-    val genres: List<Genre>,
+    val genres: List<MovieGenre>,
 
     val credits: CreditsDto,
     val images: ImagesDto,
@@ -99,13 +101,13 @@ data class TvBundleDto(
     val runtime: Int?,
     val poster_path: String?,
     val backdrop_path: String?,
-    val genres: List<Genre>,
+    val genres: List<TvGenre>,
     val season_number: Int,
     val credits: TvCreditsDto,
     @SerializedName("watch/providers")
     val watchProviders: TvWatchProvidersDto?,
     val reviews: TvReviewsDto,
-    val episodes: EpisodeListDto,
+//    val episodes: List<EpisodeItem>
 )
 
 data class TvSeasonsResponse(
@@ -119,7 +121,9 @@ data class TvSeasonDto(
     val season_number: Int,
     val episode_count: Int,
     val poster_path: String?,
-    val air_date: String?
+    val air_date: String?,
+    val vote_average: Double?
+
 )
 
 
@@ -149,10 +153,10 @@ interface TmdbApi {
     ): Response<MovieBundleDto>
 
 
-    @GET("tv/{tv_id}/season/{season_count}")
+    @GET("tv/{tv_id}")
     suspend fun getWholeTvData(
         @Path("tv_id") tvId: Long,
-        @Path("season_number") seasonNumber: Int,
+//        @Path("season_number") seasonNumber: Int,
         @Query("append_to_response") append: String =
             "credits,videos,images,watch/providers,similar,recommendations,reviews,content_ratings,external_ids",
         @Query("language") language: String = "en-US"
