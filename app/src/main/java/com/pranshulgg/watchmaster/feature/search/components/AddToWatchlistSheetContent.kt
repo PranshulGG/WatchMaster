@@ -52,7 +52,6 @@ import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.core.model.SeasonData
-import com.pranshulgg.watchmaster.data.getGenreNames
 import com.pranshulgg.watchmaster.feature.search.SearchItem
 import com.pranshulgg.watchmaster.core.network.TvSeasonDto
 import com.pranshulgg.watchmaster.core.ui.components.ActionBottomSheet
@@ -62,6 +61,7 @@ import com.pranshulgg.watchmaster.core.ui.theme.Radius
 import com.pranshulgg.watchmaster.core.ui.components.Symbol
 import com.pranshulgg.watchmaster.core.ui.components.media.PosterPlaceholder
 import com.pranshulgg.watchmaster.core.ui.snackbar.SnackbarManager
+import com.pranshulgg.watchmaster.data.getMovieGenreNames
 import com.pranshulgg.watchmaster.feature.shared.WatchlistViewModel
 import kotlinx.coroutines.launch
 
@@ -81,7 +81,7 @@ fun AddToWatchlistSheetContent(
         "https://image.tmdb.org/t/p/w154$it"
     }
 
-    val genreList = item.genreIds?.let { getGenreNames(it) }
+    val genreList = item.genreIds?.let { getMovieGenreNames(it) }
     val size = ButtonDefaults.MediumContainerHeight
 
 
