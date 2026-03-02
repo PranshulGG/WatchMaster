@@ -77,9 +77,6 @@ fun MovieDetailPage(
     id: Long,
     navController: NavController
 ) {
-//    val viewModel: MovieDetailsViewModel = viewModel(
-//        factory = MovieDetailsViewModelFactory(LocalContext.current)
-//    )
 
     val viewModel: MovieDetailsViewModel = hiltViewModel()
 
@@ -104,24 +101,6 @@ fun MovieDetailPage(
     val scope = rememberCoroutineScope()
 
     var noteText by remember { mutableStateOf("") }
-
-
-//    val context = LocalContext.current
-//    val repository = remember {
-//        val db = WatchMasterDatabase.getInstance(context)
-//        WatchlistRepository(
-//            db.watchlistDao(),
-//            MovieRepository(
-//                api = TmdbApi.create(),
-//                dao = db.movieBundleDao()
-//            )
-//        )
-//    }
-//
-//
-//    val factory = remember {
-//        WatchlistViewModelFactory(repository)
-//    }
 
     val watchlistViewModel: WatchlistViewModel = hiltViewModel()
 
@@ -282,18 +261,18 @@ fun MovieDetailPage(
                                     )
 
                                 }
-                                items(mainCast) { castMember ->
-                                    CastItem(
-                                        character = castMember.character ?: "",
-                                        name = castMember.name,
-                                        profilePath = castMember.profile_path
-                                    )
-                                }
-                                item {
-                                    Spacer(Modifier.width(8.dp))
-                                }
-
                             }
+                            items(mainCast) { castMember ->
+                                CastItem(
+                                    character = castMember.character ?: "",
+                                    name = castMember.name,
+                                    profilePath = castMember.profile_path
+                                )
+                            }
+                            item {
+                                Spacer(Modifier.width(8.dp))
+                            }
+
                         }
                     }
                     Spacer(
