@@ -5,5 +5,6 @@ data class SeasonData(
     val name: String,
     val episodeCount: Int,
     val airDate: String?,
-    val posterPath: String?
+    val posterPath: String?,
+    val vote_average: Double?,
 )
