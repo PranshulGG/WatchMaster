@@ -41,34 +41,7 @@ class SearchViewModel @Inject constructor(
     }
 
     private val seasonCache = mutableMapOf<Long, List<TvSeasonDto>>()
-
-
-    private val seasonMockData = listOf(
-        TvSeasonDto(
-            id = 1,
-            name = "Season 1",
-            season_number = 1,
-            episode_count = 22,
-            poster_path = "/3z2mYFxUkzanb2eeIcVyfJq0G3q.jpg",
-            air_date = "",
-        ),
-        TvSeasonDto(
-            id = 2,
-            name = "Season 2",
-            season_number = 2,
-            episode_count = 25,
-            poster_path = "/3z2mYFxUkzanb2eeIcVyfJq0G3q.jpg",
-            air_date = "",
-        ),
-        TvSeasonDto(
-            id = 5,
-            name = "Season 3",
-            season_number = 3,
-            episode_count = 15,
-            poster_path = "/3z2mYFxUkzanb2eeIcVyfJq0G3q.jpg",
-            air_date = "",
-        )
-    )
+    
 
     private val mockResults = listOf(
         SearchItem(
