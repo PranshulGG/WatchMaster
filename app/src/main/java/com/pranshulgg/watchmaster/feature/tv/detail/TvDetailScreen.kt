@@ -47,80 +47,116 @@ import androidx.navigation.NavController
 import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.core.model.WatchStatus
 import com.pranshulgg.watchmaster.core.ui.components.DialogBasic
+import com.pranshulgg.watchmaster.core.ui.components.LoadingScreenPlaceholder
+import com.pranshulgg.watchmaster.core.ui.components.TextAlertDialog
 import com.pranshulgg.watchmaster.core.ui.components.media.CastItem
 import com.pranshulgg.watchmaster.core.ui.components.media.MediaSectionCard
 import com.pranshulgg.watchmaster.core.ui.components.media.MediaStatusSection
+import com.pranshulgg.watchmaster.core.ui.components.media.RateMediaDialogContent
 import com.pranshulgg.watchmaster.core.ui.snackbar.SnackbarManager
 import com.pranshulgg.watchmaster.core.ui.theme.Radius
 import com.pranshulgg.watchmaster.feature.movie.detail.MovieDetailsViewModel
+import com.pranshulgg.watchmaster.feature.movie.detail.components.MovieDetailFloatingToolBar
 import com.pranshulgg.watchmaster.feature.movie.detail.components.MovieHeroHeader
 import com.pranshulgg.watchmaster.feature.shared.WatchlistViewModel
+import com.pranshulgg.watchmaster.feature.shared.media.components.CastTvSection
+import com.pranshulgg.watchmaster.feature.shared.media.components.NotesSection
+import com.pranshulgg.watchmaster.feature.shared.media.components.OverviewSection
+import com.pranshulgg.watchmaster.feature.tv.detail.components.TvDetailFloatingToolbar
 import com.pranshulgg.watchmaster.feature.tv.detail.components.TvHeroHeader
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+
+private data class UiState(
+    val minLoadingDone: Boolean = false,
+    val showNoteDialog: Boolean = false,
+    val note: String = "",
+    val showRatingDialog: Boolean = false,
+    val showConfirmationDialog: Boolean = false
+)
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun TvDetailsScreen(id: Long, seasonNumber: Int, navController: NavController) {
     val viewModel: TvDetailsViewModel = hiltViewModel()
+    val watchlistViewModel: WatchlistViewModel = hiltViewModel()
+    var uiState by remember { mutableStateOf(UiState()) }
 
     LaunchedEffect(id) {
         viewModel.load(id, seasonNumber)
     }
-
-
-    val loading = viewModel.loading
-    var minLoadingDone by remember { mutableStateOf(false) }
-
+    LaunchedEffect(id) {
+        watchlistViewModel.observeItem(id)
+    }
     LaunchedEffect(Unit) {
         delay(1000)
-        minLoadingDone = true
+        uiState = uiState.copy(minLoadingDone = true)
     }
 
-
-    val watchlistViewModel: WatchlistViewModel = hiltViewModel()
-
-
+    val loading = viewModel.loading
+    val scrollBehavior =
+        FloatingToolbarDefaults.exitAlwaysScrollBehavior(exitDirection = Bottom)
+    val liveItem by watchlistViewModel.currentItem.collectAsStateWithLifecycle()
     val seasonsData by watchlistViewModel
         .seasonsForShow(id)
         .collectAsState(initial = emptyList())
-
-    val showLoading = loading || !minLoadingDone // loading to hide nav lag -hack
-
-    val scope = rememberCoroutineScope()
-
+    val showLoading = loading || !uiState.minLoadingDone
     val season = seasonsData.find { it.seasonNumber == seasonNumber }
-
-
-    val existingNoteContent = season?.seasonNotes;
-    var showNoteDialog by remember { mutableStateOf(false) }
-    var note by remember { mutableStateOf("") }
-
-    note = existingNoteContent ?: ""
+    val watchlistItem = liveItem
+    val isTvPinned = watchlistItem?.isPinned == true
+    val isTv = watchlistItem?.mediaType == "tv"
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surfaceContainer,
+        bottomBar = {
+            if (!showLoading && season != null) {
+                TvDetailFloatingToolbar(
+                    scrollBehavior,
+                    id,
+                    season,
+                    startWatching = {
+                        watchlistViewModel.markSeasonStatus(
+                            id,
+                            WatchStatus.WATCHING
+                        )
+                    },
+                    resetWatching = {
+                        watchlistViewModel.markSeasonStatus(
+                            id,
+                            WatchStatus.WANT_TO_WATCH
+                        )
+                    },
+                    finishWatching = {
+                        uiState = uiState.copy(showRatingDialog = true)
+                    },
+                    interruptWatching = {
+                        watchlistViewModel.markSeasonStatus(
+                            id,
+                            WatchStatus.INTERRUPTED
+                        )
+                    },
+                    onDeleteSeason = {
+                        uiState = uiState.copy(showConfirmationDialog = true)
+                    },
+                    onPin = {
+                        liveItem?.let { watchlistViewModel.setPinned(it.id, isTvPinned) }
+                        SnackbarManager.show(if (isTvPinned) "Series pinned" else "Series unpinned")
+                    },
+                    isPinned = isTvPinned,
+                    isTv = isTv
+                )
+            }
+        }
     )
     { paddingValues ->
         if (showLoading) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(color = MaterialTheme.colorScheme.surfaceContainer)
-                    .zIndex(10f),
-                contentAlignment = Alignment.Center
-            ) {
-                LoadingIndicator(modifier = Modifier.size(60.dp))
-                Box(Modifier.padding(bottom = paddingValues.calculateBottomPadding()))
-            }
+            LoadingScreenPlaceholder()
+            Box(modifier = Modifier.padding(paddingValues)) // just use em
         }
-
-
         viewModel.state?.let { tvItem ->
-
-
             LazyColumn(
                 modifier = Modifier
+                    .nestedScroll(scrollBehavior)
                     .imePadding()
             ) {
                 item {
@@ -131,86 +167,19 @@ fun TvDetailsScreen(id: Long, seasonNumber: Int, navController: NavController) {
                             isFinished = seasonsData.find { it.seasonNumber == seasonNumber }?.status == WatchStatus.FINISHED,
                             season,
                         )
-
-                        MediaStatusSection(status = season.status ?: WatchStatus.WATCHING)
-                        Spacer(Modifier.height(16.dp))
-                        MediaSectionCard(
-                            title = "Overview",
-                            titleIcon = R.drawable.overview_24px,
-                        ) {
-                            Text(
-                                modifier = Modifier.padding(horizontal = 16.dp),
-                                text = tvItem.overview,
-                                color = MaterialTheme.colorScheme.onSurface,
-                                style = MaterialTheme.typography.bodyMedium,
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(12.dp))
-                        MediaSectionCard(
-                            title = "Notes",
-                            titleIcon = R.drawable.sticky_note_2_24px,
-                            showAction = true,
-                            actionOnClick = {
-                                showNoteDialog = true
+                        MediaStatusSection(status = season.status)
+                        OverviewSection(tvItem.overview)
+                        NotesSection(
+                            season.seasonNotes.isNullOrBlank(),
+                            {
+                                uiState = uiState.copy(
+                                    note = season.seasonNotes ?: "",
+                                    showNoteDialog = true
+                                )
                             },
-                            actionText = "Edit note"
-                        ) {
-
-                            if (!existingNoteContent.isNullOrBlank()) {
-                                Column(
-                                    modifier = Modifier.padding(horizontal = 16.dp)
-                                ) {
-                                    Surface(
-                                        color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                                        shape = RoundedCornerShape(Radius.Medium),
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .heightIn(min = 64.dp)
-                                    ) {
-                                        Text(
-                                            existingNoteContent,
-                                            modifier = Modifier.padding(10.dp),
-                                            style = MaterialTheme.typography.bodyMedium,
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                                        )
-                                    }
-                                }
-
-                            }
-
-
-                        }
-
-                        Spacer(modifier = Modifier.height(12.dp))
-                        MediaSectionCard(
-                            title = "Cast",
-                            titleIcon = R.drawable.groups_2_24px,
-                        ) {
-                            val mainCast = tvItem.credits.cast
-                            LazyRow {
-                                item {
-                                    Spacer(Modifier.width(8.dp))
-                                }
-                                items(mainCast) { castMember ->
-                                    CastItem(
-                                        character = castMember.character ?: "",
-                                        name = castMember.name,
-                                        profilePath = castMember.profile_path
-                                    )
-                                }
-                                item {
-                                    Spacer(Modifier.width(8.dp))
-                                }
-
-                            }
-                        }
-                        Spacer(
-                            modifier = Modifier.height(12.dp)
+                            season.seasonNotes ?: ""
                         )
-                        Spacer(
-                            modifier = Modifier
-                                .windowInsetsBottomHeight(WindowInsets.navigationBars)
-                        )
+                        CastTvSection(tvItem)
                     } else {
                         Text("No season found")
                     }
@@ -219,28 +188,63 @@ fun TvDetailsScreen(id: Long, seasonNumber: Int, navController: NavController) {
         }
     }
 
-
     DialogBasic(
-        show = showNoteDialog,
+        show = uiState.showNoteDialog,
         title = "Add a note",
         showDefaultActions = true,
         onDismiss = {
-            showNoteDialog = false
-            note = existingNoteContent ?: ""
+            uiState = uiState.copy(showNoteDialog = false)
+            uiState = uiState.copy(note = season?.seasonNotes ?: "")
         },
         onConfirm = {
-            watchlistViewModel.setSeasonNote(id, note)
+            watchlistViewModel.setSeasonNote(id, uiState.note)
         },
         confirmText = "Save",
         content = {
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(Radius.Large),
-                value = note,
-                onValueChange = { note = it },
+                value = uiState.note,
+                onValueChange = { uiState = uiState.copy(note = it) },
                 placeholder = { Text("Note...") }
             )
         }
     )
 
+
+    DialogBasic(
+        show = uiState.showRatingDialog,
+        title = "Rate this season",
+        showDefaultActions = false,
+        onDismiss = { uiState = uiState.copy(showRatingDialog = false) },
+        content = {
+            RateMediaDialogContent(
+                onCancel = { uiState = uiState.copy(showRatingDialog = false) },
+                onConfirm = { rating ->
+                    watchlistViewModel.setSeasonUserRating(id, rating)
+                    watchlistViewModel.markSeasonStatus(id, WatchStatus.FINISHED)
+                }
+            )
+        }
+    )
+
+    TextAlertDialog(
+        show = uiState.showConfirmationDialog,
+        title = "Delete season",
+        message = "Are you sure you want to delete this season? this action cannot be undone",
+        confirmText = "Confirm",
+        onConfirm = {
+            if (seasonsData.size == 1) {
+                watchlistViewModel.delete(id)
+            } else {
+                watchlistViewModel.deleteSeason(id)
+            }
+            SnackbarManager.show("Season deleted ${season?.name}")
+            navController.popBackStack()
+        },
+        onDismiss = {
+            uiState = uiState.copy(showConfirmationDialog = false)
+        }
+    )
 }
+
