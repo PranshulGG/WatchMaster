@@ -39,7 +39,9 @@ fun MediaDetailsScreenHeader(
     navController: NavController,
     isFinished: Boolean,
     userRating: Double?,
-    onUpdateRating: (Double) -> Unit
+    seasonUserRating: Double? = 0.0,
+    onUpdateRating: (Double) -> Unit,
+    isTv: Boolean = false,
 ) {
     val schemeColor = MaterialTheme.colorScheme
     var showRatingDialog by remember { mutableStateOf(false) }
@@ -119,7 +121,8 @@ fun MediaDetailsScreenHeader(
             RateMediaDialogContent(
                 onCancel = { showRatingDialog = false },
                 updateRating = true,
-                originalRating = userRating?.toFloat() ?: 0f,
+                originalRating = if (isTv) seasonUserRating?.toFloat()
+                    ?: 0f else userRating?.toFloat() ?: 0f,
                 onConfirm = { rating ->
                     onUpdateRating(rating)
                 }
