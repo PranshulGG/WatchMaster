@@ -275,7 +275,7 @@ fun MovieDetailPage(
                         }
                     }
                     Spacer(
-                        modifier = Modifier.height(12.dp)
+                        modifier = Modifier.height(62.dp)
                     )
                     Spacer(
                         modifier = Modifier
