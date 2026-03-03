@@ -45,7 +45,7 @@ import com.pranshulgg.watchmaster.core.ui.theme.Radius
 import com.pranshulgg.watchmaster.core.ui.components.Symbol
 import com.pranshulgg.watchmaster.core.ui.components.TextAlertDialog
 
-data class MenuItemOptionList(
+private data class MenuItemOptionList(
     val title: String,
     val leading: Int,
     val action: () -> Unit,
