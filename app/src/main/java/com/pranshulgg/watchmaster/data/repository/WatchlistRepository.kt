@@ -169,4 +169,5 @@ class WatchlistRepository(
 
     suspend fun updateSeasonNote(id: Long, note: String) = seasonDao.setSeasonUserNote(id, note)
 
+    suspend fun deleteSeason(id: Long) = seasonDao.deleteForShow(id)
 }
