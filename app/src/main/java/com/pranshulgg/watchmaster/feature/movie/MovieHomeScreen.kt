@@ -22,7 +22,7 @@ import com.pranshulgg.watchmaster.feature.movie.components.WatchlistItemOptionsS
 import com.pranshulgg.watchmaster.feature.tv.TvHomeState
 
 
-data class MovieHomeUiState(
+private data class MovieHomeUiState(
     val showConfirmationDialog: Boolean = false,
     val showRatingDialog: Boolean = false,
     val dialogTitle: String = "",
