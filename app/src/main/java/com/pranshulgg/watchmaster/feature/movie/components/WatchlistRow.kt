@@ -11,9 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -36,15 +33,12 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
-import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 import com.pranshulgg.watchmaster.core.ui.navigation.NavRoutes
-import com.pranshulgg.watchmaster.core.model.WatchStatus
 import com.pranshulgg.watchmaster.core.ui.components.MaterialListShape
-import com.pranshulgg.watchmaster.core.ui.theme.Radius
-import com.pranshulgg.watchmaster.core.ui.components.Symbol
 import com.pranshulgg.watchmaster.core.ui.components.media.PosterPlaceholder
-import com.pranshulgg.watchmaster.feature.movie.ui.toWatchListMovieStatusUi
+import com.pranshulgg.watchmaster.feature.shared.media.ui.watchstatus.asStatusDates
+import com.pranshulgg.watchmaster.feature.shared.media.ui.watchstatus.toWatchListItemStatusUiPill
 import com.pranshulgg.watchmaster.feature.shared.media.components.WatchListStatusPill
 
 
@@ -71,7 +65,7 @@ fun WatchlistRow(
         "https://image.tmdb.org/t/p/w154$it"
     }
 
-    val status = item.status.toWatchListMovieStatusUi(item)
+    val status = item.status.toWatchListItemStatusUiPill(item.asStatusDates())
 
     val shape = MaterialListShape(isOnly, isFirst, isLast)
 
