@@ -30,12 +30,13 @@ import com.pranshulgg.watchmaster.core.ui.navigation.NavRoutes
 import com.pranshulgg.watchmaster.core.ui.theme.Radius
 import com.pranshulgg.watchmaster.data.local.entity.SeasonEntity
 import com.pranshulgg.watchmaster.feature.shared.media.components.WatchListStatusPill
-import com.pranshulgg.watchmaster.feature.tv.ui.toWatchListTvStatusUi
+import com.pranshulgg.watchmaster.feature.shared.media.ui.watchstatus.asStatusDates
+import com.pranshulgg.watchmaster.feature.shared.media.ui.watchstatus.toWatchListItemStatusUiPill
 
 @Composable
 fun SeasonTvRow(seasonData: SeasonEntity, shape: Shape, navController: NavController) {
 
-    val status = seasonData.status.toWatchListTvStatusUi(seasonData)
+    val status = seasonData.status.toWatchListItemStatusUiPill(seasonData.asStatusDates())
 
 
     Surface(
@@ -103,7 +104,7 @@ fun SeasonTvRow(seasonData: SeasonEntity, shape: Shape, navController: NavContro
                         seasonData.status
                     )
                 }
-                SeasonProgress() // NOT READY YET
+//                SeasonProgress() // NOT READY YET
             }
         }
     }
