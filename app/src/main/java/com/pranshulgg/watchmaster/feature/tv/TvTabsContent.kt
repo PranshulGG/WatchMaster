@@ -74,7 +74,6 @@ fun TvTabsContent(
         ) { page ->
 
             when (tabs[page]) {
-
                 TvTab.WATCHLIST -> {
                     WatchlistTv(
                         state.isLoading,
