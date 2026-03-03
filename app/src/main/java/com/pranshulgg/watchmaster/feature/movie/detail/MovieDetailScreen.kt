@@ -143,9 +143,8 @@ fun MovieDetailPage(
                         watchlistViewModel.setPinned(id, isMoviePinned)
                         SnackbarManager.show(if (isMoviePinned) "Movie pinned" else "Movie unpinned")
                     },
-                    isPinned = isMoviePinned,
-
-                    )
+                    isPinned = isMoviePinned
+                )
             }
         },
 
