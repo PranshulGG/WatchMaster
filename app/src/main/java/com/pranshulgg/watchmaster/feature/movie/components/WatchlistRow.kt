@@ -154,54 +154,9 @@ fun WatchlistRow(
                     status.containerColor,
                     status.contentColor,
                     status.statusLabel,
-                    item.status
+                    item.status,
+                    item.userRating,
                 )
-//                Row {
-//                    Surface(
-//                        color = status.containerColor,
-//                        shape = if (item.status == WatchStatus.FINISHED) RoundedCornerShape(
-//                            topStart = Radius.Full,
-//                            bottomStart = Radius.Full
-//                        ) else CircleShape
-//                    ) {
-//                        Text(
-//                            status.statusLabel,
-//                            color = status.contentColor,
-//                            fontSize = 12.sp,
-//                            fontWeight = FontWeight.Bold,
-//                            modifier = Modifier.padding(horizontal = 8.dp)
-//                        )
-//                    }
-//
-//                    if (item.status == WatchStatus.FINISHED) {
-//                        Surface(
-//                            color = MaterialTheme.colorScheme.primary,
-//                            shape = RoundedCornerShape(
-//                                topEnd = Radius.Small,
-//                                bottomEnd = Radius.Small
-//                            )
-//                        ) {
-//                            Row(
-//                                horizontalArrangement = Arrangement.Center,
-//                                verticalAlignment = Alignment.CenterVertically,
-//                                modifier = Modifier.padding(start = 6.dp, end = 8.dp)
-//                            ) {
-//                                Symbol(
-//                                    R.drawable.star_24px,
-//                                    size = 16.dp,
-//                                    color = MaterialTheme.colorScheme.onPrimary
-//                                )
-//                                Spacer(Modifier.width(3.dp))
-//                                Text(
-//                                    "${if (item.userRating == 10.0) "10" else item.userRating}",
-//                                    color = MaterialTheme.colorScheme.onPrimary,
-//                                    fontSize = 12.sp,
-//                                    fontWeight = FontWeight.Bold
-//                                )
-//                            }
-//                        }
-//                    }
-//                }
             }
         }
     }
