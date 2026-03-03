@@ -31,48 +31,51 @@ fun WatchListStatusPill(
     status: WatchStatus,
     rating: Double? = null
 ) {
-    Surface(
-        color = containerColor,
-        shape = if (status == WatchStatus.FINISHED) RoundedCornerShape(
-            topStart = Radius.Full,
-            bottomStart = Radius.Full
-        ) else CircleShape
-    ) {
-        Text(
-            text,
-            color = contentColor,
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(horizontal = 8.dp)
-        )
-    }
-    if (status == WatchStatus.FINISHED) {
+    Row {
         Surface(
-            color = MaterialTheme.colorScheme.primary,
-            shape = RoundedCornerShape(
-                topEnd = Radius.Small,
-                bottomEnd = Radius.Small
-            )
+            color = containerColor,
+            shape = if (status == WatchStatus.FINISHED) RoundedCornerShape(
+                topStart = Radius.Full,
+                bottomStart = Radius.Full
+            ) else CircleShape
         ) {
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(start = 6.dp, end = 8.dp)
+            Text(
+                text,
+                color = contentColor,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
+        }
+        if (status == WatchStatus.FINISHED) {
+            Surface(
+                color = MaterialTheme.colorScheme.primary,
+                shape = RoundedCornerShape(
+                    topEnd = Radius.Small,
+                    bottomEnd = Radius.Small
+                )
             ) {
-                Symbol(
-                    R.drawable.star_24px,
-                    size = 16.dp,
-                    color = MaterialTheme.colorScheme.onPrimary
-                )
-                Spacer(Modifier.width(3.dp))
-                Text(
-                    "${if (rating == 10.0) "10" else rating}",
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold
-                )
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(start = 6.dp, end = 8.dp)
+                ) {
+                    Symbol(
+                        R.drawable.star_24px,
+                        size = 16.dp,
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
+                    Spacer(Modifier.width(3.dp))
+                    Text(
+                        "${if (rating == 10.0) "10" else rating}",
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
         }
     }
+
 }
 
