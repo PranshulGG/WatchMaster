@@ -73,7 +73,12 @@ fun MovieHeroHeader(
             contentScale = ContentScale.Crop
         )
 
-        MediaDetailsScreenHeader(navController, isFinished, userRating, onUpdateRating)
+        MediaDetailsScreenHeader(
+            navController,
+            isFinished,
+            userRating,
+            onUpdateRating = onUpdateRating
+        )
 
         Box(
             modifier = Modifier
