@@ -106,5 +106,7 @@ class WatchlistViewModel @Inject constructor(
         repository.updateSeasonNote(id, note)
     }
 
-
+    fun deleteSeason(id: Long) = viewModelScope.launch {
+        repository.deleteSeason(id)
+    }
 }
