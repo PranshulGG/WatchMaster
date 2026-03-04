@@ -19,6 +19,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingToolbarDefaults
 import androidx.compose.material3.FloatingToolbarExitDirection.Companion.Bottom
@@ -64,10 +65,11 @@ import com.pranshulgg.watchmaster.feature.shared.media.components.NotesSection
 import com.pranshulgg.watchmaster.feature.shared.media.components.OverviewSection
 import com.pranshulgg.watchmaster.feature.tv.detail.components.TvDetailFloatingToolbar
 import com.pranshulgg.watchmaster.feature.tv.detail.components.TvHeroHeader
+import com.pranshulgg.watchmaster.feature.tv.detail.ui.TvDetailEffects
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-private data class UiState(
+data class TvDetailsUiState(
     val minLoadingDone: Boolean = false,
     val showNoteDialog: Boolean = false,
     val note: String = "",
@@ -75,126 +77,57 @@ private data class UiState(
     val showConfirmationDialog: Boolean = false
 )
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun TvDetailsScreen(id: Long, seasonNumber: Int, navController: NavController) {
     val viewModel: TvDetailsViewModel = hiltViewModel()
     val watchlistViewModel: WatchlistViewModel = hiltViewModel()
-    var uiState by remember { mutableStateOf(UiState()) }
+//    var uiState by remember { mutableStateOf(TvDetailsUiState()) }
+    val uiState by viewModel.uiState
+//    LaunchedEffect(id) {
+//        viewModel.load(id, seasonNumber)
+//    }
+//    LaunchedEffect(id) {
+//        watchlistViewModel.observeItem(id)
+//    }
+//    LaunchedEffect(Unit) {
+//        delay(1000)
+//        uiState = uiState.copy(minLoadingDone = true)
+//    }
 
-    LaunchedEffect(id) {
-        viewModel.load(id, seasonNumber)
-    }
-    LaunchedEffect(id) {
-        watchlistViewModel.observeItem(id)
-    }
-    LaunchedEffect(Unit) {
-        delay(1000)
-        uiState = uiState.copy(minLoadingDone = true)
-    }
-
-    val loading = viewModel.loading
+    TvDetailEffects(id, seasonNumber, viewModel, watchlistViewModel)
+//    val loading = viewModel.loading
     val scrollBehavior =
         FloatingToolbarDefaults.exitAlwaysScrollBehavior(exitDirection = Bottom)
     val liveItem by watchlistViewModel.currentItem.collectAsStateWithLifecycle()
     val seasonsData by watchlistViewModel
         .seasonsForShow(id)
         .collectAsState(initial = emptyList())
-    val showLoading = loading || !uiState.minLoadingDone
+//    val showLoading = loading || !uiState.minLoadingDone
     val season = seasonsData.find { it.seasonNumber == seasonNumber }
     val watchlistItem = liveItem
     val isTvPinned = watchlistItem?.isPinned == true
     val isTv = watchlistItem?.mediaType == "tv"
 
-    Scaffold(
-        containerColor = MaterialTheme.colorScheme.surfaceContainer,
-        bottomBar = {
-            if (!showLoading && season != null) {
-                TvDetailFloatingToolbar(
-                    scrollBehavior,
-                    id,
-                    season,
-                    startWatching = {
-                        watchlistViewModel.markSeasonStatus(
-                            id,
-                            WatchStatus.WATCHING
-                        )
-                    },
-                    resetWatching = {
-                        watchlistViewModel.markSeasonStatus(
-                            id,
-                            WatchStatus.WANT_TO_WATCH
-                        )
-                    },
-                    finishWatching = {
-                        uiState = uiState.copy(showRatingDialog = true)
-                    },
-                    interruptWatching = {
-                        watchlistViewModel.markSeasonStatus(
-                            id,
-                            WatchStatus.INTERRUPTED
-                        )
-                    },
-                    onDeleteSeason = {
-                        uiState = uiState.copy(showConfirmationDialog = true)
-                    },
-                    onPin = {
-                        liveItem?.let { watchlistViewModel.setPinned(it.id, isTvPinned) }
-                        SnackbarManager.show(if (isTvPinned) "Series pinned" else "Series unpinned")
-                    },
-                    isPinned = isTvPinned,
-                    isTv = isTv
-                )
-            }
-        }
-    )
-    { paddingValues ->
-        if (showLoading) {
-            LoadingScreenPlaceholder()
-            Box(modifier = Modifier.padding(paddingValues)) // just use em
-        }
-        viewModel.state?.let { tvItem ->
-            LazyColumn(
-                modifier = Modifier
-                    .nestedScroll(scrollBehavior)
-                    .imePadding()
-            ) {
-                item {
-                    if (season != null) {
-                        TvHeroHeader(
-                            tvItem,
-                            navController,
-                            isFinished = seasonsData.find { it.seasonNumber == seasonNumber }?.status == WatchStatus.FINISHED,
-                            season,
-                        )
-                        MediaStatusSection(status = season.status)
-                        OverviewSection(tvItem.overview)
-                        NotesSection(
-                            season.seasonNotes.isNullOrBlank(),
-                            {
-                                uiState = uiState.copy(
-                                    note = season.seasonNotes ?: "",
-                                    showNoteDialog = true
-                                )
-                            },
-                            season.seasonNotes ?: ""
-                        )
-                        CastTvSection(tvItem)
-                    } else {
-                        Text("No season found")
-                    }
-                }
-            }
-        }
-    }
 
+    TvDetailsScaffold(
+        id = id,
+        seasonNumber = seasonNumber,
+        scrollBehavior = scrollBehavior,
+        uiState = uiState,
+        viewModel = viewModel,
+        watchlistViewModel = watchlistViewModel,
+        navController = navController
+    )
+
+    // --- Notes dialog ---
     DialogBasic(
         show = uiState.showNoteDialog,
         title = "Add a note",
         showDefaultActions = true,
         onDismiss = {
-            uiState = uiState.copy(showNoteDialog = false)
-            uiState = uiState.copy(note = season?.seasonNotes ?: "")
+//            uiState = uiState.copy(showNoteDialog = false)
+//            uiState = uiState.copy(note = season?.seasonNotes ?: "")
         },
         onConfirm = {
             watchlistViewModel.setSeasonNote(id, uiState.note)
@@ -212,14 +145,15 @@ fun TvDetailsScreen(id: Long, seasonNumber: Int, navController: NavController) {
     )
 
 
+    // --- Rating Dialog ---
     DialogBasic(
         show = uiState.showRatingDialog,
         title = "Rate this season",
         showDefaultActions = false,
-        onDismiss = { uiState = uiState.copy(showRatingDialog = false) },
+//        onDismiss = { uiState = uiState.copy(showRatingDialog = false) },
         content = {
             RateMediaDialogContent(
-                onCancel = { uiState = uiState.copy(showRatingDialog = false) },
+//                onCancel = { uiState = uiState.copy(showRatingDialog = false) },
                 onConfirm = { rating ->
                     watchlistViewModel.setSeasonUserRating(id, rating)
                     watchlistViewModel.markSeasonStatus(id, WatchStatus.FINISHED)
@@ -228,6 +162,7 @@ fun TvDetailsScreen(id: Long, seasonNumber: Int, navController: NavController) {
         }
     )
 
+    // --- Confirmation Dialog ---
     TextAlertDialog(
         show = uiState.showConfirmationDialog,
         title = "Delete season",
@@ -243,7 +178,7 @@ fun TvDetailsScreen(id: Long, seasonNumber: Int, navController: NavController) {
             navController.popBackStack()
         },
         onDismiss = {
-            uiState = uiState.copy(showConfirmationDialog = false)
+//            uiState = uiState.copy(showConfirmationDialog = false)
         }
     )
 }
