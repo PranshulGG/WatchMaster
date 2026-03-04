@@ -18,25 +18,6 @@ class WatchlistRepository(
 ) {
 
     suspend fun addFromSearch(item: SearchItem, tvDetails: List<TvSeasonDto>? = null) {
-
-//        val seasons = tvDetails?.map {
-//            SeasonEntity(
-//                seasonNumber = it.season_number,
-//                name = it.name,
-//                episodeCount = it.episode_count,
-//                airDate = it.air_date,
-//                posterPath = it.poster_path,
-//                showId = item.id
-//            )
-//        }
-
-//        val seasonsJson = SeasonDataMapper.toJson(seasons)
-
-        // Save season name so it's easier to check if the season already exists or not
-//        val seasonName = tvDetails
-//            ?.map { it.name }
-//            ?.toSet()
-
         dao.insert(
             WatchlistItemEntity(
                 id = item.id,
@@ -51,10 +32,6 @@ class WatchlistRepository(
                 backdropPath = item.backdropPath,
             )
         )
-
-//        if (seasons != null) {
-//            seasonDao.insertSeasons(seasons)
-//        }
     }
 
     suspend fun insertSeason(showId: Long, tvDetails: List<TvSeasonDto>) {
@@ -134,34 +111,36 @@ class WatchlistRepository(
     fun getSeasonsForShow(id: Long): Flow<List<SeasonEntity>> {
         return seasonDao.getSeasonForShow(id)
     }
+    
+    suspend fun markSeasonStarted(id: Long) {
+        seasonDao.updateSeasonStatus(
+            id = id,
+            status = WatchStatus.WATCHING,
+            started = Instant.now()
+        )
+    }
 
-    suspend fun markSeasonStatus(showId: Long, status: WatchStatus) {
-        val timestamp = Instant.now()
+    suspend fun markSeasonFinished(id: Long) {
+        seasonDao.updateSeasonStatus(
+            id = id,
+            status = WatchStatus.FINISHED,
+            finished = Instant.now()
+        )
+    }
 
-        when (status) {
-            WatchStatus.WATCHING -> seasonDao.updateSeasonStatus(
-                id = showId,
-                status = WatchStatus.WATCHING,
-                started = timestamp
-            )
+    suspend fun markSeasonInterrupted(id: Long) {
+        seasonDao.updateSeasonStatus(
+            id = id,
+            status = WatchStatus.INTERRUPTED,
+            interruptedAt = Instant.now()
+        )
+    }
 
-            WatchStatus.INTERRUPTED -> seasonDao.updateSeasonStatus(
-                id = showId,
-                status = WatchStatus.INTERRUPTED,
-                interruptedAt = timestamp
-            )
-
-            WatchStatus.FINISHED -> seasonDao.updateSeasonStatus(
-                id = showId,
-                status = WatchStatus.FINISHED,
-                finished = timestamp
-            )
-
-            WatchStatus.WANT_TO_WATCH -> seasonDao.updateSeasonStatus(
-                id = showId,
-                status = WatchStatus.WANT_TO_WATCH
-            )
-        }
+    suspend fun markSeasonWantToWatch(id: Long) {
+        seasonDao.updateSeasonStatus(
+            id = id,
+            status = WatchStatus.WANT_TO_WATCH
+        )
     }
 
     suspend fun updateSeasonUserRating(id: Long, rating: Double) =
