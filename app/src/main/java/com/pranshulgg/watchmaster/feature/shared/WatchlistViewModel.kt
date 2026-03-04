@@ -76,16 +76,27 @@ class WatchlistViewModel @Inject constructor(
         repository.updateNote(id, note)
     }
 
-    private val _currentItem = MutableStateFlow<WatchlistItemEntity?>(null)
-    val currentItem = _currentItem.asStateFlow()
+//    private val _currentItem = MutableStateFlow<WatchlistItemEntity?>(null)
+//    val currentItem = _currentItem.asStateFlow()
+//
+//    fun observeItem(id: Long) {
+//        viewModelScope.launch {
+//            repository.getItemById(id)
+//                .distinctUntilChanged()
+//                .collect { _currentItem.value = it }
+//        }
+//    }
 
-    fun observeItem(id: Long) {
-        viewModelScope.launch {
-            repository.getItemById(id)
-                .distinctUntilChanged()
-                .collect { _currentItem.value = it }
-        }
+    fun item(id: Long): StateFlow<WatchlistItemEntity?> {
+        return repository.getItemById(id)
+            .distinctUntilChanged()
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = null
+            )
     }
+
 
     fun seasonsForShow(showId: Long): Flow<List<SeasonEntity>> {
         return repository.getSeasonsForShow(showId)
