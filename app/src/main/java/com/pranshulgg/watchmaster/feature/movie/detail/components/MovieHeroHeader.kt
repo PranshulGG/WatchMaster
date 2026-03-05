@@ -34,6 +34,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
@@ -43,24 +44,19 @@ import com.pranshulgg.watchmaster.data.local.entity.MovieBundle
 import com.pranshulgg.watchmaster.feature.shared.WatchlistViewModel
 import com.pranshulgg.watchmaster.core.ui.theme.Radius
 import com.pranshulgg.watchmaster.core.ui.components.Symbol
+import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun MovieHeroHeader(
     movie: MovieBundle,
+    watchlistItem: WatchlistItemEntity?,
     navController: NavController,
     isFinished: Boolean,
     userRating: Double? = 0.0,
     onUpdateRating: (Double) -> Unit
 ) {
 
-    val watchlistViewModel: WatchlistViewModel = hiltViewModel()
-
-    LaunchedEffect(movie.id) {
-        watchlistViewModel.observeItem(movie.id)
-    }
-
-    val watchlistItem by watchlistViewModel.currentItem.collectAsState()
 
     Box(modifier = Modifier.fillMaxWidth()) {
 
