@@ -11,9 +11,7 @@ fun TvDetailEffects(
     id: Long,
     seasonNumber: Int,
     viewModel: TvDetailsViewModel,
-    watchlistViewModel: WatchlistViewModel
 ) {
     LaunchedEffect(id) { viewModel.load(id, seasonNumber) }
-    LaunchedEffect(id) { watchlistViewModel.observeItem(id) }
     LaunchedEffect(Unit) { viewModel.loading }
 }
