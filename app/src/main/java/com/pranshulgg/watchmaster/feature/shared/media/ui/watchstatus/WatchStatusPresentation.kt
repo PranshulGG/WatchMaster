@@ -3,18 +3,23 @@ package com.pranshulgg.watchmaster.feature.shared.media.ui.watchstatus
 import com.pranshulgg.watchmaster.core.model.WatchStatus
 import com.pranshulgg.watchmaster.R
 
-fun WatchStatus.dialogMessage(isTv: Boolean = false): String = when (this) {
-    WatchStatus.WATCHING ->
-        "Are you sure you want to finish this ${if (isTv) "season" else "movie"}?"
+fun WatchStatus.dialogMessage(isTv: Boolean = false): String {
+    val tvMovieText: String = if (isTv) "season" else "movie";
 
-    WatchStatus.INTERRUPTED ->
-        "Do you want to continue watching this ${if (isTv) "season" else "movie"}?"
+    return when (this) {
 
-    WatchStatus.FINISHED ->
-        "Reset this ${if (isTv) "season" else "movie"} and add it back to your watchlist?"
+        WatchStatus.WATCHING ->
+            "Are you sure you want to finish this $tvMovieText?"
 
-    else ->
-        "Are you sure you want to start watching this ${if (isTv) "season" else "movie"}?"
+        WatchStatus.INTERRUPTED ->
+            "Do you want to continue watching this $tvMovieText?"
+
+        WatchStatus.FINISHED ->
+            "Reset this $tvMovieText and add it back to your watchlist?"
+
+        else ->
+            "Are you sure you want to start watching this $tvMovieText?"
+    }
 }
 
 fun WatchStatus.confirmAction(
