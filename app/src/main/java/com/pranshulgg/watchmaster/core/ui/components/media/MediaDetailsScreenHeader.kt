@@ -45,6 +45,7 @@ fun MediaDetailsScreenHeader(
 ) {
     val schemeColor = MaterialTheme.colorScheme
     var showRatingDialog by remember { mutableStateOf(false) }
+
     TopAppBar(
         modifier = Modifier.zIndex(2f),
         colors = TopAppBarDefaults.topAppBarColors(
