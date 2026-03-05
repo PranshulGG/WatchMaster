@@ -336,10 +336,10 @@ private fun SeasonBtn(
         .seasonsForShow(id)
         .collectAsState(initial = emptyList())
 
-
-    LaunchedEffect(id) {
-        watchlistViewModel.observeItem(id)
-    }
+//
+//    LaunchedEffect(id) {
+//        watchlistViewModel.observeItem(id)
+//    }
 
 
     if (!seasonChanged) {
