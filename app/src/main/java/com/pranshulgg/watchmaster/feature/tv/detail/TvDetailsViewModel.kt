@@ -31,17 +31,14 @@ class TvDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             loading = true
             state = repo.getWholeTvData(tvId, seasonNumber)
-            delay(1000)
             loading = false
         }
     }
 
 
-    // UI ACTIONS
     private val _uiState = mutableStateOf(TvDetailsUiState())
     val uiState: State<TvDetailsUiState> = _uiState
 
-    // Example: hide note dialog
     fun hideNoteDialog() {
         _uiState.value = _uiState.value.copy(showNoteDialog = false)
     }
@@ -73,7 +70,4 @@ class TvDetailsViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(showConfirmationDialog = false)
     }
 
-    fun markMinLoadingDone() {
-        _uiState.value = _uiState.value.copy(minLoadingDone = true)
-    }
 }
