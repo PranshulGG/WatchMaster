@@ -66,11 +66,11 @@ import com.pranshulgg.watchmaster.feature.shared.media.components.OverviewSectio
 import com.pranshulgg.watchmaster.feature.tv.detail.components.TvDetailFloatingToolbar
 import com.pranshulgg.watchmaster.feature.tv.detail.components.TvHeroHeader
 import com.pranshulgg.watchmaster.feature.tv.detail.ui.TvDetailEffects
+import com.pranshulgg.watchmaster.feature.tv.detail.ui.TvDetailsNoteDialog
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 data class TvDetailsUiState(
-    val minLoadingDone: Boolean = false,
     val showNoteDialog: Boolean = false,
     val note: String = "",
     val showRatingDialog: Boolean = false,
@@ -80,106 +80,23 @@ data class TvDetailsUiState(
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun TvDetailsScreen(id: Long, seasonNumber: Int, navController: NavController) {
+
     val viewModel: TvDetailsViewModel = hiltViewModel()
     val watchlistViewModel: WatchlistViewModel = hiltViewModel()
-//    var uiState by remember { mutableStateOf(TvDetailsUiState()) }
-    val uiState by viewModel.uiState
-//    LaunchedEffect(id) {
-//        viewModel.load(id, seasonNumber)
-//    }
-//    LaunchedEffect(id) {
-//        watchlistViewModel.observeItem(id)
-//    }
-//    LaunchedEffect(Unit) {
-//        delay(1000)
-//        uiState = uiState.copy(minLoadingDone = true)
-//    }
 
-    TvDetailEffects(id, seasonNumber, viewModel, watchlistViewModel)
-//    val loading = viewModel.loading
-    val scrollBehavior =
-        FloatingToolbarDefaults.exitAlwaysScrollBehavior(exitDirection = Bottom)
-    val liveItem by watchlistViewModel.currentItem.collectAsStateWithLifecycle()
-    val seasonsData by watchlistViewModel
-        .seasonsForShow(id)
-        .collectAsState(initial = emptyList())
-//    val showLoading = loading || !uiState.minLoadingDone
-    val season = seasonsData.find { it.seasonNumber == seasonNumber }
-    val watchlistItem = liveItem
-    val isTvPinned = watchlistItem?.isPinned == true
-    val isTv = watchlistItem?.mediaType == "tv"
+    TvDetailEffects(id, seasonNumber, viewModel)
+
+    val scrollBehavior = FloatingToolbarDefaults.exitAlwaysScrollBehavior(exitDirection = Bottom)
 
 
     TvDetailsScaffold(
         id = id,
         seasonNumber = seasonNumber,
         scrollBehavior = scrollBehavior,
-        uiState = uiState,
         viewModel = viewModel,
         watchlistViewModel = watchlistViewModel,
         navController = navController
     )
 
-    // --- Notes dialog ---
-    DialogBasic(
-        show = uiState.showNoteDialog,
-        title = "Add a note",
-        showDefaultActions = true,
-        onDismiss = {
-//            uiState = uiState.copy(showNoteDialog = false)
-//            uiState = uiState.copy(note = season?.seasonNotes ?: "")
-        },
-        onConfirm = {
-            watchlistViewModel.setSeasonNote(id, uiState.note)
-        },
-        confirmText = "Save",
-        content = {
-            OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(Radius.Large),
-                value = uiState.note,
-                onValueChange = { uiState = uiState.copy(note = it) },
-                placeholder = { Text("Note...") }
-            )
-        }
-    )
-
-
-    // --- Rating Dialog ---
-    DialogBasic(
-        show = uiState.showRatingDialog,
-        title = "Rate this season",
-        showDefaultActions = false,
-//        onDismiss = { uiState = uiState.copy(showRatingDialog = false) },
-        content = {
-            RateMediaDialogContent(
-//                onCancel = { uiState = uiState.copy(showRatingDialog = false) },
-                onConfirm = { rating ->
-                    watchlistViewModel.setSeasonUserRating(id, rating)
-                    watchlistViewModel.markSeasonStatus(id, WatchStatus.FINISHED)
-                }
-            )
-        }
-    )
-
-    // --- Confirmation Dialog ---
-    TextAlertDialog(
-        show = uiState.showConfirmationDialog,
-        title = "Delete season",
-        message = "Are you sure you want to delete this season? this action cannot be undone",
-        confirmText = "Confirm",
-        onConfirm = {
-            if (seasonsData.size == 1) {
-                watchlistViewModel.delete(id)
-            } else {
-                watchlistViewModel.deleteSeason(id)
-            }
-            SnackbarManager.show("Season deleted ${season?.name}")
-            navController.popBackStack()
-        },
-        onDismiss = {
-//            uiState = uiState.copy(showConfirmationDialog = false)
-        }
-    )
 }
 
