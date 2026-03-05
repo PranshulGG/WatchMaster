@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,32 +38,31 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.core.ui.components.Symbol
+import com.pranshulgg.watchmaster.core.ui.components.media.MediaDetailsScreenHeader
 import com.pranshulgg.watchmaster.core.ui.theme.Radius
 import com.pranshulgg.watchmaster.data.getMovieGenreNames
 import com.pranshulgg.watchmaster.data.getTvGenreNames
 import com.pranshulgg.watchmaster.data.local.entity.TvBundle
 import com.pranshulgg.watchmaster.data.local.entity.SeasonEntity
+import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 import com.pranshulgg.watchmaster.feature.shared.WatchlistViewModel
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun TvHeroHeader(
     tv: TvBundle,
+    watchlistItem: WatchlistItemEntity?,
     navController: NavController,
     isFinished: Boolean,
-    seasonItem: SeasonEntity
+    seasonItem: SeasonEntity,
+    userRating: Double? = 0.0,
+    onUpdateRating: (Double) -> Unit
 ) {
-    val watchlistViewModel: WatchlistViewModel = hiltViewModel()
-
-    LaunchedEffect(tv.id) {
-        watchlistViewModel.observeItem(tv.id)
-    }
-
-    val watchlistItem by watchlistViewModel.currentItem.collectAsState()
 
     val genre = tv.genres
 
@@ -82,6 +82,14 @@ fun TvHeroHeader(
             contentScale = ContentScale.Crop
         )
 
+        MediaDetailsScreenHeader(
+            navController,
+            isFinished,
+            userRating,
+            onUpdateRating = onUpdateRating,
+            isTv = true,
+            seasonUserRating = seasonItem.seasonUserRating
+        )
 
         Box(
             modifier = Modifier
