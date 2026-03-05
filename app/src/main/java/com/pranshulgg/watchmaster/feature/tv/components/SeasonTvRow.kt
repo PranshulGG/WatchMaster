@@ -56,7 +56,6 @@ fun SeasonTvRow(seasonData: SeasonEntity, shape: Shape, navController: NavContro
                 },
             ),
         color = MaterialTheme.colorScheme.surfaceContainer
-//        color = Color.Transparent
     ) {
         Column() {
             Row(
@@ -101,7 +100,8 @@ fun SeasonTvRow(seasonData: SeasonEntity, shape: Shape, navController: NavContro
                         status.containerColor,
                         status.contentColor,
                         status.statusLabel,
-                        seasonData.status
+                        seasonData.status,
+                        seasonData.seasonUserRating
                     )
                 }
 //                SeasonProgress() // NOT READY YET
