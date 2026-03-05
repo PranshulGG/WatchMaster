@@ -62,20 +62,20 @@ private data class UiState(
     val expanded: Boolean = false
 )
 
+
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun TvDetailFloatingToolbar(
     scrollBehavior: FloatingToolbarScrollBehavior,
-    id: Long,
-    item: SeasonEntity,
+    itemStatus: WatchStatus,
     startWatching: () -> Unit,
     resetWatching: () -> Unit,
     finishWatching: () -> Unit,
     interruptWatching: () -> Unit,
-    onDeleteSeason: () -> Unit,
+    onDelete: () -> Unit,
     onPin: () -> Unit,
     isPinned: Boolean = false,
-    isTv: Boolean
+    isTv: Boolean = false,
 ) {
     val systemInsets = WindowInsets.systemBars.asPaddingValues()
     val menuItemContentColor = MaterialTheme.colorScheme.onTertiaryContainer
@@ -89,7 +89,7 @@ fun TvDetailFloatingToolbar(
             { interruptWatching() }, isInterruptOption = true
         ),
         MenuItemOptionList(
-            if (!isPinned) "Unpin" else "Pin",
+            if (isPinned) "Unpin" else "Pin",
             R.drawable.keep_24px,
             { onPin() }),
         MenuItemOptionList("Folder", R.drawable.folder_24px, {}),
@@ -97,7 +97,7 @@ fun TvDetailFloatingToolbar(
         MenuItemOptionList(
             "Delete",
             R.drawable.delete_24px,
-            { onDeleteSeason() })
+            { onDelete() })
     )
 
     Box(
@@ -123,13 +123,13 @@ fun TvDetailFloatingToolbar(
                 ) {
                     FloatingMainActionBtn(
                         onClick = {
-                            if (item.status == WatchStatus.WATCHING) {
+                            if (itemStatus == WatchStatus.WATCHING) {
                                 finishWatching()
                             } else {
                                 uiState = uiState.copy(showDialog = true)
                             }
                         },
-                        item = item
+                        itemStatus = itemStatus
                     )
                     Box {
                         FilledIconButton(
@@ -153,7 +153,7 @@ fun TvDetailFloatingToolbar(
                         ) {
                             menuItemOptionList.forEach { option ->
 
-                                if (option.isInterruptOption && item.status != WatchStatus.WATCHING) {
+                                if (option.isInterruptOption && itemStatus != WatchStatus.WATCHING) {
                                     return@forEach
                                 }
 
@@ -187,10 +187,10 @@ fun TvDetailFloatingToolbar(
     TextAlertDialog(
         show = uiState.showDialog,
         title = "Watch status",
-        message = item.status.dialogMessage(isTv = isTv),
+        message = itemStatus.dialogMessage(isTv = isTv),
         confirmText = "Confirm",
         onConfirm = {
-            item.status.confirmAction(
+            itemStatus.confirmAction(
                 start = { startWatching() },
                 reset = { resetWatching() },
                 finish = { finishWatching() }
@@ -204,7 +204,7 @@ fun TvDetailFloatingToolbar(
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-private fun FloatingMainActionBtn(onClick: () -> Unit, item: SeasonEntity) {
+private fun FloatingMainActionBtn(onClick: () -> Unit, itemStatus: WatchStatus) {
     Button(
         modifier = Modifier
             .height(48.dp),
@@ -218,12 +218,12 @@ private fun FloatingMainActionBtn(onClick: () -> Unit, item: SeasonEntity) {
         contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
     ) {
         Symbol(
-            item.status.buttonIcon,
+            itemStatus.buttonIcon,
             color = MaterialTheme.colorScheme.onSurface,
         )
         Spacer(Modifier.width(ButtonDefaults.iconSpacingFor(48.dp)))
         Text(
-            item.status.buttonLabel,
+            itemStatus.buttonLabel,
             style = MaterialTheme.typography.titleMedium
 
         )
