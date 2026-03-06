@@ -45,9 +45,9 @@ interface SeasonDao {
         interruptedAt: Instant? = null
     )
 
-    @Query("UPDATE tv_seasons SET seasonUserRating = :rating WHERE showId = :id")
-    suspend fun updateSeasonUserRating(id: Long, rating: Double)
+    @Query("UPDATE tv_seasons SET seasonUserRating = :rating WHERE seasonId = :seasonId")
+    suspend fun updateSeasonUserRating(seasonId: Long, rating: Double)
 
-    @Query("UPDATE tv_seasons SET seasonNotes= :note WHERE showId = :id")
-    suspend fun setSeasonUserNote(id: Long, note: String)
+    @Query("UPDATE tv_seasons SET seasonNotes= :note WHERE seasonId = :seasonId")
+    suspend fun setSeasonUserNote(seasonId: Long, note: String)
 }
