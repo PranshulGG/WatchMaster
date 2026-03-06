@@ -111,34 +111,35 @@ class WatchlistRepository(
     fun getSeasonsForShow(id: Long): Flow<List<SeasonEntity>> {
         return seasonDao.getSeasonForShow(id)
     }
-    
-    suspend fun markSeasonStarted(id: Long) {
+
+
+    suspend fun markSeasonStarted(seasonId: Long) {
         seasonDao.updateSeasonStatus(
-            id = id,
+            seasonId = seasonId,
             status = WatchStatus.WATCHING,
             started = Instant.now()
         )
     }
 
-    suspend fun markSeasonFinished(id: Long) {
+    suspend fun markSeasonFinished(seasonId: Long) {
         seasonDao.updateSeasonStatus(
-            id = id,
+            seasonId = seasonId,
             status = WatchStatus.FINISHED,
             finished = Instant.now()
         )
     }
 
-    suspend fun markSeasonInterrupted(id: Long) {
+    suspend fun markSeasonInterrupted(seasonId: Long) {
         seasonDao.updateSeasonStatus(
-            id = id,
+            seasonId = seasonId,
             status = WatchStatus.INTERRUPTED,
             interruptedAt = Instant.now()
         )
     }
 
-    suspend fun markSeasonWantToWatch(id: Long) {
+    suspend fun markSeasonWantToWatch(seasonId: Long) {
         seasonDao.updateSeasonStatus(
-            id = id,
+            seasonId = seasonId,
             status = WatchStatus.WANT_TO_WATCH
         )
     }
