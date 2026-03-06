@@ -24,8 +24,8 @@ interface SeasonDao {
     )
     fun getSeasonForShow(showId: Long): Flow<List<SeasonEntity>>
 
-    @Query("DELETE FROM tv_seasons WHERE showId = :showId")
-    suspend fun deleteForShow(showId: Long)
+    @Query("DELETE FROM tv_seasons WHERE seasonId = :seasonId")
+    suspend fun deleteForShow(seasonId: Long)
 
     @Query(
         """
@@ -34,11 +34,11 @@ interface SeasonDao {
             seasonStartedDate = :started,
             seasonFinishedDate = :finished,
             seasonInterruptedAt = :interruptedAt
-        WHERE showId = :id
+        WHERE seasonId = :seasonId
     """
     )
     suspend fun updateSeasonStatus(
-        id: Long,
+        seasonId: Long,
         status: WatchStatus,
         started: Instant? = null,
         finished: Instant? = null,
