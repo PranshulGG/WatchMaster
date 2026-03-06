@@ -1,5 +1,8 @@
 package com.pranshulgg.watchmaster.feature.shared
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pranshulgg.watchmaster.core.model.WatchStatus
@@ -77,17 +80,6 @@ class WatchlistViewModel @Inject constructor(
         repository.updateNote(id, note)
     }
 
-//    private val _currentItem = MutableStateFlow<WatchlistItemEntity?>(null)
-//    val currentItem = _currentItem.asStateFlow()
-//
-//    fun observeItem(id: Long) {
-//        viewModelScope.launch {
-//            repository.getItemById(id)
-//                .distinctUntilChanged()
-//                .collect { _currentItem.value = it }
-//        }
-//    }
-
     fun item(id: Long): StateFlow<WatchlistItemEntity?> {
         return repository.getItemById(id)
             .distinctUntilChanged()
@@ -103,30 +95,32 @@ class WatchlistViewModel @Inject constructor(
         return repository.getSeasonsForShow(showId)
     }
 
-    fun startSeason(id: Long) = viewModelScope.launch {
-        repository.markSeasonStarted(id)
+
+    fun startSeason(seasonId: Long) = viewModelScope.launch {
+        repository.markSeasonStarted(seasonId)
     }
 
-    fun finishSeason(id: Long) = viewModelScope.launch {
-        repository.markSeasonFinished(id)
+    fun finishSeason(seasonId: Long) = viewModelScope.launch {
+        repository.markSeasonFinished(seasonId)
     }
 
-    fun interruptSeason(id: Long) = viewModelScope.launch {
-        repository.markSeasonInterrupted(id)
+    fun interruptSeason(seasonId: Long) = viewModelScope.launch {
+        repository.markSeasonInterrupted(seasonId)
     }
 
-    fun resetSeason(id: Long) = viewModelScope.launch {
-        repository.markSeasonWantToWatch(id)
+    fun resetSeason(seasonId: Long) = viewModelScope.launch {
+        repository.markSeasonWantToWatch(seasonId)
     }
 
+    fun setSeasonUserRating(id: Long, rating: Double) =
+        viewModelScope.launch { // TODO: USE seasonId, remove showId
+            repository.updateSeasonUserRating(id, rating)
+        }
 
-    fun setSeasonUserRating(id: Long, rating: Double) = viewModelScope.launch {
-        repository.updateSeasonUserRating(id, rating)
-    }
-
-    fun setSeasonNote(id: Long, note: String) = viewModelScope.launch {
-        repository.updateSeasonNote(id, note)
-    }
+    fun setSeasonNote(id: Long, note: String) =
+        viewModelScope.launch { // TODO: USE seasonId, remove showId
+            repository.updateSeasonNote(id, note)
+        }
 
     fun deleteSeason(id: Long) = viewModelScope.launch {
         repository.deleteSeason(id)
