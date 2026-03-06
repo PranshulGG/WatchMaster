@@ -91,8 +91,17 @@ class WatchlistViewModel @Inject constructor(
     }
 
 
-    fun seasonsForShow(showId: Long): Flow<List<SeasonEntity>> {
-        return repository.getSeasonsForShow(showId)
+    private val seasonsCache = mutableMapOf<Long, StateFlow<List<SeasonEntity>>>()
+
+    fun seasonsForShow(showId: Long): StateFlow<List<SeasonEntity>> {
+        return seasonsCache.getOrPut(showId) {
+            repository.getSeasonsForShow(showId)
+                .stateIn(
+                    viewModelScope,
+                    SharingStarted.WhileSubscribed(5000),
+                    emptyList()
+                )
+        }
     }
 
 
@@ -112,17 +121,17 @@ class WatchlistViewModel @Inject constructor(
         repository.markSeasonWantToWatch(seasonId)
     }
 
-    fun setSeasonUserRating(id: Long, rating: Double) =
-        viewModelScope.launch { // TODO: USE seasonId, remove showId
-            repository.updateSeasonUserRating(id, rating)
+    fun setSeasonUserRating(seasonId: Long, rating: Double) =
+        viewModelScope.launch {
+            repository.updateSeasonUserRating(seasonId, rating)
         }
 
-    fun setSeasonNote(id: Long, note: String) =
-        viewModelScope.launch { // TODO: USE seasonId, remove showId
-            repository.updateSeasonNote(id, note)
+    fun setSeasonNote(seasonId: Long, note: String) =
+        viewModelScope.launch {
+            repository.updateSeasonNote(seasonId, note)
         }
 
-    fun deleteSeason(id: Long) = viewModelScope.launch {
-        repository.deleteSeason(id)
+    fun deleteSeason(seasonId: Long) = viewModelScope.launch {
+        repository.deleteSeason(seasonId)
     }
 }
