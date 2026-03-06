@@ -1,11 +1,13 @@
 package com.pranshulgg.watchmaster.feature.tv.detail
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingToolbarScrollBehavior
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -20,12 +22,12 @@ import com.pranshulgg.watchmaster.core.ui.snackbar.SnackbarManager
 import com.pranshulgg.watchmaster.feature.shared.WatchlistViewModel
 import com.pranshulgg.watchmaster.feature.shared.media.ui.MediaActionsFloatingToolbar
 import com.pranshulgg.watchmaster.feature.shared.media.ui.FloatingToolbarMediaActionsParams
-import com.pranshulgg.watchmaster.feature.tv.detail.components.TvDetailFloatingToolbar
 import com.pranshulgg.watchmaster.feature.tv.detail.ui.TvDetailsConfirmationDialog
 import com.pranshulgg.watchmaster.feature.tv.detail.ui.TvDetailsNoteDialog
 import com.pranshulgg.watchmaster.feature.tv.detail.ui.TvDetailsRatingDialog
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun TvDetailsScaffold(
     id: Long,
@@ -44,39 +46,39 @@ fun TvDetailsScaffold(
 
     val isSeriesPinned = watchlistItem?.isPinned == true
 
+    if (loading || season == null) {
+        LoadingScreenPlaceholder()
+        return
+    }
+
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surfaceContainer,
         bottomBar = {
-            if (!loading && season != null) {
-                MediaActionsFloatingToolbar(
-                    scrollBehavior,
-                    season.status,
-                    actions = FloatingToolbarMediaActionsParams(
-                        startWatching = { watchlistViewModel.startSeason(id) },
-                        resetWatching = { watchlistViewModel.resetSeason(id) },
-                        finishWatching = { viewModel.showRatingDialog() },
-                        interruptWatching = { watchlistViewModel.interruptSeason(id) },
-                        delete = { viewModel.showConfirmationDialog() },
-                        togglePin = {
-                            watchlistItem?.let {
-                                watchlistViewModel.setPinned(
-                                    season.showId,
-                                    !it.isPinned
-                                )
-                            }
-                        },
-                    ),
-                    isPinned = isSeriesPinned,
-                    isTv = true
-                )
-            }
-        }
-    )
-    { paddingValues ->
-        if (loading) {
-            LoadingScreenPlaceholder()
-            Box(modifier = Modifier.padding(paddingValues))
-        }
+            MediaActionsFloatingToolbar(
+                scrollBehavior,
+                season.status,
+                actions = FloatingToolbarMediaActionsParams(
+                    startWatching = { watchlistViewModel.startSeason(season.seasonId) },
+                    resetWatching = { watchlistViewModel.resetSeason(season.seasonId) },
+                    finishWatching = { viewModel.showRatingDialog() },
+                    interruptWatching = { watchlistViewModel.interruptSeason(season.seasonId) },
+                    delete = { viewModel.showConfirmationDialog() },
+                    togglePin = {
+                        watchlistItem?.let {
+                            watchlistViewModel.setPinned(
+                                season.showId,
+                                !it.isPinned
+                            )
+                        }
+                    },
+                ),
+                isPinned = isSeriesPinned,
+                isTv = true
+            )
+        },
+
+        )
+    { _ ->
         viewModel.state?.let { tvItem ->
             TvDetailsContent(
                 tvItem,
