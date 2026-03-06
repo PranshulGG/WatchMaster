@@ -64,6 +64,7 @@ import com.pranshulgg.watchmaster.core.ui.theme.Radius
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 import com.pranshulgg.watchmaster.data.local.mapper.SeasonDataMapper
 import com.pranshulgg.watchmaster.feature.shared.WatchlistViewModel
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -81,11 +82,10 @@ fun TvWatchlistRow(
 
     val shape = MaterialListShape(isOnly, isFirst, isLast)
 
-    val seasons by viewModel
-        .seasonsForShow(item.id)
-        .collectAsState(initial = emptyList())
 
-    var expanded by rememberSaveable(item.id) { mutableStateOf(true) }
+    val seasons by viewModel.seasonsForShow(item.id).collectAsState()
+
+    var expanded by rememberSaveable(item.id) { mutableStateOf(false) }
 
     val motionScheme = MaterialTheme.motionScheme
 
@@ -167,16 +167,17 @@ fun TvWatchlistRow(
                 ) {
                     HorizontalDivider(color = MaterialTheme.colorScheme.surfaceContainer)
                     Spacer(Modifier.height(8.dp))
-                    seasons.forEach { item ->
+                    seasons.forEachIndexed { i, item ->
                         val isOnly = seasons.singleOrNull() == item
-                        val isFirst = seasons.indexOf(item) == 0
-                        val isLast = seasons.indexOf(item) == seasons.lastIndex
+                        val isFirst = i == 0
+                        val isLast = i == seasons.lastIndex
 
                         val shapeSeasonRow = MaterialListShape(isOnly, isFirst, isLast)
 
                         SeasonTvRow(item, shapeSeasonRow, navController)
                     }
                 }
+
             }
         }
     }
