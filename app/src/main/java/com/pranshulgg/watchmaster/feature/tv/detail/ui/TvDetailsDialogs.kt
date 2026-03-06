@@ -15,6 +15,9 @@ import com.pranshulgg.watchmaster.core.ui.snackbar.SnackbarManager
 import com.pranshulgg.watchmaster.core.ui.theme.Radius
 import com.pranshulgg.watchmaster.data.local.entity.SeasonEntity
 import com.pranshulgg.watchmaster.feature.shared.WatchlistViewModel
+import com.pranshulgg.watchmaster.feature.shared.media.components.DetailsConfirmationDialogContent
+import com.pranshulgg.watchmaster.feature.shared.media.components.DetailsNoteDialogContent
+import com.pranshulgg.watchmaster.feature.shared.media.components.DetailsRatingDialogContent
 import com.pranshulgg.watchmaster.feature.tv.detail.TvDetailsViewModel
 
 @Composable
@@ -23,27 +26,17 @@ fun TvDetailsNoteDialog(
     watchlistViewModel: WatchlistViewModel,
     season: SeasonEntity?,
 ) {
+    val uiState = viewModel.uiState.value
+
     season?.let { seasonIt ->
-        DialogBasic(
-            show = viewModel.uiState.value.showNoteDialog,
-            title = "Add a note",
-            showDefaultActions = true,
-            onDismiss = {
-                viewModel.hideNoteDialog()
-                viewModel.updateNoteText(seasonIt.seasonNotes ?: "")
-            },
+        DetailsNoteDialogContent(
+            uiState.showNoteDialog,
+            uiState.note,
+            seasonIt.seasonNotes ?: "",
+            viewModel::updateNoteText,
+            viewModel::hideNoteDialog,
             onConfirm = {
-                watchlistViewModel.setSeasonNote(seasonIt.showId, viewModel.uiState.value.note)
-            },
-            confirmText = "Save",
-            content = {
-                OutlinedTextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(Radius.Large),
-                    value = viewModel.uiState.value.note,
-                    onValueChange = { viewModel.updateNoteText(it) },
-                    placeholder = { Text("Note...") }
-                )
+                watchlistViewModel.setSeasonNote(seasonIt.showId, it)
             }
         )
     }
@@ -55,24 +48,15 @@ fun TvDetailsRatingDialog(
     watchlistViewModel: WatchlistViewModel,
     season: SeasonEntity?,
 ) {
+    val uiState = viewModel.uiState.value
+
     season?.let { seasonIt ->
-        DialogBasic(
-            show = viewModel.uiState.value.showRatingDialog,
-            title = "Rate this season",
-            showDefaultActions = false,
-            onDismiss = {
-                viewModel.hideRatingDialog()
-            },
-            content = {
-                RateMediaDialogContent(
-                    onCancel = {
-                        viewModel.hideRatingDialog()
-                    },
-                    onConfirm = { rating ->
-                        watchlistViewModel.setSeasonUserRating(seasonIt.showId, rating)
-                        watchlistViewModel.finishSeason(seasonIt.showId)
-                    }
-                )
+        DetailsRatingDialogContent(
+            uiState.showRatingDialog,
+            viewModel::hideRatingDialog,
+            onConfirm = { rating ->
+                watchlistViewModel.setSeasonUserRating(seasonIt.showId, rating)
+                watchlistViewModel.finishSeason(seasonIt.showId)
             }
         )
     }
@@ -87,24 +71,22 @@ fun TvDetailsConfirmationDialog(
     seasonSize: Int,
     navController: NavController
 ) {
+    val uiState = viewModel.uiState.value
+
     season?.let { seasonIt ->
-        TextAlertDialog(
-            show = viewModel.uiState.value.showConfirmationDialog,
-            title = "Delete season",
-            message = "Are you sure you want to delete this season? this action cannot be undone",
-            confirmText = "Confirm",
+        DetailsConfirmationDialogContent(
+            uiState.showConfirmationDialog,
+            viewModel::hideConfirmationDialog,
             onConfirm = {
                 if (seasonSize == 1) {
                     watchlistViewModel.delete(seasonIt.showId)
                 } else {
-                    watchlistViewModel.deleteSeason(seasonIt.showId)
+                    watchlistViewModel.deleteSeason(seasonIt.seasonId)
                 }
                 SnackbarManager.show("Season deleted ${seasonIt.name}")
                 navController.popBackStack()
             },
-            onDismiss = {
-                viewModel.hideConfirmationDialog()
-            }
+            isTv = true
         )
     }
 }
