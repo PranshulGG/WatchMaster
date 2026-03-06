@@ -13,6 +13,7 @@ import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.core.ui.components.EmptyContainerPlaceholder
 import com.pranshulgg.watchmaster.core.ui.components.LoadingScreenPlaceholder
 import com.pranshulgg.watchmaster.core.ui.components.media.PosterBox
+import com.pranshulgg.watchmaster.data.local.entity.SeasonEntity
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 import com.pranshulgg.watchmaster.data.local.mapper.SeasonDataMapper
 import com.pranshulgg.watchmaster.feature.movie.components.MovieItems
@@ -28,8 +29,7 @@ fun WatchlistTv(
     scrollBehaviorTopBar: TopAppBarScrollBehavior,
     navController: NavController,
     onLongActionTvRequest: (WatchlistItemEntity) -> Unit,
-    viewModel: WatchlistViewModel
-
+    viewModel: WatchlistViewModel,
 ) {
 
 
