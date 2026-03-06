@@ -57,13 +57,11 @@ import com.pranshulgg.watchmaster.core.ui.components.media.RateMediaDialogConten
 import com.pranshulgg.watchmaster.core.ui.snackbar.SnackbarManager
 import com.pranshulgg.watchmaster.core.ui.theme.Radius
 import com.pranshulgg.watchmaster.feature.movie.detail.MovieDetailsViewModel
-import com.pranshulgg.watchmaster.feature.movie.detail.components.MovieDetailFloatingToolBar
 import com.pranshulgg.watchmaster.feature.movie.detail.components.MovieHeroHeader
 import com.pranshulgg.watchmaster.feature.shared.WatchlistViewModel
 import com.pranshulgg.watchmaster.feature.shared.media.components.CastTvSection
 import com.pranshulgg.watchmaster.feature.shared.media.components.NotesSection
 import com.pranshulgg.watchmaster.feature.shared.media.components.OverviewSection
-import com.pranshulgg.watchmaster.feature.tv.detail.components.TvDetailFloatingToolbar
 import com.pranshulgg.watchmaster.feature.tv.detail.components.TvHeroHeader
 import com.pranshulgg.watchmaster.feature.tv.detail.ui.TvDetailEffects
 import com.pranshulgg.watchmaster.feature.tv.detail.ui.TvDetailsNoteDialog
