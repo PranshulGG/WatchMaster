@@ -69,8 +69,6 @@ fun TvHeroHeader(
     val genreList = getTvGenreNames(genre.map { it.id })
 
 
-
-
     Box(modifier = Modifier.fillMaxWidth()) {
 
         AsyncImage(
