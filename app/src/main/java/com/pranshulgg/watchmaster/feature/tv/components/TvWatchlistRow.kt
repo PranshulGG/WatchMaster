@@ -35,6 +35,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -72,7 +73,7 @@ fun TvWatchlistRow(
     items: List<WatchlistItemEntity>,
     navController: NavController,
     onLongActionTvRequest: () -> Unit,
-    viewModel: WatchlistViewModel
+    viewModel: WatchlistViewModel,
 ) {
     val isOnly = items.singleOrNull() == item
     val isFirst = index == 0
@@ -80,19 +81,13 @@ fun TvWatchlistRow(
 
     val shape = MaterialListShape(isOnly, isFirst, isLast)
 
-//    val seasonData = SeasonDataMapper.fromJson(item.seasonsJson)
-
-
-    val seasonsData by viewModel
+    val seasons by viewModel
         .seasonsForShow(item.id)
         .collectAsState(initial = emptyList())
 
-    var expanded by remember { mutableStateOf(false) }
+    var expanded by rememberSaveable(item.id) { mutableStateOf(true) }
 
     val motionScheme = MaterialTheme.motionScheme
-
-
-
 
     Surface(
         shape = shape,
@@ -172,14 +167,14 @@ fun TvWatchlistRow(
                 ) {
                     HorizontalDivider(color = MaterialTheme.colorScheme.surfaceContainer)
                     Spacer(Modifier.height(8.dp))
-                    seasonsData.forEach { seasonDataItem ->
-                        val isOnly = seasonsData.singleOrNull() == seasonDataItem
-                        val isFirst = seasonsData.indexOf(seasonDataItem) == 0
-                        val isLast = seasonsData.indexOf(seasonDataItem) == seasonsData.lastIndex
+                    seasons.forEach { item ->
+                        val isOnly = seasons.singleOrNull() == item
+                        val isFirst = seasons.indexOf(item) == 0
+                        val isLast = seasons.indexOf(item) == seasons.lastIndex
 
                         val shapeSeasonRow = MaterialListShape(isOnly, isFirst, isLast)
 
-                        SeasonTvRow(seasonDataItem, shapeSeasonRow, navController)
+                        SeasonTvRow(item, shapeSeasonRow, navController)
                     }
                 }
             }
