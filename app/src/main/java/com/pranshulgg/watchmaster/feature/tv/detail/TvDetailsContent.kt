@@ -58,7 +58,7 @@ fun TvDetailsContent(
                     season,
                     userRating = season.seasonUserRating,
                     onUpdateRating = { newRating ->
-                        watchlistViewModel.setSeasonUserRating(season.showId, newRating)
+                        watchlistViewModel.setSeasonUserRating(season.seasonId, newRating)
                         SnackbarManager.show("User rating updated")
                     }
                 )
