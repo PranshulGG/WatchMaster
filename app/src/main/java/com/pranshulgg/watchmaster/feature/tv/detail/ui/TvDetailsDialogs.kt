@@ -36,7 +36,7 @@ fun TvDetailsNoteDialog(
             viewModel::updateNoteText,
             viewModel::hideNoteDialog,
             onConfirm = {
-                watchlistViewModel.setSeasonNote(seasonIt.showId, it)
+                watchlistViewModel.setSeasonNote(seasonIt.seasonId, it)
             }
         )
     }
@@ -55,8 +55,8 @@ fun TvDetailsRatingDialog(
             uiState.showRatingDialog,
             viewModel::hideRatingDialog,
             onConfirm = { rating ->
-                watchlistViewModel.setSeasonUserRating(seasonIt.showId, rating)
-                watchlistViewModel.finishSeason(seasonIt.showId)
+                watchlistViewModel.setSeasonUserRating(seasonIt.seasonId, rating)
+                watchlistViewModel.finishSeason(seasonIt.seasonId)
             }
         )
     }
