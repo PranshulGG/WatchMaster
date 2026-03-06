@@ -144,10 +144,11 @@ class WatchlistRepository(
         )
     }
 
-    suspend fun updateSeasonUserRating(id: Long, rating: Double) =
-        seasonDao.updateSeasonUserRating(id, rating)
+    suspend fun updateSeasonUserRating(seasonId: Long, rating: Double) =
+        seasonDao.updateSeasonUserRating(seasonId, rating)
 
-    suspend fun updateSeasonNote(id: Long, note: String) = seasonDao.setSeasonUserNote(id, note)
+    suspend fun updateSeasonNote(seasonId: Long, note: String) =
+        seasonDao.setSeasonUserNote(seasonId, note)
 
-    suspend fun deleteSeason(id: Long) = seasonDao.deleteForShow(id)
+    suspend fun deleteSeason(seasonId: Long) = seasonDao.deleteForShow(seasonId)
 }
