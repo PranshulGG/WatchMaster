@@ -18,12 +18,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.pranshulgg.watchmaster.data.local.entity.SeasonEntity
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 import com.pranshulgg.watchmaster.feature.movie.components.WatchlistRow
 import com.pranshulgg.watchmaster.feature.shared.WatchlistViewModel
@@ -37,8 +41,10 @@ fun TvItems(
     onLongActionTvRequest: (WatchlistItemEntity) -> Unit,
     pinnedItems: List<WatchlistItemEntity>,
     normalItems: List<WatchlistItemEntity>,
-    viewModel: WatchlistViewModel
-) {
+    viewModel: WatchlistViewModel,
+
+    ) {
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -72,12 +78,11 @@ fun TvItems(
                     pinnedItems,
                     navController,
                     onLongActionTvRequest = { onLongActionTvRequest(item) },
-                    viewModel
+                    viewModel,
                 )
             }
 
             if (normalItems.isNotEmpty()) {
-
                 item {
                     Text(
                         text = "Other",
@@ -91,13 +96,14 @@ fun TvItems(
         }
 
         itemsIndexed(normalItems, key = { _, item -> item.id }) { index, item ->
+
             TvWatchlistRow(
                 item,
                 index,
                 normalItems,
                 navController,
                 onLongActionTvRequest = { onLongActionTvRequest(item) },
-                viewModel
+                viewModel,
             )
         }
 
