@@ -1,23 +1,13 @@
 package com.pranshulgg.watchmaster.feature.tv.detail.ui
 
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
-import com.pranshulgg.watchmaster.core.model.WatchStatus
-import com.pranshulgg.watchmaster.core.ui.components.DialogBasic
-import com.pranshulgg.watchmaster.core.ui.components.TextAlertDialog
-import com.pranshulgg.watchmaster.core.ui.components.media.RateMediaDialogContent
 import com.pranshulgg.watchmaster.core.ui.snackbar.SnackbarManager
-import com.pranshulgg.watchmaster.core.ui.theme.Radius
 import com.pranshulgg.watchmaster.data.local.entity.SeasonEntity
 import com.pranshulgg.watchmaster.feature.shared.WatchlistViewModel
-import com.pranshulgg.watchmaster.feature.shared.media.components.DetailsConfirmationDialogContent
-import com.pranshulgg.watchmaster.feature.shared.media.components.DetailsNoteDialogContent
-import com.pranshulgg.watchmaster.feature.shared.media.components.DetailsRatingDialogContent
+import com.pranshulgg.watchmaster.feature.shared.media.components.MediaConfirmationDialogContent
+import com.pranshulgg.watchmaster.feature.shared.media.components.MediaNoteDialogContent
+import com.pranshulgg.watchmaster.feature.shared.media.components.MediaRatingDialogContent
 import com.pranshulgg.watchmaster.feature.tv.detail.TvDetailsViewModel
 
 @Composable
@@ -29,7 +19,7 @@ fun TvDetailsNoteDialog(
     val uiState = viewModel.uiState.value
 
     season?.let { seasonIt ->
-        DetailsNoteDialogContent(
+        MediaNoteDialogContent(
             uiState.showNoteDialog,
             uiState.note,
             seasonIt.seasonNotes ?: "",
@@ -51,7 +41,7 @@ fun TvDetailsRatingDialog(
     val uiState = viewModel.uiState.value
 
     season?.let { seasonIt ->
-        DetailsRatingDialogContent(
+        MediaRatingDialogContent(
             uiState.showRatingDialog,
             viewModel::hideRatingDialog,
             onConfirm = { rating ->
@@ -74,7 +64,7 @@ fun TvDetailsConfirmationDialog(
     val uiState = viewModel.uiState.value
 
     season?.let { seasonIt ->
-        DetailsConfirmationDialogContent(
+        MediaConfirmationDialogContent(
             uiState.showConfirmationDialog,
             viewModel::hideConfirmationDialog,
             onConfirm = {
