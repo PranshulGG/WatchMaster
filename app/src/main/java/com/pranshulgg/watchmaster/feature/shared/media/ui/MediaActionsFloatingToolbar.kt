@@ -43,7 +43,7 @@ import com.pranshulgg.watchmaster.core.ui.components.TextAlertDialog
 import com.pranshulgg.watchmaster.core.ui.snackbar.SnackbarManager
 import com.pranshulgg.watchmaster.core.ui.theme.Radius
 import com.pranshulgg.watchmaster.feature.shared.media.ui.watchstatus.buttonIcon
-import com.pranshulgg.watchmaster.feature.shared.media.ui.watchstatus.buttonLabel
+import com.pranshulgg.watchmaster.feature.shared.media.ui.watchstatus.actionLabel
 import com.pranshulgg.watchmaster.feature.shared.media.ui.watchstatus.confirmAction
 import com.pranshulgg.watchmaster.feature.shared.media.ui.watchstatus.dialogMessage
 
@@ -220,7 +220,7 @@ private fun StatusMainActionBtn(onClick: () -> Unit, itemStatus: WatchStatus) {
         )
         Spacer(Modifier.width(ButtonDefaults.iconSpacingFor(48.dp)))
         Text(
-            itemStatus.buttonLabel,
+            itemStatus.actionLabel,
             style = MaterialTheme.typography.titleMedium
 
         )
