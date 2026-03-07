@@ -67,7 +67,6 @@ import kotlinx.coroutines.launch
 )
 @Composable
 fun SearchScreen(
-//    viewModel: SearchViewModel = viewModel(factory = SearchViewModelFactory(LocalContext.current)),
     navController: NavController,
     type: SearchType
 ) {
