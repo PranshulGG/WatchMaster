@@ -38,69 +38,66 @@ fun ActionBottomSheet(
     confirmText: String = "Save",
     cancelText: String = "Cancel",
     showActions: Boolean = true,
-
     content: @Composable ColumnScope.() -> Unit,
 ) {
-    if (sheetState.isVisible) {
-        ModalBottomSheet(
-            sheetState = sheetState,
-            onDismissRequest = onCancel,
-            scrimColor = MaterialTheme.colorScheme.scrim.copy(alpha = 0.5f),
-            dragHandle = {
-                Surface(
-                    Modifier
-                        .padding(top = 22.dp, bottom = 12.dp)
-                        .height(4.dp)
-                        .width(32.dp),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    shape = CircleShape
-                ) {}
-            }
+    ModalBottomSheet(
+        sheetState = sheetState,
+        onDismissRequest = onCancel,
+        scrimColor = MaterialTheme.colorScheme.scrim.copy(alpha = 0.5f),
+        dragHandle = {
+            Surface(
+                Modifier
+                    .padding(top = 22.dp, bottom = 12.dp)
+                    .height(4.dp)
+                    .width(32.dp),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                shape = CircleShape
+            ) {}
+        }
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(max = 800.dp)
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(max = 800.dp)
-            ) {
 
-                content()
+            content()
 
-                Spacer(Modifier.height(12.dp))
-                if (showActions) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(end = 16.dp, start = 16.dp, bottom = 10.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
+            Spacer(Modifier.height(12.dp))
+            if (showActions) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(end = 16.dp, start = 16.dp, bottom = 10.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Button(
+                        modifier = Modifier.defaultMinSize(minWidth = 90.dp, minHeight = 45.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.errorContainer),
+                        onClick = {
+                            onCancel()
+                        }, shapes = ButtonDefaults.shapes()
                     ) {
-                        Button(
-                            modifier = Modifier.defaultMinSize(minWidth = 90.dp, minHeight = 45.dp),
-                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.errorContainer),
-                            onClick = {
-                                onCancel()
-                            }, shapes = ButtonDefaults.shapes()
-                        ) {
-                            Text(
-                                cancelText,
-                                color = MaterialTheme.colorScheme.onErrorContainer,
-                                fontSize = 16.sp
-                            )
-                        }
-                        Button(
-                            onClick = {
-                                onConfirm()
-                            },
-
-                            shapes = ButtonDefaults.shapes(),
-                            modifier = Modifier.defaultMinSize(minWidth = 90.dp, minHeight = 45.dp),
-                        ) {
-                            Text(confirmText, fontSize = 16.sp)
-                        }
-
+                        Text(
+                            cancelText,
+                            color = MaterialTheme.colorScheme.onErrorContainer,
+                            fontSize = 16.sp
+                        )
                     }
-                }
+                    Button(
+                        onClick = {
+                            onConfirm()
+                        },
 
+                        shapes = ButtonDefaults.shapes(),
+                        modifier = Modifier.defaultMinSize(minWidth = 90.dp, minHeight = 45.dp),
+                    ) {
+                        Text(confirmText, fontSize = 16.sp)
+                    }
+
+                }
             }
+
         }
     }
 }
