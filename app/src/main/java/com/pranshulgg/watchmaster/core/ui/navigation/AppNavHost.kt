@@ -1,6 +1,5 @@
 package com.pranshulgg.watchmaster.core.ui.navigation
 
-import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
@@ -18,7 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.zIndex
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -28,10 +26,7 @@ import com.pranshulgg.watchmaster.feature.main.MainScreen
 import com.pranshulgg.watchmaster.feature.movie.detail.MovieDetailPage
 import com.pranshulgg.watchmaster.feature.search.SearchScreen
 import com.pranshulgg.watchmaster.feature.search.SearchType
-import com.pranshulgg.watchmaster.feature.search.SearchViewModel
-import com.pranshulgg.watchmaster.feature.search.SearchViewModelFactory
 import com.pranshulgg.watchmaster.feature.setting.SettingsScreen
-import com.pranshulgg.watchmaster.core.ui.navigation.NavRoutes
 import com.pranshulgg.watchmaster.feature.tv.detail.TvDetailsScreen
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -40,7 +35,6 @@ fun AppNavHost(
     navController: NavHostController,
     snackbarHostState: SnackbarHostState,
     motionScheme: MotionScheme,
-    context: Context
 ) {
     Box(
         Modifier.fillMaxSize()
@@ -60,8 +54,7 @@ fun AppNavHost(
         )
         NavHost(
             navController = navController,
-            startDestination = NavRoutes.MAIN,
-//            startDestination = NavRoutes.tvDetail(60574, 1),
+            startDestination = NavRoutes.SEARCH,
             modifier = Modifier.background(MaterialTheme.colorScheme.surfaceContainer),
             enterTransition = { NavTransitions.enter(motionScheme) },
             exitTransition = { NavTransitions.exit(motionScheme) },
