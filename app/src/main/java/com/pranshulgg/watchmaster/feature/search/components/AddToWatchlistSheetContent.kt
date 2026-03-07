@@ -75,7 +75,6 @@ fun AddToWatchlistSheetContent(
     seasonData: List<TvSeasonDto>,
     onSelectedSeason: (List<TvSeasonDto>) -> Unit
 ) {
-    val scrollState = rememberScrollState()
 
     val poster = item.posterPath?.let {
         "https://image.tmdb.org/t/p/w154$it"
@@ -90,7 +89,6 @@ fun AddToWatchlistSheetContent(
                 (item.mediaType == "tv" && !seasonLoading)
 
 
-//    val btnSize = ButtonDefaults.MediumContainerHeight
 
     Column(
         Modifier.padding(horizontal = 16.dp)
@@ -172,19 +170,6 @@ fun AddToWatchlistSheetContent(
             CircularProgressIndicator()
         }
         Spacer(Modifier.height(12.dp))
-//
-//        Box(
-//            Modifier
-//                .weight(1f, fill = false)
-//                .verticalColumnScrollbar(
-//                    scrollState = scrollState,
-//                    alpha = scrollbarAlpha
-//                )
-//                .verticalScroll(scrollState)
-//        ) {
-//
-//        }
-
 
         item.overview?.let {
             Text(
@@ -199,9 +184,6 @@ fun AddToWatchlistSheetContent(
 
         Spacer(Modifier.height(16.dp))
 
-//        seasonData?.forEach {
-//            Text(it.name)
-//        }
 
         val interactionSources = remember { List(2) { MutableInteractionSource() } }
 
@@ -335,11 +317,6 @@ private fun SeasonBtn(
     val seasonsData by watchlistViewModel
         .seasonsForShow(id)
         .collectAsState(initial = emptyList())
-
-//
-//    LaunchedEffect(id) {
-//        watchlistViewModel.observeItem(id)
-//    }
 
 
     if (!seasonChanged) {
