@@ -9,11 +9,10 @@ import androidx.compose.ui.Modifier
 import com.pranshulgg.watchmaster.core.ui.components.DialogBasic
 import com.pranshulgg.watchmaster.core.ui.components.TextAlertDialog
 import com.pranshulgg.watchmaster.core.ui.components.media.RateMediaDialogContent
-import com.pranshulgg.watchmaster.core.ui.snackbar.SnackbarManager
 import com.pranshulgg.watchmaster.core.ui.theme.Radius
 
 @Composable
-fun DetailsNoteDialogContent(
+fun MediaNoteDialogContent(
     show: Boolean,
     note: String,
     initialNote: String,
@@ -46,10 +45,12 @@ fun DetailsNoteDialogContent(
 }
 
 @Composable
-fun DetailsRatingDialogContent(
+fun MediaRatingDialogContent(
     show: Boolean,
     onDismiss: () -> Unit,
-    onConfirm: (Double) -> Unit
+    onConfirm: (Double) -> Unit,
+    isUpdateRating: Boolean = false,
+    originalRating: Float = 0f
 ) {
     DialogBasic(
         show = show,
@@ -60,6 +61,8 @@ fun DetailsRatingDialogContent(
         },
         content = {
             RateMediaDialogContent(
+                updateRating = isUpdateRating,
+                originalRating = originalRating,
                 onCancel = {
                     onDismiss()
                 },
@@ -73,7 +76,7 @@ fun DetailsRatingDialogContent(
 
 
 @Composable
-fun DetailsConfirmationDialogContent(
+fun MediaConfirmationDialogContent(
     show: Boolean,
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
