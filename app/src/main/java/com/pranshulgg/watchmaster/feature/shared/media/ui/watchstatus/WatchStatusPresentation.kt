@@ -34,7 +34,7 @@ fun WatchStatus.confirmAction(
     }
 }
 
-val WatchStatus.buttonLabel: String
+val WatchStatus.actionLabel: String
     get() = when (this) {
         WatchStatus.WATCHING -> "Mark as finished"
         WatchStatus.INTERRUPTED -> "Continue watching"
