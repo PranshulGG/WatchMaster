@@ -58,8 +58,6 @@ fun WatchlistRow(
 
     val titleMaxLines = 2
     val overviewMaxLines = remember { mutableIntStateOf(1) }
-    val scope = rememberCoroutineScope()
-
 
     val poster = item.posterPath?.let {
         "https://image.tmdb.org/t/p/w154$it"
