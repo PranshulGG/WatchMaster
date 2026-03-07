@@ -80,6 +80,7 @@ class WatchlistViewModel @Inject constructor(
         repository.updateNote(id, note)
     }
 
+
     fun item(id: Long): StateFlow<WatchlistItemEntity?> {
         return repository.getItemById(id)
             .distinctUntilChanged()
@@ -89,7 +90,6 @@ class WatchlistViewModel @Inject constructor(
                 initialValue = null
             )
     }
-
 
     private val seasonsCache = mutableMapOf<Long, StateFlow<List<SeasonEntity>>>()
 
