@@ -6,9 +6,9 @@ import com.pranshulgg.watchmaster.core.ui.snackbar.SnackbarManager
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 import com.pranshulgg.watchmaster.feature.movie.detail.MovieDetailsViewModel
 import com.pranshulgg.watchmaster.feature.shared.WatchlistViewModel
-import com.pranshulgg.watchmaster.feature.shared.media.components.DetailsConfirmationDialogContent
-import com.pranshulgg.watchmaster.feature.shared.media.components.DetailsNoteDialogContent
-import com.pranshulgg.watchmaster.feature.shared.media.components.DetailsRatingDialogContent
+import com.pranshulgg.watchmaster.feature.shared.media.components.MediaConfirmationDialogContent
+import com.pranshulgg.watchmaster.feature.shared.media.components.MediaNoteDialogContent
+import com.pranshulgg.watchmaster.feature.shared.media.components.MediaRatingDialogContent
 
 @Composable
 fun MovieDetailsNoteDialog(
@@ -19,7 +19,7 @@ fun MovieDetailsNoteDialog(
     val uiState = viewModel.uiState.value
 
     watchlistItem?.let { item ->
-        DetailsNoteDialogContent(
+        MediaNoteDialogContent(
             uiState.showNoteDialog,
             uiState.note,
             item.notes ?: "",
@@ -41,7 +41,7 @@ fun MovieDetailsRatingDialog(
     val uiState = viewModel.uiState.value
 
     watchlistItem?.let { item ->
-        DetailsRatingDialogContent(
+        MediaRatingDialogContent(
             uiState.showRatingDialog,
             viewModel::hideRatingDialog,
             onConfirm = { rating ->
@@ -63,7 +63,7 @@ fun MovieDetailsConfirmationDialog(
     val uiState = viewModel.uiState.value
 
     watchlistItem?.let { item ->
-        DetailsConfirmationDialogContent(
+        MediaConfirmationDialogContent(
             uiState.showConfirmationDialog,
             viewModel::hideConfirmationDialog,
             onConfirm = {
