@@ -38,6 +38,7 @@ fun ActionBottomSheet(
     confirmText: String = "Save",
     cancelText: String = "Cancel",
     showActions: Boolean = true,
+    confirmBtnMaxWidth: Boolean = false,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     ModalBottomSheet(
@@ -76,7 +77,8 @@ fun ActionBottomSheet(
                         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.errorContainer),
                         onClick = {
                             onCancel()
-                        }, shapes = ButtonDefaults.shapes()
+                        },
+                        shapes = ButtonDefaults.shapes(),
                     ) {
                         Text(
                             cancelText,
@@ -84,13 +86,19 @@ fun ActionBottomSheet(
                             fontSize = 16.sp
                         )
                     }
+                    if (confirmBtnMaxWidth) {
+                        Spacer(Modifier.width(8.dp))
+                    }
                     Button(
                         onClick = {
                             onConfirm()
                         },
-
                         shapes = ButtonDefaults.shapes(),
-                        modifier = Modifier.defaultMinSize(minWidth = 90.dp, minHeight = 45.dp),
+                        modifier = if (confirmBtnMaxWidth) Modifier
+                            .fillMaxWidth()
+                            .defaultMinSize(minHeight = 45.dp)
+                        else
+                            Modifier.defaultMinSize(minWidth = 90.dp, minHeight = 45.dp),
                     ) {
                         Text(confirmText, fontSize = 16.sp)
                     }
