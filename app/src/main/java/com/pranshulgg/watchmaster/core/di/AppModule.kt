@@ -9,7 +9,7 @@ import com.pranshulgg.watchmaster.data.repository.WatchlistRepository
 import com.pranshulgg.watchmaster.core.network.TmdbApi
 import com.pranshulgg.watchmaster.data.local.dao.SeasonDao
 import com.pranshulgg.watchmaster.data.local.dao.TvBundleDao
-import com.pranshulgg.watchmaster.feature.search.SearchRepository
+import com.pranshulgg.watchmaster.data.repository.SearchRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
