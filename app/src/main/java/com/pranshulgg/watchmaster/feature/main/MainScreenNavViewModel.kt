@@ -8,7 +8,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 
 class MainScreenNavViewModel : ViewModel() {
-    var currentDefaultSelectedTab = "movies"
+    var currentDefaultSelectedTab = "home"
     var selectedTab = when (currentDefaultSelectedTab) {
         "home" -> 0
         "movies" -> 1
