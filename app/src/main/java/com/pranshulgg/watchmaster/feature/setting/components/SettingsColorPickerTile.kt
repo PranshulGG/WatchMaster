@@ -12,7 +12,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.pranshulgg.watchmaster.core.prefs.LocalAppPrefs
@@ -28,7 +32,7 @@ fun ColorPickerBtn() {
     val prefs = LocalAppPrefs.current
     var selectedColor = prefs.themeColor
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    val scope = rememberCoroutineScope()
+    var isSheetOpen by remember { mutableStateOf(false) }
 
     Surface(
         shape = RoundedCornerShape(50.dp),
@@ -43,28 +47,26 @@ fun ColorPickerBtn() {
                 )
                 .clickable(
                     onClick = {
-                        scope.launch { sheetState.show() }
+                        isSheetOpen = true
                     }
                 ),
         ) {
         }
     }
 
-    ActionBottomSheet(
-        sheetState = sheetState,
-        onCancel = {
-            scope.launch { sheetState.hide() }
-        },
-        onConfirm = {
-            prefs.setThemeColor(selectedColor)
-            scope.launch { sheetState.hide() }
+    if (isSheetOpen)
+        ActionBottomSheet(
+            sheetState = sheetState,
+            onCancel = {
+                isSheetOpen = false
+            },
+            onConfirm = {
+                prefs.setThemeColor(selectedColor)
+                isSheetOpen = false
+            }
+        ) {
+            SelectableThemeColors(onThemeColorChanged = { color ->
+                selectedColor = color
+            })
         }
-    ) {
-        SelectableThemeColors(onThemeColorChanged = { color ->
-            selectedColor = color
-        })
-
-    }
-
-
 }
