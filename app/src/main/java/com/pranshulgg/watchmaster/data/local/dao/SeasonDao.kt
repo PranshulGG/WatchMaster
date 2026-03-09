@@ -50,4 +50,7 @@ interface SeasonDao {
 
     @Query("UPDATE tv_seasons SET seasonNotes= :note WHERE seasonId = :seasonId")
     suspend fun setSeasonUserNote(seasonId: Long, note: String)
+
+    @Query("SELECT * FROM tv_seasons")
+    fun getAllSeasons(): Flow<List<SeasonEntity>>
 }
