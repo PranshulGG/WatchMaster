@@ -54,6 +54,8 @@ class WatchlistRepository(
 
     fun getWatchlist() = dao.getAll()
 
+    fun getAllSeasons() = seasonDao.getAllSeasons()
+
     suspend fun markStarted(id: Long) {
         dao.updateStatus(
             id = id,
