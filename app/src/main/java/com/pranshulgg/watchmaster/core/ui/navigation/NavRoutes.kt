@@ -19,6 +19,6 @@ object NavRoutes {
     }
 
     fun search(type: SearchType = SearchType.MULTI): String {
-        return "$SEARCH?type=${type.name}"
+        return "$SEARCH?searchType=${type.name}"
     }
 }
