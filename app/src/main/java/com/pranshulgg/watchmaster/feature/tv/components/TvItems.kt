@@ -20,13 +20,16 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.pranshulgg.watchmaster.core.model.WatchStatus
 import com.pranshulgg.watchmaster.data.local.entity.SeasonEntity
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 import com.pranshulgg.watchmaster.feature.movie.components.WatchlistRow
@@ -38,12 +41,18 @@ fun TvItems(
     scrollBehavior: FloatingToolbarScrollBehavior,
     scrollBehaviorTopBar: TopAppBarScrollBehavior,
     navController: NavController,
-    onLongActionTvRequest: (WatchlistItemEntity) -> Unit,
+    onLongActionTvRequest: (SeasonEntity, WatchlistItemEntity) -> Unit,
     pinnedItems: List<WatchlistItemEntity>,
     normalItems: List<WatchlistItemEntity>,
     viewModel: WatchlistViewModel,
+    seasons: List<SeasonEntity>
 
-    ) {
+) {
+
+    val seasonsByShow = remember(seasons) {
+        seasons.groupBy { it.showId }
+    }
+
 
     LazyColumn(
         modifier = Modifier
@@ -72,13 +81,17 @@ fun TvItems(
             itemsIndexed(
                 pinnedItems,
                 key = { _, item -> item.id }) { index, item ->
+
+                val filteredSeasons = seasonsByShow[item.id].orEmpty()
+
                 TvWatchlistRow(
                     item,
                     index,
                     pinnedItems,
                     navController,
-                    onLongActionTvRequest = { onLongActionTvRequest(item) },
+                    onLongActionTvRequest,
                     viewModel,
+                    filteredSeasons
                 )
             }
 
@@ -97,13 +110,17 @@ fun TvItems(
 
         itemsIndexed(normalItems, key = { _, item -> item.id }) { index, item ->
 
+            val filteredSeasons = seasonsByShow[item.id].orEmpty()
+
+
             TvWatchlistRow(
                 item,
                 index,
                 normalItems,
                 navController,
-                onLongActionTvRequest = { onLongActionTvRequest(item) },
+                onLongActionTvRequest,
                 viewModel,
+                filteredSeasons
             )
         }
 
