@@ -41,6 +41,14 @@ class WatchlistViewModel @Inject constructor(
             initialValue = emptyList()
         )
 
+    val seasons = repository
+        .getAllSeasons()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Companion.WhileSubscribed(5_000),
+            initialValue = emptyList()
+        )
+
     fun start(id: Long) = viewModelScope.launch {
         repository.markStarted(id)
     }
