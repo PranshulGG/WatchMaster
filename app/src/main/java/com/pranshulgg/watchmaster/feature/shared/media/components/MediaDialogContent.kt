@@ -6,10 +6,12 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.pranshulgg.watchmaster.core.model.WatchStatus
 import com.pranshulgg.watchmaster.core.ui.components.DialogBasic
 import com.pranshulgg.watchmaster.core.ui.components.TextAlertDialog
 import com.pranshulgg.watchmaster.core.ui.components.media.RateMediaDialogContent
 import com.pranshulgg.watchmaster.core.ui.theme.Radius
+import com.pranshulgg.watchmaster.feature.shared.media.ui.watchstatus.dialogMessage
 
 @Composable
 fun MediaNoteDialogContent(
@@ -80,15 +82,20 @@ fun MediaConfirmationDialogContent(
     show: Boolean,
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
-    isTv: Boolean = false
+    isTv: Boolean = false,
+    status: WatchStatus? = null
 ) {
 
     val text = if (isTv) "season" else "movie"
 
+    val headline = if (status != null) "Watch status" else "Delete $text"
+    val message = status?.dialogMessage(isTv)
+        ?: "Are you sure you want to delete this $text? this action cannot be undone"
+
     TextAlertDialog(
         show = show,
-        title = "Delete $text",
-        message = "Are you sure you want to delete this $text? this action cannot be undone",
+        title = headline,
+        message = message,
         confirmText = "Confirm",
         onConfirm = {
             onConfirm()
