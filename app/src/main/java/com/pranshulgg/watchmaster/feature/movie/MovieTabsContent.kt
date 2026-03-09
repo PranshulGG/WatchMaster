@@ -38,8 +38,6 @@ fun MovieTabsContent(
     val tabs = MovieTab.entries
     val pagerState = rememberPagerState { tabs.size }
     val scope = rememberCoroutineScope()
-    val handleLongPress: (WatchlistItemEntity) -> Unit = { onLongActionMovieRequest(it) }
-
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surfaceContainer,
