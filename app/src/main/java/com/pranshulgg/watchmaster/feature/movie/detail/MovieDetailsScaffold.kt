@@ -1,6 +1,9 @@
 package com.pranshulgg.watchmaster.feature.movie.detail
 
 import android.annotation.SuppressLint
+import android.widget.Space
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingToolbarScrollBehavior
 import androidx.compose.material3.MaterialTheme
@@ -8,6 +11,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.pranshulgg.watchmaster.core.model.WatchStatus
@@ -62,7 +67,6 @@ fun MovieDetailsScaffold(
         },
 
         ) { _ ->
-
         MovieDetailsContent(
             movieItem,
             watchlistItem,
