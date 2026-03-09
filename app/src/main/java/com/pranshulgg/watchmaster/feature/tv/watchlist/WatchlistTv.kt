@@ -8,8 +8,13 @@ import androidx.compose.material3.FloatingToolbarScrollBehavior
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.navigation.NavController
 import com.pranshulgg.watchmaster.R
+import com.pranshulgg.watchmaster.core.model.WatchStatus
 import com.pranshulgg.watchmaster.core.ui.components.EmptyContainerPlaceholder
 import com.pranshulgg.watchmaster.core.ui.components.LoadingScreenPlaceholder
 import com.pranshulgg.watchmaster.core.ui.components.media.PosterBox
@@ -28,26 +33,40 @@ fun WatchlistTv(
     scrollBehavior: FloatingToolbarScrollBehavior,
     scrollBehaviorTopBar: TopAppBarScrollBehavior,
     navController: NavController,
-    onLongActionTvRequest: (WatchlistItemEntity) -> Unit,
+    onLongActionTvRequest: (SeasonEntity, WatchlistItemEntity) -> Unit,
     viewModel: WatchlistViewModel,
+    seasons: List<SeasonEntity>
 ) {
 
+    val seasonShowIds = remember(seasons) {
+        seasons.map { it.showId }.toSet()
+    }
+
+    val filteredItems = remember(items, seasonShowIds) {
+        items.filter { it.id in seasonShowIds }
+    }
 
     if (isLoading) {
         LoadingScreenPlaceholder()
+        return
     }
 
-    if (items.isEmpty()) {
+    if (filteredItems.isEmpty()) {
         EmptyContainerPlaceholder(
             R.drawable.movie_info_24px,
             "No series found",
             description = "Your watchlist is empty. Add some tv series to start building it!"
         )
+        return
     }
 
 
-    val pinnedItems = items.filter { it.isPinned }
-    val normalItems = items.filter { !it.isPinned }
+
+
+    val (pinnedItems, normalItems) = remember(filteredItems) {
+        filteredItems.partition { it.isPinned }
+    }
+
 
 
     TvItems(
@@ -57,7 +76,9 @@ fun WatchlistTv(
         onLongActionTvRequest,
         pinnedItems,
         normalItems,
-        viewModel
+        viewModel,
+        seasons
+
     )
 
 }
