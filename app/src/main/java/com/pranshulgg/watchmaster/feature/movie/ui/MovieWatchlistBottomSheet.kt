@@ -3,6 +3,7 @@ package com.pranshulgg.watchmaster.feature.movie.ui
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SheetState
 import androidx.compose.runtime.Composable
+import com.pranshulgg.watchmaster.core.model.WatchStatus
 import com.pranshulgg.watchmaster.core.ui.components.ActionBottomSheet
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 import com.pranshulgg.watchmaster.feature.movie.MovieHomeViewModel
@@ -25,7 +26,7 @@ fun MovieWatchlistBottomSheet(
             showActions = false,
             sheetState = sheetState,
             onCancel = { onDismiss() },
-            onConfirm = { }
+            onConfirm = { },
         ) {
             WatchlistMediaSheetContent(
                 id = watchlistItem.id,
@@ -34,8 +35,12 @@ fun MovieWatchlistBottomSheet(
                 onUpdateRating = {
                     movieHomeViewModel.showUpdateRatingDialog()
                 },
-                onStatusFinish = {
-                    movieHomeViewModel.showRatingDialog()
+                onWatchStatus = { status ->
+                    if (status != WatchStatus.WATCHING) {
+                        movieHomeViewModel.showStatusConfirmationDialog()
+                    } else {
+                        movieHomeViewModel.showRatingDialog()
+                    }
                 },
                 onDelete = {
                     movieHomeViewModel.showConfirmationDialog()
