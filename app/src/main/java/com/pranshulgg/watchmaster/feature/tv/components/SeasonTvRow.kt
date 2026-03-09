@@ -34,9 +34,14 @@ import com.pranshulgg.watchmaster.feature.shared.media.ui.watchstatus.asStatusDa
 import com.pranshulgg.watchmaster.feature.shared.media.ui.watchstatus.toWatchListItemStatusUiPill
 
 @Composable
-fun SeasonTvRow(seasonData: SeasonEntity, shape: Shape, navController: NavController) {
+fun SeasonTvRow(
+    season: SeasonEntity,
+    shape: Shape,
+    navController: NavController,
+    onLongActionTvRequest: () -> Unit
+) {
 
-    val status = seasonData.status.toWatchListItemStatusUiPill(seasonData.asStatusDates())
+    val status = season.status.toWatchListItemStatusUiPill(season.asStatusDates())
 
 
     Surface(
@@ -49,11 +54,14 @@ fun SeasonTvRow(seasonData: SeasonEntity, shape: Shape, navController: NavContro
                 onClick = {
                     navController.navigate(
                         NavRoutes.tvDetail(
-                            seasonData.showId,
-                            seasonData.seasonNumber
+                            season.showId,
+                            season.seasonNumber
                         )
                     )
                 },
+                onLongClick = {
+                    onLongActionTvRequest()
+                }
             ),
         color = MaterialTheme.colorScheme.surfaceContainer
     ) {
@@ -70,8 +78,8 @@ fun SeasonTvRow(seasonData: SeasonEntity, shape: Shape, navController: NavContro
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 PosterBox(
-                    posterUrl = "https://image.tmdb.org/t/p/w154${seasonData.posterPath}",
-                    apiPath = seasonData.posterPath,
+                    posterUrl = "https://image.tmdb.org/t/p/w154${season.posterPath}",
+                    apiPath = season.posterPath,
                     cornerRadius = Radius.None,
                     height = 100.dp,
                     width = 65.dp
@@ -83,14 +91,14 @@ fun SeasonTvRow(seasonData: SeasonEntity, shape: Shape, navController: NavContro
                     horizontalAlignment = Alignment.Start,
                 ) {
                     Text(
-                        text = seasonData.name,
+                        text = season.name,
                         fontWeight = FontWeight.W900,
                         color = MaterialTheme.colorScheme.onSurface,
                         fontSize = 17.sp,
                         overflow = TextOverflow.Ellipsis,
                     )
                     Text(
-                        "${seasonData.episodeCount} episodes",
+                        "${season.episodeCount} episodes",
                         overflow = TextOverflow.Ellipsis,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -100,8 +108,8 @@ fun SeasonTvRow(seasonData: SeasonEntity, shape: Shape, navController: NavContro
                         status.containerColor,
                         status.contentColor,
                         status.statusLabel,
-                        seasonData.status,
-                        seasonData.seasonUserRating
+                        season.status,
+                        season.seasonUserRating
                     )
                 }
 //                SeasonProgress() // NOT READY YET
