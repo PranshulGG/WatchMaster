@@ -44,6 +44,7 @@ import com.pranshulgg.watchmaster.data.local.entity.MovieBundle
 import com.pranshulgg.watchmaster.feature.shared.WatchlistViewModel
 import com.pranshulgg.watchmaster.core.ui.theme.Radius
 import com.pranshulgg.watchmaster.core.ui.components.Symbol
+import com.pranshulgg.watchmaster.core.ui.components.media.MediaChip
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -142,10 +143,19 @@ fun MovieHeroHeader(
                     verticalArrangement = Arrangement.spacedBy(6.dp),
                 ) {
                     movie.genres.forEach { genre ->
-                        GenreChip(genre.name)
+                        MediaChip(
+                            genre.name,
+                            containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                            contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                        )
                     }
-                    GenreChip("%.1f".format(watchlistItem?.avgRating), rating = true)
-
+                    MediaChip(
+                        "%.1f".format(watchlistItem?.avgRating),
+                        containerColor = MaterialTheme.colorScheme.tertiary,
+                        contentColor = MaterialTheme.colorScheme.onTertiary,
+                        shapeRadius = Radius.Small,
+                        icon = R.drawable.star_24px
+                    )
                 }
 
             }
@@ -160,35 +170,9 @@ private fun formatRuntime(minutes: Int?): String {
     val h = minutes / 60
     val m = minutes % 60
 
-    return if (h > 0) "${h}h ${m}m" else "${m}m"
+    return if (h > 0) "${h}h-${m}m" else "${m}m"
 }
 
-@Composable
-private fun GenreChip(text: String, rating: Boolean = false) {
-    val schemeColor = MaterialTheme.colorScheme
-
-    Surface(
-        color = if (rating) schemeColor.tertiary else schemeColor.tertiaryContainer,
-        shape = if (rating) RoundedCornerShape(Radius.Small) else CircleShape
-    ) {
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(start = if (rating) 6.dp else 8.dp, end = 8.dp)
-        ) {
-            if (rating) {
-                Symbol(R.drawable.star_24px, size = 16.dp, color = schemeColor.onTertiary)
-                Spacer(Modifier.width(3.dp))
-            }
-            Text(
-                text,
-                color = if (rating) schemeColor.onTertiary else schemeColor.onTertiaryContainer,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Bold
-            )
-        }
-    }
-}
 
 private fun posterUrl(movie: MovieBundle): String? =
     when {
