@@ -61,6 +61,7 @@ import com.pranshulgg.watchmaster.core.ui.components.media.PosterBox
 import com.pranshulgg.watchmaster.core.ui.components.media.PosterPlaceholder
 import com.pranshulgg.watchmaster.core.ui.navigation.NavRoutes
 import com.pranshulgg.watchmaster.core.ui.theme.Radius
+import com.pranshulgg.watchmaster.data.local.entity.SeasonEntity
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 import com.pranshulgg.watchmaster.data.local.mapper.SeasonDataMapper
 import com.pranshulgg.watchmaster.feature.shared.WatchlistViewModel
@@ -73,8 +74,9 @@ fun TvWatchlistRow(
     index: Int,
     items: List<WatchlistItemEntity>,
     navController: NavController,
-    onLongActionTvRequest: () -> Unit,
+    onLongActionTvRequest: (SeasonEntity, WatchlistItemEntity) -> Unit,
     viewModel: WatchlistViewModel,
+    seasons: List<SeasonEntity>
 ) {
     val isOnly = items.singleOrNull() == item
     val isFirst = index == 0
@@ -82,8 +84,6 @@ fun TvWatchlistRow(
 
     val shape = MaterialListShape(isOnly, isFirst, isLast)
 
-
-    val seasons by viewModel.seasonsForShow(item.id).collectAsState()
 
     var expanded by rememberSaveable(item.id) { mutableStateOf(false) }
 
@@ -167,14 +167,18 @@ fun TvWatchlistRow(
                 ) {
                     HorizontalDivider(color = MaterialTheme.colorScheme.surfaceContainer)
                     Spacer(Modifier.height(8.dp))
-                    seasons.forEachIndexed { i, item ->
-                        val isOnly = seasons.singleOrNull() == item
+                    seasons.forEachIndexed { i, season ->
+                        val isOnly = seasons.singleOrNull() == season
                         val isFirst = i == 0
                         val isLast = i == seasons.lastIndex
 
                         val shapeSeasonRow = MaterialListShape(isOnly, isFirst, isLast)
 
-                        SeasonTvRow(item, shapeSeasonRow, navController)
+                        SeasonTvRow(
+                            season,
+                            shapeSeasonRow,
+                            navController,
+                            onLongActionTvRequest = { onLongActionTvRequest(season, item) })
                     }
                 }
 
