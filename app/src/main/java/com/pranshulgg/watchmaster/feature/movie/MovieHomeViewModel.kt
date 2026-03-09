@@ -41,6 +41,14 @@ class MovieHomeViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(showConfirmationDialog = true)
     }
 
+    fun showStatusConfirmationDialog() {
+        _uiState.value = _uiState.value.copy(showStatusConfirmationDialog = true)
+    }
+
+    fun hideStatusConfirmationDialog() {
+        _uiState.value = _uiState.value.copy(showStatusConfirmationDialog = false)
+    }
+
     fun hideConfirmationDialog() {
         _uiState.value = _uiState.value.copy(showConfirmationDialog = false)
     }
