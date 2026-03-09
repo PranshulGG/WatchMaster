@@ -37,14 +37,13 @@ import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.feature.search.SearchItem
 import com.pranshulgg.watchmaster.core.ui.components.Symbol
 import com.pranshulgg.watchmaster.core.ui.components.media.PosterPlaceholder
-import java.util.Locale
 
 @Composable
 fun SearchRow(
     item: SearchItem,
     index: Int,
     results: List<SearchItem>,
-    onAddToWatchlist: () -> Unit,
+    onSearchItemClick: () -> Unit,
 ) {
 
     val isOnly = results.singleOrNull() == item
@@ -82,7 +81,7 @@ fun SearchRow(
         shape = shape,
         modifier = Modifier
             .clip(shape)
-            .clickable { onAddToWatchlist() },
+            .clickable { onSearchItemClick() },
         color = MaterialTheme.colorScheme.surfaceBright
 
     ) {
@@ -136,12 +135,12 @@ fun SearchRow(
                     maxLines = titleMaxLines,
                     overflow = TextOverflow.Ellipsis,
                     onTextLayout = { textLayoutResult: TextLayoutResult ->
-                        overviewMaxLines.value = if (textLayoutResult.lineCount == 1) 2 else 1
+                        overviewMaxLines.intValue = if (textLayoutResult.lineCount == 1) 2 else 1
                     }
                 )
                 Text(
                     item.overview ?: "No overview found",
-                    maxLines = overviewMaxLines.value,
+                    maxLines = overviewMaxLines.intValue,
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -163,13 +162,6 @@ fun SearchRow(
             }
         }
     }
-}
-
-
-fun isoToName(code: String): String {
-    val locale = Locale.forLanguageTag(code)
-    val name = locale.getDisplayLanguage(Locale.ENGLISH).uppercase()
-    return name.ifBlank { code }
 }
 
 @Composable
