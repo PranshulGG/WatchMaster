@@ -222,7 +222,6 @@ private fun StatusMainActionBtn(onClick: () -> Unit, itemStatus: WatchStatus) {
         Text(
             itemStatus.actionLabel,
             style = MaterialTheme.typography.titleMedium
-
         )
     }
 }
