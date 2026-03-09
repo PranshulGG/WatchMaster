@@ -16,10 +16,13 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
+import com.pranshulgg.watchmaster.core.model.WatchStatus
+import com.pranshulgg.watchmaster.data.local.entity.SeasonEntity
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 import com.pranshulgg.watchmaster.feature.movie.MovieTab
 import com.pranshulgg.watchmaster.feature.movie.finished.FinishedMovies
@@ -34,10 +37,12 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun TvTabsContent(
-    navController: NavController, state: TvHomeState,
+    navController: NavController,
+    state: TvHomeState,
     scrollBehavior: FloatingToolbarScrollBehavior,
     scrollBehaviorTopBar: TopAppBarScrollBehavior,
-    viewModel: WatchlistViewModel
+    viewModel: WatchlistViewModel,
+    onLongActionTvRequest: (SeasonEntity, WatchlistItemEntity) -> Unit
 ) {
 
     val tabs = TvTab.entries
@@ -80,21 +85,44 @@ fun TvTabsContent(
                 TvTab.WATCHLIST -> {
                     WatchlistTv(
                         state.isLoading,
-                        state.watchlist,
+                        state.items,
                         scrollBehavior,
                         scrollBehaviorTopBar,
                         navController,
-                        onLongActionTvRequest = {},
-                        viewModel
+                        onLongActionTvRequest = { item, watchlistItem ->
+                            onLongActionTvRequest(item, watchlistItem)
+                        },
+                        viewModel,
+                        state.seasonWatchlist
                     )
                 }
 
                 TvTab.WATCHING -> {
-                    WatchingTv(state.isLoading, state.watching)
+                    WatchingTv(
+                        state.isLoading, state.items,
+                        scrollBehavior,
+                        scrollBehaviorTopBar,
+                        navController,
+                        onLongActionTvRequest = { item, watchlistItem ->
+                            onLongActionTvRequest(item, watchlistItem)
+                        },
+                        viewModel,
+                        state.seasonWatching
+                    )
                 }
 
                 TvTab.FINISHED -> {
-                    FinishedTv(state.isLoading, state.finished)
+                    FinishedTv(
+                        state.isLoading, state.items,
+                        scrollBehavior,
+                        scrollBehaviorTopBar,
+                        navController,
+                        onLongActionTvRequest = { item, watchlistItem ->
+                            onLongActionTvRequest(item, watchlistItem)
+                        },
+                        viewModel,
+                        state.seasonFinished
+                    )
                 }
             }
 
