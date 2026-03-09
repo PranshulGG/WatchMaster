@@ -25,22 +25,16 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.feature.search.SearchType
 import com.pranshulgg.watchmaster.feature.search.SearchViewModel
-import com.pranshulgg.watchmaster.feature.search.SearchViewModelFactory
 import com.pranshulgg.watchmaster.core.ui.components.Symbol
 
 @Composable
 fun SearchFloatingBarContent(
-    viewModel: SearchViewModel = viewModel(factory = SearchViewModelFactory(LocalContext.current)),
+    viewModel: SearchViewModel,
     query: String,
     focusRequester: FocusRequester,
     focusManager: FocusManager,
     type: SearchType
 ) {
-//    Box(
-//        Modifier
-//            .width(220.dp)
-//    ) {
-
     TextField(
         value = query,
         onValueChange = viewModel::onQueryChange,
@@ -94,5 +88,4 @@ fun SearchFloatingBarContent(
         ),
     )
 
-//    }
 }
