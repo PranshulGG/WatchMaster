@@ -26,8 +26,8 @@ android {
         applicationId = "com.pranshulgg.watchmaster"
         minSdk = 24
         targetSdk = 36
-        versionCode = 5
-        versionName = "1.0.0-beta5"
+        versionCode = 6
+        versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
