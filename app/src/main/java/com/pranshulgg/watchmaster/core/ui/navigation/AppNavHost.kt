@@ -54,7 +54,7 @@ fun AppNavHost(
         )
         NavHost(
             navController = navController,
-            startDestination = NavRoutes.SEARCH,
+            startDestination = NavRoutes.MAIN,
             modifier = Modifier.background(MaterialTheme.colorScheme.surfaceContainer),
             enterTransition = { NavTransitions.enter(motionScheme) },
             exitTransition = { NavTransitions.exit(motionScheme) },
@@ -85,23 +85,23 @@ fun AppNavHost(
                 MovieDetailPage(id = id, navController)
             }
             composable(
-                route = "${NavRoutes.SEARCH}?type={type}",
+                route = "${NavRoutes.SEARCH}?searchType={searchType}",
                 arguments = listOf(
-                    navArgument("type") {
+                    navArgument("searchType") {
                         type = NavType.StringType
-                        defaultValue = SearchType.MULTI.name
+                        defaultValue = SearchType.MOVIE.name
                     }
                 )
             ) { backStackEntry ->
 
-                val type = backStackEntry.arguments
-                    ?.getString("type")
+                val searchType = backStackEntry.arguments
+                    ?.getString("searchType")
                     ?.let { SearchType.valueOf(it) }
                     ?: SearchType.MULTI
 
                 SearchScreen(
                     navController = navController,
-                    type = type
+                    searchType = searchType
                 )
             }
             composable(
