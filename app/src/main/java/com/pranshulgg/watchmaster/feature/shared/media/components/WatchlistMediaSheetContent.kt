@@ -22,7 +22,7 @@ fun WatchlistMediaSheetContent(
     mediaTitle: String?,
     status: WatchStatus,
     onUpdateRating: () -> Unit,
-    onStatusFinish: (Long) -> Unit,
+    onWatchStatus: (WatchStatus) -> Unit,
     onDelete: () -> Unit,
     onDismiss: () -> Unit,
     viewModel: WatchlistViewModel
@@ -36,26 +36,7 @@ fun WatchlistMediaSheetContent(
                 leading = { SettingsTileIcon(R.drawable.play_arrow_24px) },
                 title = status.actionLabel,
                 onClick = {
-                    status.confirmAction(
-                        start = {
-                            if (isTv) {
-                                viewModel.startSeason(id)
-                            } else {
-                                viewModel.start(id)
-                            }
-                        },
-                        finish = {
-                            onStatusFinish(id)
-                        },
-                        reset = {
-                            if (isTv) {
-                                viewModel.resetSeason(id)
-                            } else {
-                                viewModel.reset(id)
-                            }
-                        }
-                    )
-
+                    onWatchStatus(status)
                     onDismiss()
                 }
             ),
@@ -83,7 +64,7 @@ fun WatchlistMediaSheetContent(
             ),
             SettingTile.ActionTile(
                 leading = { SettingsTileIcon(R.drawable.keep_24px) },
-                title = if (!isPinned) "Unpin" else "Pin",
+                title = if (isPinned) "Unpin" else "Pin",
                 onClick = {
                     viewModel.setPinned(id, !isPinned)
                     onDismiss()
