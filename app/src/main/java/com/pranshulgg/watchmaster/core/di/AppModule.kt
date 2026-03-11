@@ -9,6 +9,7 @@ import com.pranshulgg.watchmaster.data.repository.WatchlistRepository
 import com.pranshulgg.watchmaster.core.network.TmdbApi
 import com.pranshulgg.watchmaster.data.local.dao.SeasonDao
 import com.pranshulgg.watchmaster.data.local.dao.TvBundleDao
+import com.pranshulgg.watchmaster.data.local.dao.TvEpisodeDao
 import com.pranshulgg.watchmaster.data.repository.SearchRepository
 import dagger.Module
 import dagger.Provides
@@ -46,6 +47,10 @@ object AppModule {
         db.seasonDao()
 
     @Provides
+    fun provideTvEpisodeDao(db: WatchMasterDatabase) =
+        db.tvEpisodeDao()
+
+    @Provides
     @Singleton
     fun provideTmdbApi(): TmdbApi =
         TmdbApi.create()
@@ -78,6 +83,7 @@ object AppModule {
     @Singleton
     fun providerTvRepository(
         api: TmdbApi,
-        tvBundleDao: TvBundleDao
-    ): TvRepository = TvRepository(api, tvBundleDao)
+        tvBundleDao: TvBundleDao,
+        tvEpisodeDao: TvEpisodeDao
+    ): TvRepository = TvRepository(api, tvBundleDao, tvEpisodeDao)
 }
