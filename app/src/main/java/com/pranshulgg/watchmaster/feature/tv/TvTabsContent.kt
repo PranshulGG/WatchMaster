@@ -41,8 +41,7 @@ fun TvTabsContent(
     state: TvHomeState,
     scrollBehavior: FloatingToolbarScrollBehavior,
     scrollBehaviorTopBar: TopAppBarScrollBehavior,
-    viewModel: WatchlistViewModel,
-    onLongActionTvRequest: (SeasonEntity, WatchlistItemEntity) -> Unit
+    onLongActionTvSeasonRequest: (SeasonEntity?, WatchlistItemEntity) -> Unit,
 ) {
 
     val tabs = TvTab.entries
@@ -89,10 +88,9 @@ fun TvTabsContent(
                         scrollBehavior,
                         scrollBehaviorTopBar,
                         navController,
-                        onLongActionTvRequest = { item, watchlistItem ->
-                            onLongActionTvRequest(item, watchlistItem)
+                        onLongActionTvSeasonRequest = { item, watchlistItem ->
+                            onLongActionTvSeasonRequest(item, watchlistItem)
                         },
-                        viewModel,
                         state.seasonWatchlist
                     )
                 }
@@ -103,10 +101,9 @@ fun TvTabsContent(
                         scrollBehavior,
                         scrollBehaviorTopBar,
                         navController,
-                        onLongActionTvRequest = { item, watchlistItem ->
-                            onLongActionTvRequest(item, watchlistItem)
+                        onLongActionTvSeasonRequest = { item, watchlistItem ->
+                            onLongActionTvSeasonRequest(item, watchlistItem)
                         },
-                        viewModel,
                         state.seasonWatching
                     )
                 }
@@ -117,10 +114,9 @@ fun TvTabsContent(
                         scrollBehavior,
                         scrollBehaviorTopBar,
                         navController,
-                        onLongActionTvRequest = { item, watchlistItem ->
-                            onLongActionTvRequest(item, watchlistItem)
+                        onLongActionTvSeasonRequest = { item, watchlistItem ->
+                            onLongActionTvSeasonRequest(item, watchlistItem)
                         },
-                        viewModel,
                         state.seasonFinished
                     )
                 }
