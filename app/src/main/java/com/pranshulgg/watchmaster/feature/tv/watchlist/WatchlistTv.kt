@@ -33,10 +33,10 @@ fun WatchlistTv(
     scrollBehavior: FloatingToolbarScrollBehavior,
     scrollBehaviorTopBar: TopAppBarScrollBehavior,
     navController: NavController,
-    onLongActionTvRequest: (SeasonEntity, WatchlistItemEntity) -> Unit,
-    viewModel: WatchlistViewModel,
-    seasons: List<SeasonEntity>
-) {
+    onLongActionTvSeasonRequest: (SeasonEntity?, WatchlistItemEntity) -> Unit,
+    seasons: List<SeasonEntity>,
+
+    ) {
 
     val seasonShowIds = remember(seasons) {
         seasons.map { it.showId }.toSet()
@@ -73,12 +73,10 @@ fun WatchlistTv(
         scrollBehavior,
         scrollBehaviorTopBar,
         navController,
-        onLongActionTvRequest,
+        onLongActionTvSeasonRequest,
         pinnedItems,
         normalItems,
-        viewModel,
-        seasons
-
+        seasons,
     )
 
 }
