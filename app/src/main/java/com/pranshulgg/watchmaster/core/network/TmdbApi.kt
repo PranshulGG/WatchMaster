@@ -11,8 +11,6 @@ import okhttp3.Interceptor
 import okhttp3.logging.HttpLoggingInterceptor
 import com.pranshulgg.watchmaster.BuildConfig
 import com.pranshulgg.watchmaster.data.CreditsDto
-import com.pranshulgg.watchmaster.data.EpisodeItem
-import com.pranshulgg.watchmaster.data.EpisodeListDto
 import com.pranshulgg.watchmaster.data.ImagesDto
 import com.pranshulgg.watchmaster.data.MovieGenre
 import com.pranshulgg.watchmaster.data.MovieListDto
@@ -126,6 +124,21 @@ data class TvSeasonDto(
 
 )
 
+data class TvSeasonEpisodesResponse(
+    val episodes: List<TvSeasonEpisodeDto>,
+)
+
+
+data class TvSeasonEpisodeDto(
+    val air_date: String,
+    val episode_number: Int,
+    val name: String,
+    val overview: String,
+    val season_number: Int,
+    val still_path: String?,
+    val runtime: Int,
+    val isWatched: Boolean = false
+)
 
 interface TmdbApi {
     @GET
@@ -143,6 +156,12 @@ interface TmdbApi {
         @Query("language") language: String = "en-US"
     ): Response<TvSeasonsResponse>
 
+    @GET("tv/{tv_id}/season/{season_number}")
+    suspend fun getTvSeasonEpisodes(
+        @Path("tv_id") tvId: Long,
+        @Path("season_number") seasonNumber: Int,
+        @Query("language") language: String = "en-US"
+    ): Response<TvSeasonEpisodesResponse>
 
     @GET("movie/{movie_id}")
     suspend fun getWholeMovieData(
@@ -156,7 +175,6 @@ interface TmdbApi {
     @GET("tv/{tv_id}")
     suspend fun getWholeTvData(
         @Path("tv_id") tvId: Long,
-//        @Path("season_number") seasonNumber: Int,
         @Query("append_to_response") append: String =
             "credits,videos,images,watch/providers,similar,recommendations,reviews,content_ratings,external_ids",
         @Query("language") language: String = "en-US"
