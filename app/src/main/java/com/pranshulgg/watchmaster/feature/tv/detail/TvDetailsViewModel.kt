@@ -7,11 +7,17 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pranshulgg.watchmaster.data.local.entity.TvBundle
+import com.pranshulgg.watchmaster.data.local.entity.TvEpisodeEntity
 import com.pranshulgg.watchmaster.data.repository.TvRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.collections.emptyList
 
 
 @HiltViewModel
@@ -25,16 +31,31 @@ class TvDetailsViewModel @Inject constructor(
     var loading by mutableStateOf(false)
         private set
 
-    fun load(tvId: Long, seasonNumber: Int) {
+    fun load(tvId: Long) {
         if (state != null) return
 
         viewModelScope.launch {
             loading = true
-            state = repo.getWholeTvData(tvId, seasonNumber)
+            state = repo.getWholeTvData(tvId)
             loading = false
         }
     }
 
+
+    fun loadEpisodes(
+        tvId: Long,
+        seasonId: Long,
+        seasonNumber: Int
+    ): StateFlow<List<TvEpisodeEntity>> {
+
+        return repo
+            .getEpisodesForSeason(tvId, seasonId, seasonNumber)
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = emptyList()
+            )
+    }
 
     private val _uiState = mutableStateOf(TvDetailsUiState())
     val uiState: State<TvDetailsUiState> = _uiState
@@ -69,5 +90,18 @@ class TvDetailsViewModel @Inject constructor(
     fun hideConfirmationDialog() {
         _uiState.value = _uiState.value.copy(showConfirmationDialog = false)
     }
+
+    fun markEpWatched(epId: Long) {
+        viewModelScope.launch {
+            repo.markEpWatched(epId)
+        }
+    }
+
+    fun markEpUnWatched(epId: Long) {
+        viewModelScope.launch {
+            repo.markEpUnWatched(epId)
+        }
+    }
+
 
 }
