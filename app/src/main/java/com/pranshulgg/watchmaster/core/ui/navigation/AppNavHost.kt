@@ -105,19 +105,22 @@ fun AppNavHost(
                 )
             }
             composable(
-                route = "${NavRoutes.TV_DETAIL_SCREEN}/{id}/{season}",
+                route = "${NavRoutes.TV_DETAIL_SCREEN}/{id}/{seasonNumber}/{seasonId}",
                 arguments = listOf(
                     navArgument("id") { type = NavType.LongType },
-                    navArgument("season") { type = NavType.IntType }
+                    navArgument("seasonNumber") { type = NavType.IntType },
+                    navArgument("seasonId") { type = NavType.LongType }
                 )
             ) { backStackEntry ->
                 val id = backStackEntry.arguments!!.getLong("id")
-                val season = backStackEntry.arguments!!.getInt("season")
+                val seasonNumber = backStackEntry.arguments!!.getInt("seasonNumber")
+                val seasonId = backStackEntry.arguments!!.getLong("seasonId")
 
                 TvDetailsScreen(
                     id = id,
-                    seasonNumber = season,
-                    navController = navController
+                    seasonNumber = seasonNumber,
+                    navController = navController,
+                    seasonId = seasonId
                 )
             }
 
