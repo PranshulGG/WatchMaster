@@ -74,9 +74,8 @@ fun TvWatchlistRow(
     index: Int,
     items: List<WatchlistItemEntity>,
     navController: NavController,
-    onLongActionTvRequest: (SeasonEntity, WatchlistItemEntity) -> Unit,
-    viewModel: WatchlistViewModel,
-    seasons: List<SeasonEntity>
+    onLongActionTvSeasonRequest: (SeasonEntity?, WatchlistItemEntity) -> Unit,
+    seasons: List<SeasonEntity>,
 ) {
     val isOnly = items.singleOrNull() == item
     val isFirst = index == 0
@@ -98,6 +97,9 @@ fun TvWatchlistRow(
                 onClick = {
                     expanded = !expanded
                 },
+                onLongClick = {
+                    onLongActionTvSeasonRequest(null, item)
+                }
             ),
         color = MaterialTheme.colorScheme.surfaceBright
     ) {
@@ -178,7 +180,12 @@ fun TvWatchlistRow(
                             season,
                             shapeSeasonRow,
                             navController,
-                            onLongActionTvRequest = { onLongActionTvRequest(season, item) })
+                            onLongActionTvSeasonRequest = {
+                                onLongActionTvSeasonRequest(
+                                    season,
+                                    item
+                                )
+                            })
                     }
                 }
 
