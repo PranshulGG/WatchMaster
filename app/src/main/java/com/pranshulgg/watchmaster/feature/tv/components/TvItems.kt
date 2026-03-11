@@ -41,12 +41,10 @@ fun TvItems(
     scrollBehavior: FloatingToolbarScrollBehavior,
     scrollBehaviorTopBar: TopAppBarScrollBehavior,
     navController: NavController,
-    onLongActionTvRequest: (SeasonEntity, WatchlistItemEntity) -> Unit,
+    onLongActionTvSeasonRequest: (SeasonEntity?, WatchlistItemEntity) -> Unit,
     pinnedItems: List<WatchlistItemEntity>,
     normalItems: List<WatchlistItemEntity>,
-    viewModel: WatchlistViewModel,
-    seasons: List<SeasonEntity>
-
+    seasons: List<SeasonEntity>,
 ) {
 
     val seasonsByShow = remember(seasons) {
@@ -89,9 +87,8 @@ fun TvItems(
                     index,
                     pinnedItems,
                     navController,
-                    onLongActionTvRequest,
-                    viewModel,
-                    filteredSeasons
+                    onLongActionTvSeasonRequest,
+                    filteredSeasons,
                 )
             }
 
@@ -118,9 +115,8 @@ fun TvItems(
                 index,
                 normalItems,
                 navController,
-                onLongActionTvRequest,
-                viewModel,
-                filteredSeasons
+                onLongActionTvSeasonRequest,
+                filteredSeasons,
             )
         }
 
