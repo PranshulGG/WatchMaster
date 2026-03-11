@@ -30,11 +30,12 @@ class TvHomeViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(showRatingDialog = false, isUpdateRating = false)
     }
 
-    fun showBottomSheet(item: SeasonEntity, watchlistItem: WatchlistItemEntity) {
+    fun showBottomSheet(item: SeasonEntity?, watchlistItem: WatchlistItemEntity) {
         _uiState.value = _uiState.value.copy(
             actionSheetWatchlistItem = watchlistItem,
             actionSheetSeasonItem = item,
-            isSheetOpen = true
+            isSheetOpen = true,
+            seriesId = null
         )
     }
 
@@ -42,8 +43,12 @@ class TvHomeViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(isSheetOpen = false)
     }
 
-    fun showConfirmationDialog() {
-        _uiState.value = _uiState.value.copy(showConfirmationDialog = true)
+    fun showConfirmationDialog(seriesId: Long? = null) {
+        _uiState.value =
+            _uiState.value.copy(
+                showConfirmationDialog = true,
+                seriesId = seriesId
+            )
     }
 
     fun showStatusConfirmationDialog() {
@@ -55,6 +60,9 @@ class TvHomeViewModel @Inject constructor(
     }
 
     fun hideConfirmationDialog() {
-        _uiState.value = _uiState.value.copy(showConfirmationDialog = false)
+        _uiState.value = _uiState.value.copy(
+            showConfirmationDialog = false,
+            seriesId = null
+        )
     }
 }
