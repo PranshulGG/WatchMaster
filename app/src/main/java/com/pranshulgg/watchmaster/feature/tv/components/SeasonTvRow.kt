@@ -38,7 +38,7 @@ fun SeasonTvRow(
     season: SeasonEntity,
     shape: Shape,
     navController: NavController,
-    onLongActionTvRequest: () -> Unit
+    onLongActionTvSeasonRequest: () -> Unit
 ) {
 
     val status = season.status.toWatchListItemStatusUiPill(season.asStatusDates())
@@ -55,12 +55,13 @@ fun SeasonTvRow(
                     navController.navigate(
                         NavRoutes.tvDetail(
                             season.showId,
-                            season.seasonNumber
+                            season.seasonNumber,
+                            season.seasonId
                         )
                     )
                 },
                 onLongClick = {
-                    onLongActionTvRequest()
+                    onLongActionTvSeasonRequest()
                 }
             ),
         color = MaterialTheme.colorScheme.surfaceContainer
