@@ -83,7 +83,9 @@ fun MediaConfirmationDialogContent(
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
     isTv: Boolean = false,
-    status: WatchStatus? = null
+    status: WatchStatus? = null,
+    customHeadline: String? = null,
+    customMessage: String? = null
 ) {
 
     val text = if (isTv) "season" else "movie"
@@ -94,8 +96,8 @@ fun MediaConfirmationDialogContent(
 
     TextAlertDialog(
         show = show,
-        title = headline,
-        message = message,
+        title = customHeadline ?: headline,
+        message = customMessage ?: message,
         confirmText = "Confirm",
         onConfirm = {
             onConfirm()
