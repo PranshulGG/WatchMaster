@@ -153,6 +153,8 @@ class SearchViewModel @Inject constructor(
             }
             if (item.mediaType == "tv" && tvDetails != null) {
                 addSeasonToWatchlist(item.id, tvDetails)
+            } else {
+                SnackbarManager.show("No season found")
             }
             hideSheet()
         }
@@ -189,7 +191,7 @@ class SearchViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(selectedItem = item)
     }
 
-    fun updateSelectedSeasonList(list: List<TvSeasonDto>) {
+    fun updateSelectedSeasonList(list: List<TvSeasonDto>?) {
         _uiState.value = _uiState.value.copy(selectedSeasonList = list)
     }
 
