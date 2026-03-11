@@ -19,17 +19,25 @@ fun TvWatchlistConfirmationDialog(
 ) {
     val uiState = tvHomeViewModel.uiState.value
 
-    season?.let { item ->
-        MediaConfirmationDialogContent(
-            uiState.showConfirmationDialog,
-            tvHomeViewModel::hideConfirmationDialog,
-            isTv = true,
-            onConfirm = {
-                watchlistViewModel.deleteSeason(item.seasonId)
-                SnackbarManager.show("Season deleted ${item.name}")
+    MediaConfirmationDialogContent(
+        uiState.showConfirmationDialog,
+        tvHomeViewModel::hideConfirmationDialog,
+        customHeadline = if (uiState.seriesId != null) "Delete series" else null,
+        customMessage = if (uiState.seriesId != null) "Are you sure you want to delete this series? All seasons will be removed. This action cannot be undone" else null,
+        isTv = true,
+        onConfirm = {
+            if (uiState.seriesId != null) {
+                watchlistViewModel.delete(uiState.seriesId)
+            } else if (season != null) {
+                watchlistViewModel.deleteSeason(season.seasonId)
             }
-        )
-    }
+            SnackbarManager.show(
+                if (season != null) {
+                    "Season deleted ${season.name}"
+                } else "Series deleted"
+            )
+        }
+    )
 }
 
 @Composable
