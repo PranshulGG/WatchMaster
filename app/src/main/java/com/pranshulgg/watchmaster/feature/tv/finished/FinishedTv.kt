@@ -27,10 +27,10 @@ fun FinishedTv(
     scrollBehavior: FloatingToolbarScrollBehavior,
     scrollBehaviorTopBar: TopAppBarScrollBehavior,
     navController: NavController,
-    onLongActionTvRequest: (SeasonEntity, WatchlistItemEntity) -> Unit,
-    viewModel: WatchlistViewModel,
-    seasons: List<SeasonEntity>
-) {
+    onLongActionTvSeasonRequest: (SeasonEntity?, WatchlistItemEntity) -> Unit,
+    seasons: List<SeasonEntity>,
+
+    ) {
 
     val seasonShowIds = remember(seasons) {
         seasons.map { it.showId }.toSet()
@@ -48,8 +48,8 @@ fun FinishedTv(
     if (filteredItems.isEmpty()) {
         EmptyContainerPlaceholder(
             R.drawable.movie_info_24px,
-            "No series found",
-            description = "Your watchlist is empty. Add some tv series to start building it!"
+            "No completed series",
+            description = "You haven’t completed anything yet. Time to start and finish a series!"
         )
     }
 
@@ -62,11 +62,10 @@ fun FinishedTv(
         scrollBehavior,
         scrollBehaviorTopBar,
         navController,
-        onLongActionTvRequest,
+        onLongActionTvSeasonRequest,
         pinnedItems,
         normalItems,
-        viewModel,
-        seasons
+        seasons,
     )
 
 }
