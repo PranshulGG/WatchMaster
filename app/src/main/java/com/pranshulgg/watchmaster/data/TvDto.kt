@@ -22,22 +22,6 @@ data class TvCrewMember(
     val profile_path: String?
 )
 
-data class EpisodeListDto(
-    val episodes: List<EpisodeItem>,
-)
-
-
-data class EpisodeItem(
-    val air_date: String,
-    val episode_number: Int,
-    val id: Long,
-    val name: String,
-    val overview: String,
-    val season_number: Int,
-    val runtime: Int,
-    val isWatched: Boolean = false
-)
-
 data class TvListDto(
     val page: Int,
     val results: List<TvSimple>,
