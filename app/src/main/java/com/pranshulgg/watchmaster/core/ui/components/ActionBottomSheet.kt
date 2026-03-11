@@ -39,6 +39,7 @@ fun ActionBottomSheet(
     cancelText: String = "Cancel",
     showActions: Boolean = true,
     confirmBtnMaxWidth: Boolean = false,
+    isConfirmDisabled: Boolean = false,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     ModalBottomSheet(
@@ -93,6 +94,7 @@ fun ActionBottomSheet(
                         onClick = {
                             onConfirm()
                         },
+                        enabled = !isConfirmDisabled,
                         shapes = ButtonDefaults.shapes(),
                         modifier = if (confirmBtnMaxWidth) Modifier
                             .fillMaxWidth()
