@@ -35,6 +35,7 @@ import com.pranshulgg.watchmaster.feature.tv.detail.ui.TvDetailsRatingDialog
 fun TvDetailsScaffold(
     id: Long,
     seasonNumber: Int,
+    seasonId: Long,
     scrollBehavior: FloatingToolbarScrollBehavior,
     viewModel: TvDetailsViewModel,
     watchlistViewModel: WatchlistViewModel,
@@ -46,6 +47,10 @@ fun TvDetailsScaffold(
     val season = seasons.find { it.seasonNumber == seasonNumber }
     val watchlistFlow = remember(id) { watchlistViewModel.item(id) }
     val watchlistItem by watchlistFlow.collectAsStateWithLifecycle()
+    val episodes by viewModel
+        .loadEpisodes(id, seasonId, seasonNumber)
+        .collectAsState()
+
 
     val isSeriesPinned = watchlistItem?.isPinned == true
 
@@ -91,7 +96,8 @@ fun TvDetailsScaffold(
                 seasonNumber,
                 season,
                 viewModel,
-                watchlistViewModel
+                watchlistViewModel,
+                episodes
             )
         }
     }
