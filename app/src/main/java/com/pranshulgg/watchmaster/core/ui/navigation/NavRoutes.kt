@@ -14,8 +14,8 @@ object NavRoutes {
         return "$MOVIE_DETAIL_SCREEN/$id"
     }
 
-    fun tvDetail(id: Long, season: Int): String {
-        return "$TV_DETAIL_SCREEN/$id/$season"
+    fun tvDetail(id: Long, seasonNumber: Int, seasonId: Long): String {
+        return "$TV_DETAIL_SCREEN/$id/$seasonNumber/$seasonId"
     }
 
     fun search(type: SearchType = SearchType.MULTI): String {
