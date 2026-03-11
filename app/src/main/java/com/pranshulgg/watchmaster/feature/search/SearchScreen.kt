@@ -17,7 +17,7 @@ import com.pranshulgg.watchmaster.feature.shared.WatchlistViewModel
 
 data class SearchUiState(
     val selectedItem: SearchItem? = null,
-    val selectedSeasonList: List<TvSeasonDto> = emptyList(),
+    val selectedSeasonList: List<TvSeasonDto>? = null,
     val isSheetOpen: Boolean = false
 )
 
