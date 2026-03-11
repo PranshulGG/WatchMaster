@@ -8,6 +8,7 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingToolbarScrollBehavior
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -20,6 +21,7 @@ import com.pranshulgg.watchmaster.core.ui.components.media.MediaStatusSection
 import com.pranshulgg.watchmaster.core.ui.snackbar.SnackbarManager
 import com.pranshulgg.watchmaster.data.local.entity.SeasonEntity
 import com.pranshulgg.watchmaster.data.local.entity.TvBundle
+import com.pranshulgg.watchmaster.data.local.entity.TvEpisodeEntity
 import com.pranshulgg.watchmaster.feature.shared.WatchlistViewModel
 import com.pranshulgg.watchmaster.feature.shared.media.components.CastTvSection
 import com.pranshulgg.watchmaster.feature.shared.media.components.NotesSection
@@ -37,7 +39,8 @@ fun TvDetailsContent(
     seasonNumber: Int,
     season: SeasonEntity?,
     viewModel: TvDetailsViewModel,
-    watchlistViewModel: WatchlistViewModel
+    watchlistViewModel: WatchlistViewModel,
+    episodes: List<TvEpisodeEntity>
 ) {
 
     val isFinished =
@@ -45,6 +48,8 @@ fun TvDetailsContent(
 
     val watchlistFlow = remember(tvItem.id) { watchlistViewModel.item(tvItem.id) }
     val watchlistItem by watchlistFlow.collectAsStateWithLifecycle()
+
+
 
     LazyColumn(
         modifier = Modifier
