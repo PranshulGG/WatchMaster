@@ -2,20 +2,10 @@ package com.pranshulgg.watchmaster.data.local.mapper
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.pranshulgg.watchmaster.data.CreditsDto
-import com.pranshulgg.watchmaster.data.EpisodeItem
-import com.pranshulgg.watchmaster.data.EpisodeListDto
-import com.pranshulgg.watchmaster.data.ImagesDto
-import com.pranshulgg.watchmaster.data.MovieListDto
-import com.pranshulgg.watchmaster.data.ReviewsDto
 import com.pranshulgg.watchmaster.data.TvCreditsDto
 import com.pranshulgg.watchmaster.data.TvGenre
-import com.pranshulgg.watchmaster.data.TvListDto
 import com.pranshulgg.watchmaster.data.TvReviewsDto
 import com.pranshulgg.watchmaster.data.TvWatchProvidersDto
-import com.pranshulgg.watchmaster.data.WatchProvidersDto
-import com.pranshulgg.watchmaster.data.local.entity.MovieBundle
-import com.pranshulgg.watchmaster.data.local.entity.MovieBundleEntity
 import com.pranshulgg.watchmaster.data.local.entity.TvBundle
 import com.pranshulgg.watchmaster.data.local.entity.TvBundleEntity
 
