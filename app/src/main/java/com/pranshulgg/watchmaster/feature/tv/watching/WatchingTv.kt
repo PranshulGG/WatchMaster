@@ -28,10 +28,10 @@ fun WatchingTv(
     scrollBehavior: FloatingToolbarScrollBehavior,
     scrollBehaviorTopBar: TopAppBarScrollBehavior,
     navController: NavController,
-    onLongActionTvRequest: (SeasonEntity, WatchlistItemEntity) -> Unit,
-    viewModel: WatchlistViewModel,
-    seasons: List<SeasonEntity>
-) {
+    onLongActionTvSeasonRequest: (SeasonEntity?, WatchlistItemEntity) -> Unit,
+    seasons: List<SeasonEntity>,
+
+    ) {
 
     val seasonShowIds = remember(seasons) {
         seasons.map { it.showId }.toSet()
@@ -49,8 +49,8 @@ fun WatchingTv(
     if (filteredItems.isEmpty()) {
         EmptyContainerPlaceholder(
             R.drawable.movie_info_24px,
-            "No series found",
-            description = "Your watchlist is empty. Add some tv series to start building it!"
+            "Nothing in progress",
+            description = "Looks like you haven’t started watching anything. Find your next binge!"
         )
     }
 
@@ -66,12 +66,10 @@ fun WatchingTv(
         scrollBehavior,
         scrollBehaviorTopBar,
         navController,
-        onLongActionTvRequest,
+        onLongActionTvSeasonRequest,
         pinnedItems,
         normalItems,
-        viewModel,
-        seasons
-
+        seasons,
     )
 
 }
