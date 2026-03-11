@@ -1,11 +1,9 @@
 package com.pranshulgg.watchmaster.data.local.entity
 
-import com.pranshulgg.watchmaster.data.EpisodeListDto
 import com.pranshulgg.watchmaster.data.TvCreditsDto
 import com.pranshulgg.watchmaster.data.TvReviewsDto
 import com.pranshulgg.watchmaster.data.TvWatchProvidersDto
 import com.pranshulgg.watchmaster.core.network.TvBundleDto
-import com.pranshulgg.watchmaster.data.EpisodeItem
 import com.pranshulgg.watchmaster.data.TvGenre
 
 data class TvBundle(
