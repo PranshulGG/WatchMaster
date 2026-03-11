@@ -34,7 +34,8 @@ data class TvHomeUiState(
     val isUpdateRating: Boolean = false,
     val originalRating: Float = 0f,
     val isSheetOpen: Boolean = false,
-    val showStatusConfirmationDialog: Boolean = false
+    val showStatusConfirmationDialog: Boolean = false,
+    val seriesId: Long? = null
 )
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
@@ -65,10 +66,9 @@ fun TvHomeScreen(
         state,
         scrollBehavior,
         scrollBehaviorTopBar,
-        viewModel,
-        onLongActionTvRequest = { item, watchlistItem ->
+        onLongActionTvSeasonRequest = { item, watchlistItem ->
             tvHomeViewModel.showBottomSheet(item, watchlistItem)
-        }
+        },
     )
 
 
