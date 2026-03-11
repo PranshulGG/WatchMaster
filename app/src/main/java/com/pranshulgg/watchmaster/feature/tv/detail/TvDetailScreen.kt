@@ -77,12 +77,12 @@ data class TvDetailsUiState(
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun TvDetailsScreen(id: Long, seasonNumber: Int, navController: NavController) {
+fun TvDetailsScreen(id: Long, seasonNumber: Int, navController: NavController, seasonId: Long) {
 
     val viewModel: TvDetailsViewModel = hiltViewModel()
     val watchlistViewModel: WatchlistViewModel = hiltViewModel()
 
-    TvDetailEffects(id, seasonNumber, viewModel)
+    TvDetailEffects(id, viewModel)
 
     val scrollBehavior = FloatingToolbarDefaults.exitAlwaysScrollBehavior(exitDirection = Bottom)
 
@@ -93,7 +93,8 @@ fun TvDetailsScreen(id: Long, seasonNumber: Int, navController: NavController) {
         scrollBehavior = scrollBehavior,
         viewModel = viewModel,
         watchlistViewModel = watchlistViewModel,
-        navController = navController
+        navController = navController,
+        seasonId = seasonId
     )
 
 }
