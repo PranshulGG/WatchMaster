@@ -25,6 +25,7 @@ fun SearchItemInfoBottomSheet(
     val item = viewModel.uiState.value.selectedItem
     val tvDetailsList = viewModel.uiState.value.selectedSeasonList
     val scope = rememberCoroutineScope()
+    val disabled = (item?.mediaType != "movie" && tvDetailsList.isNullOrEmpty())
 
     if (show && item != null)
         ActionBottomSheet(
@@ -34,6 +35,7 @@ fun SearchItemInfoBottomSheet(
             },
             confirmText = "Add to watchlist",
             confirmBtnMaxWidth = true,
+            isConfirmDisabled = disabled,
             onConfirm = {
                 scope.launch {
                     viewModel.addToWatchlist(item, tvDetailsList, watchlistViewModel)
@@ -41,8 +43,6 @@ fun SearchItemInfoBottomSheet(
                 }
             }
         ) {
-
-
             SearchItemInfoSheetContent(
                 item = item,
                 seasonLoading = viewModel.seasonLoading,
