@@ -44,7 +44,7 @@ fun SearchItemInfoSheetContent(
     item: SearchItem,
     seasonLoading: Boolean = true,
     seasonData: List<TvSeasonDto>,
-    onSelectedSeason: (List<TvSeasonDto>) -> Unit,
+    onSelectedSeason: (List<TvSeasonDto>?) -> Unit,
     watchlistViewModel: WatchlistViewModel
 ) {
 
@@ -83,7 +83,7 @@ fun SearchItemInfoSheetContent(
                         )
                     }
                 } else {
-                    PosterPlaceholder(bgColor = MaterialTheme.colorScheme.surface)
+                    PosterPlaceholder(bgColor = MaterialTheme.colorScheme.surface, iconSize = 30.dp)
                 }
             }
             Spacer(Modifier.width(12.dp))
