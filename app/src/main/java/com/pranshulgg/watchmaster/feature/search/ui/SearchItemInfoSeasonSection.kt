@@ -16,6 +16,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -41,10 +42,11 @@ import kotlinx.coroutines.launch
 @Composable
 fun SearchItemInfoSeasonSection(
     seasonData: List<TvSeasonDto>,
-    onSelectedSeason: (List<TvSeasonDto>) -> Unit,
+    onSelectedSeason: (List<TvSeasonDto>?) -> Unit,
     watchlistViewModel: WatchlistViewModel,
-    id: Long
-) {
+    id: Long,
+
+    ) {
     var selectedSeason by remember { mutableIntStateOf(0) }
     val size = ButtonDefaults.MediumContainerHeight
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -58,9 +60,21 @@ fun SearchItemInfoSeasonSection(
         .seasonsForShow(id)
         .collectAsState(initial = emptyList())
 
+    LaunchedEffect(savedSeasons) {
+        if (!seasonChanged) {
+            val firstUnsaved = seasonData.firstOrNull { season ->
+                savedSeasons.none { it.name == season.name }
+            }
 
-    if (!seasonChanged) {
-        onSelectedSeason(listOf(seasonData[0]))
+            selectedSeason = seasonData.indexOf(firstUnsaved ?: -1)
+
+            if (firstUnsaved != null) {
+                onSelectedSeason(listOf(firstUnsaved))
+            } else {
+                onSelectedSeason(null)
+            }
+
+        }
     }
 
 
@@ -76,7 +90,8 @@ fun SearchItemInfoSeasonSection(
                 .fillMaxWidth(),
             shapes = ButtonDefaults.shapes(),
             onClick = {
-                isSheetOpen = true
+                if (selectedSeason != -1)
+                    isSheetOpen = true
             },
             contentPadding = ButtonDefaults.contentPaddingFor(size)
         ) {
@@ -86,7 +101,10 @@ fun SearchItemInfoSeasonSection(
                 size = ButtonDefaults.iconSizeFor(size)
             )
             Spacer(Modifier.size(ButtonDefaults.iconSpacingFor(size)))
-            Text(seasonData[selectedSeason].name, style = ButtonDefaults.textStyleFor(size))
+            Text(
+                if (selectedSeason == -1) "All season saved" else seasonData[selectedSeason].name,
+                style = ButtonDefaults.textStyleFor(size)
+            )
         }
     }
 
