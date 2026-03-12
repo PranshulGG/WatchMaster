@@ -47,9 +47,8 @@ fun TvDetailsScaffold(
     val season = seasons.find { it.seasonNumber == seasonNumber }
     val watchlistFlow = remember(id) { watchlistViewModel.item(id) }
     val watchlistItem by watchlistFlow.collectAsStateWithLifecycle()
-    val episodes by viewModel
-        .loadEpisodes(id, seasonId, seasonNumber)
-        .collectAsState()
+    val episodesFlow = remember(seasonId) { viewModel.seasonEpisodes(seasonId) }
+    val episodes by episodesFlow.collectAsStateWithLifecycle(initialValue = emptyList())
 
 
     val isSeriesPinned = watchlistItem?.isPinned == true
