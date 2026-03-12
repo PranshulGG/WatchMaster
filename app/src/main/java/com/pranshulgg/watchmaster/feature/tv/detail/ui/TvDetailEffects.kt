@@ -9,8 +9,11 @@ import com.pranshulgg.watchmaster.feature.tv.detail.TvDetailsViewModel
 @Composable
 fun TvDetailEffects(
     id: Long,
+    seasonNumber: Int,
     viewModel: TvDetailsViewModel,
+    seasonId: Long
 ) {
     LaunchedEffect(id) { viewModel.load(id) }
+    LaunchedEffect(seasonNumber) { viewModel.loadEpisodes(id, seasonId, seasonNumber) }
     LaunchedEffect(Unit) { viewModel.loading }
 }
