@@ -46,13 +46,19 @@ class TvDetailsViewModel @Inject constructor(
         tvId: Long,
         seasonId: Long,
         seasonNumber: Int
-    ): StateFlow<List<TvEpisodeEntity>> {
+    ) {
+        viewModelScope.launch {
+            repo.ensureEpisodesFetched(tvId, seasonId, seasonNumber)
+        }
+    }
+
+    fun seasonEpisodes(seasonId: Long): StateFlow<List<TvEpisodeEntity>> {
 
         return repo
-            .getEpisodesForSeason(tvId, seasonId, seasonNumber)
+            .getEpisodesForSeason(seasonId)
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5_000),
+                started = SharingStarted.Companion.WhileSubscribed(5_000),
                 initialValue = emptyList()
             )
     }
