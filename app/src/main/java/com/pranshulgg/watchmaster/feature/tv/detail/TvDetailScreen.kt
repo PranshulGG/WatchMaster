@@ -82,7 +82,7 @@ fun TvDetailsScreen(id: Long, seasonNumber: Int, navController: NavController, s
     val viewModel: TvDetailsViewModel = hiltViewModel()
     val watchlistViewModel: WatchlistViewModel = hiltViewModel()
 
-    TvDetailEffects(id, viewModel)
+    TvDetailEffects(id, seasonNumber, viewModel, seasonId)
 
     val scrollBehavior = FloatingToolbarDefaults.exitAlwaysScrollBehavior(exitDirection = Bottom)
 
