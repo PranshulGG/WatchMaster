@@ -26,6 +26,7 @@ import com.pranshulgg.watchmaster.feature.shared.WatchlistViewModel
 import com.pranshulgg.watchmaster.feature.shared.media.components.CastTvSection
 import com.pranshulgg.watchmaster.feature.shared.media.components.NotesSection
 import com.pranshulgg.watchmaster.feature.shared.media.components.OverviewSection
+import com.pranshulgg.watchmaster.feature.tv.detail.components.EpisodesSection
 import com.pranshulgg.watchmaster.feature.tv.detail.components.TvHeroHeader
 import kotlinx.coroutines.launch
 
@@ -77,6 +78,7 @@ fun TvDetailsContent(
                     { viewModel.showNoteDialog(season.seasonNotes ?: "") },
                     season.seasonNotes ?: ""
                 )
+                EpisodesSection(episodes, viewModel)
                 CastTvSection(tvItem)
                 Spacer(modifier = Modifier.height(56.dp))
             } else {
