@@ -1,5 +1,6 @@
 package com.pranshulgg.watchmaster.data.repository
 
+import android.util.Log
 import com.pranshulgg.watchmaster.data.local.dao.TvBundleDao
 import com.pranshulgg.watchmaster.data.local.entity.TvBundle
 import com.pranshulgg.watchmaster.data.local.entity.toDomain
@@ -84,20 +85,23 @@ class TvRepository(
         episodeDao.updateEpisodeStatus(epId, false)
     }
 
-    fun getEpisodesForSeason(
+
+    private val loadingSeasons = mutableSetOf<Long>()
+
+    suspend fun ensureEpisodesFetched(
         tvId: Long,
         seasonId: Long,
         seasonNumber: Int
-    ): Flow<List<TvEpisodeEntity>> = flow {
-
-        val count = episodeDao.countEpisodes(seasonId)
-
-        if (count == 0) {
+    ) {
+        if (!episodeDao.hasEpisodes(seasonId) && !loadingSeasons.contains(seasonId)) {
+            loadingSeasons.add(seasonId)
             fetchEpisodes(tvId, seasonId, seasonNumber)
+            loadingSeasons.remove(seasonId)
         }
-
-        emitAll(episodeDao.getById(seasonId))
     }
 
 
+    fun getEpisodesForSeason(seasonId: Long): Flow<List<TvEpisodeEntity>> {
+        return episodeDao.getEpisodesForSeason(seasonId)
+    }
 }
