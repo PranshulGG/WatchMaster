@@ -18,9 +18,10 @@ interface TvEpisodeDao {
     suspend fun updateEpisodeStatus(epId: Long, watched: Boolean)
 
     @Query("SELECT * FROM tv_episodes WHERE seasonId = :seasonId ORDER BY episode_number")
-    fun getById(seasonId: Long): Flow<List<TvEpisodeEntity>>
+    fun getEpisodesForSeason(seasonId: Long): Flow<List<TvEpisodeEntity>>
 
-    @Query("SELECT COUNT(*) FROM tv_episodes WHERE seasonId = :seasonId")
-    suspend fun countEpisodes(seasonId: Long): Int
+    @Query("SELECT EXISTS(SELECT 1 FROM tv_episodes WHERE seasonId = :seasonId)")
+    suspend fun hasEpisodes(seasonId: Long): Boolean
+
 
 }
