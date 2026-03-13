@@ -16,4 +16,5 @@ fun TvDetailEffects(
     LaunchedEffect(id) { viewModel.load(id) }
     LaunchedEffect(seasonNumber) { viewModel.loadEpisodes(id, seasonId, seasonNumber) }
     LaunchedEffect(Unit) { viewModel.loading }
+
 }
