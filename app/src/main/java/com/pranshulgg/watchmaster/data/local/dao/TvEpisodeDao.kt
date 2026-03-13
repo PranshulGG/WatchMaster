@@ -17,6 +17,12 @@ interface TvEpisodeDao {
     @Query("UPDATE tv_episodes SET isWatched = :watched WHERE epId = :epId")
     suspend fun updateEpisodeStatus(epId: Long, watched: Boolean)
 
+    @Query("UPDATE tv_episodes SET isWatched = 1 WHERE seasonId = :seasonId")
+    suspend fun markAllEpWatched(seasonId: Long)
+
+    @Query("UPDATE tv_episodes SET isWatched = 0 WHERE seasonId = :seasonId")
+    suspend fun markAllEpUnWatched(seasonId: Long)
+
     @Query("SELECT * FROM tv_episodes WHERE seasonId = :seasonId ORDER BY episode_number")
     fun getEpisodesForSeason(seasonId: Long): Flow<List<TvEpisodeEntity>>
 
