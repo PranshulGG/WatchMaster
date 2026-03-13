@@ -52,7 +52,7 @@ fun MediaRatingDialogContent(
     onDismiss: () -> Unit,
     onConfirm: (Double) -> Unit,
     isUpdateRating: Boolean = false,
-    originalRating: Float = 0f
+    originalRating: Float = 0f,
 ) {
     DialogBasic(
         show = show,
