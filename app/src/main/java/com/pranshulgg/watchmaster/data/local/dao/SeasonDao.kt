@@ -53,4 +53,7 @@ interface SeasonDao {
 
     @Query("SELECT * FROM tv_seasons")
     fun getAllSeasons(): Flow<List<SeasonEntity>>
+
+    @Query("UPDATE tv_seasons SET seasonProgress = :progress WHERE seasonId = :seasonId")
+    suspend fun updateSeasonProgress(seasonId: Long, progress: Int)
 }
