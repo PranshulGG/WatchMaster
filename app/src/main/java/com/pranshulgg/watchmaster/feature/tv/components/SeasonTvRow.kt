@@ -113,7 +113,7 @@ fun SeasonTvRow(
                         season.seasonUserRating
                     )
                 }
-//                SeasonProgress() // NOT READY YET
+                SeasonProgress(season.seasonProgress ?: 0)
             }
         }
     }
@@ -121,13 +121,16 @@ fun SeasonTvRow(
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-private fun SeasonProgress() {
+private fun SeasonProgress(seasonProgress: Int) {
+
+    val progress = seasonProgress.toFloat() / 100
+
     Box(contentAlignment = Alignment.Center) {
         CircularWavyProgressIndicator(
-            progress = { 0.5f }
+            progress = { progress }
         )
         Text(
-            "50%",
+            "${seasonProgress}%",
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.secondary
         )
