@@ -27,18 +27,25 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pranshulgg.watchmaster.R
+import com.pranshulgg.watchmaster.core.model.WatchStatus
 import com.pranshulgg.watchmaster.core.ui.components.Symbol
+import com.pranshulgg.watchmaster.core.ui.snackbar.SnackbarManager
 import com.pranshulgg.watchmaster.core.ui.theme.Radius
 import com.pranshulgg.watchmaster.data.local.entity.TvEpisodeEntity
 import com.pranshulgg.watchmaster.feature.tv.detail.TvDetailsViewModel
+import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun EpisodeItem(item: TvEpisodeEntity, viewModel: TvDetailsViewModel) {
+fun EpisodeItem(item: TvEpisodeEntity, viewModel: TvDetailsViewModel, seasonStatus: WatchStatus) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
         color = Color.Transparent,
         onClick = {
+            if (seasonStatus == WatchStatus.WANT_TO_WATCH) {
+                SnackbarManager.show("Please mark the season as 'Watching' to track episodes")
+                return@Surface
+            }
             if (item.isWatched) {
                 viewModel.markEpUnWatched(item.epId)
             } else {
@@ -47,12 +54,12 @@ fun EpisodeItem(item: TvEpisodeEntity, viewModel: TvDetailsViewModel) {
         }
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+            modifier = Modifier.padding(end = 16.dp, top = 8.dp, bottom = 8.dp, start = 18.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             LeadingIcon(item.isWatched)
-            Column() {
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
                     item.name,
                     style = MaterialTheme.typography.bodyMedium,
@@ -70,7 +77,6 @@ fun EpisodeItem(item: TvEpisodeEntity, viewModel: TvDetailsViewModel) {
             }
 
 
-            Spacer(Modifier.weight(1f))
             IconButton(
                 onClick = {},
                 modifier = Modifier.size(36.dp),
