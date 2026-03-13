@@ -14,7 +14,7 @@ class WatchlistRepository(
     private val dao: WatchlistDao,
     private val seasonDao: SeasonDao,
     private val movieRepository: MovieRepository,
-    private val tvRepository: TvRepository? = null
+    private val tvRepository: TvRepository
 ) {
 
     suspend fun addFromSearch(item: SearchItem, tvDetails: List<TvSeasonDto>? = null) {
@@ -129,6 +129,7 @@ class WatchlistRepository(
             status = WatchStatus.FINISHED,
             finished = Instant.now()
         )
+        tvRepository.markAllEpWatched(seasonId)
     }
 
     suspend fun markSeasonInterrupted(seasonId: Long) {
@@ -144,6 +145,7 @@ class WatchlistRepository(
             seasonId = seasonId,
             status = WatchStatus.WANT_TO_WATCH
         )
+        tvRepository.markAllEpUnWatched(seasonId)
     }
 
     suspend fun updateSeasonUserRating(seasonId: Long, rating: Double) =
