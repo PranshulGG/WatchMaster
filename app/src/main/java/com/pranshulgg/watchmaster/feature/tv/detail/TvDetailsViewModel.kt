@@ -109,5 +109,9 @@ class TvDetailsViewModel @Inject constructor(
         }
     }
 
-
+    fun updateSeasonProgress(seasonId: Long, progress: Int) {
+        viewModelScope.launch {
+            repo.updateSeasonProgress(seasonId, progress)
+        }
+    }
 }
