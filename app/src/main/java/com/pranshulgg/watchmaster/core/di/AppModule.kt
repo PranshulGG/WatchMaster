@@ -69,8 +69,9 @@ object AppModule {
         watchlistDao: WatchlistDao,
         seasonDao: SeasonDao,
         movieRepository: MovieRepository,
+        tvRepository: TvRepository
     ): WatchlistRepository =
-        WatchlistRepository(watchlistDao, seasonDao, movieRepository)
+        WatchlistRepository(watchlistDao, seasonDao, movieRepository, tvRepository)
 
     @Provides
     @Singleton
@@ -84,6 +85,7 @@ object AppModule {
     fun providerTvRepository(
         api: TmdbApi,
         tvBundleDao: TvBundleDao,
-        tvEpisodeDao: TvEpisodeDao
-    ): TvRepository = TvRepository(api, tvBundleDao, tvEpisodeDao)
+        tvEpisodeDao: TvEpisodeDao,
+        seasonDao: SeasonDao
+    ): TvRepository = TvRepository(api, tvBundleDao, tvEpisodeDao, seasonDao)
 }
