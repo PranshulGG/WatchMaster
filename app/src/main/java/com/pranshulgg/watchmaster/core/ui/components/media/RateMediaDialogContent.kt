@@ -27,6 +27,7 @@ import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontVariation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pranshulgg.watchmaster.R
@@ -44,7 +45,7 @@ fun RateMediaDialogContent(
     onConfirm: (Double) -> Unit,
     onCancel: () -> Unit,
     updateRating: Boolean = false,
-    originalRating: Float = 0f
+    originalRating: Float = 0f,
 ) {
 
     val sliderState = remember {
