@@ -78,7 +78,7 @@ fun TvDetailsContent(
                     { viewModel.showNoteDialog(season.seasonNotes ?: "") },
                     season.seasonNotes ?: ""
                 )
-                EpisodesSection(episodes, viewModel)
+                EpisodesSection(episodes, viewModel, season.status)
                 CastTvSection(tvItem)
                 Spacer(modifier = Modifier.height(56.dp))
             } else {
