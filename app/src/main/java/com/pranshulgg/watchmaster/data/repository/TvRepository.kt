@@ -9,6 +9,7 @@ import com.pranshulgg.watchmaster.data.local.mapper.toEntity
 import com.pranshulgg.watchmaster.core.network.TmdbApi
 import com.pranshulgg.watchmaster.core.network.TvSeasonEpisodeDto
 import com.pranshulgg.watchmaster.core.network.TvSeasonEpisodesResponse
+import com.pranshulgg.watchmaster.data.local.dao.SeasonDao
 import com.pranshulgg.watchmaster.data.local.dao.TvEpisodeDao
 import com.pranshulgg.watchmaster.data.local.entity.SeasonEntity
 import com.pranshulgg.watchmaster.data.local.entity.TvEpisodeEntity
@@ -21,7 +22,8 @@ import java.time.Instant
 class TvRepository(
     private val api: TmdbApi,
     private val dao: TvBundleDao,
-    private val episodeDao: TvEpisodeDao
+    private val episodeDao: TvEpisodeDao,
+    private val seasonDao: SeasonDao
 ) {
 
     suspend fun getWholeTvData(tvId: Long): TvBundle {
@@ -85,6 +87,19 @@ class TvRepository(
         episodeDao.updateEpisodeStatus(epId, false)
     }
 
+    suspend fun updateSeasonProgress(seasonId: Long, progress: Int) {
+        seasonDao.updateSeasonProgress(seasonId, progress)
+    }
+
+    suspend fun markAllEpWatched(seasonId: Long) {
+        episodeDao.markAllEpWatched(seasonId)
+        seasonDao.updateSeasonProgress(seasonId, 100)
+    }
+
+    suspend fun markAllEpUnWatched(seasonId: Long) {
+        episodeDao.markAllEpUnWatched(seasonId)
+        seasonDao.updateSeasonProgress(seasonId, 0)
+    }
 
     private val loadingSeasons = mutableSetOf<Long>()
 
