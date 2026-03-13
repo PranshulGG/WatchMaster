@@ -4,21 +4,25 @@ import com.pranshulgg.watchmaster.core.model.WatchStatus
 import com.pranshulgg.watchmaster.R
 
 fun WatchStatus.dialogMessage(isTv: Boolean = false): String {
-    val tvMovieText: String = if (isTv) "season" else "movie";
+
+    val finishText: String = if (isTv) "season and mark all episodes as watched" else "movie";
+    val resetText: String = if (isTv) "season, mark all episodes as unwatched," else "movie";
+
+    val seasonMovieText: String = if (isTv) "season" else "movie";
 
     return when (this) {
 
         WatchStatus.WATCHING ->
-            "Are you sure you want to finish this $tvMovieText?"
+            "Are you sure you want to finish this $finishText?"
 
         WatchStatus.INTERRUPTED ->
-            "Do you want to continue watching this $tvMovieText?"
+            "Do you want to continue watching this $seasonMovieText?"
 
         WatchStatus.FINISHED ->
-            "Reset this $tvMovieText and add it back to your watchlist?"
+            "Reset this $resetText and add it back to your watchlist?"
 
         else ->
-            "Are you sure you want to start watching this $tvMovieText?"
+            "Are you sure you want to start watching this $seasonMovieText?"
     }
 }
 
