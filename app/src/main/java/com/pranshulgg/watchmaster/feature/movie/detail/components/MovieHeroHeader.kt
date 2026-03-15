@@ -120,7 +120,6 @@ fun MovieHeroHeader(
                     text = movie.title,
                     style = MaterialTheme.typography.headlineMedium.copy(
                         shadow = Shadow(
-//                            color = Color.Black.copy(alpha = 0.4f),
                             color = MaterialTheme.colorScheme.surfaceContainer,
                             offset = Offset(2f, 2f),
                             blurRadius = 6f
@@ -131,8 +130,7 @@ fun MovieHeroHeader(
                     maxLines = 3,
                     lineHeight = 30.sp,
                     overflow = TextOverflow.Ellipsis,
-
-                    )
+                )
                 Text(
                     text = "${formatRuntime(movie.runtime)} • ${watchlistItem?.releaseDate?.take(4) ?: "—"}",
                     style = MaterialTheme.typography.titleMedium,
