@@ -153,7 +153,7 @@ class SearchViewModel @Inject constructor(
             }
             if (item.mediaType == "tv" && tvDetails != null) {
                 addSeasonToWatchlist(item.id, tvDetails)
-            } else {
+            } else if (item.mediaType == "tv") {
                 SnackbarManager.show("No season found")
             }
             hideSheet()
