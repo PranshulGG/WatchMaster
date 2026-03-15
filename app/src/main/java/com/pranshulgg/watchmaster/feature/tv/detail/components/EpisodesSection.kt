@@ -63,7 +63,7 @@ fun EpisodesSection(
         },
         showAction = true
     ) {
-        if (expanded)
+        if (expanded) {
             Column(
                 modifier = Modifier.padding(top = 10.dp),
                 verticalArrangement = Arrangement.spacedBy(2.dp)
@@ -80,6 +80,7 @@ fun EpisodesSection(
                     )
                 }
             }
+        }
     }
 
     Spacer(modifier = Modifier.height(12.dp))
