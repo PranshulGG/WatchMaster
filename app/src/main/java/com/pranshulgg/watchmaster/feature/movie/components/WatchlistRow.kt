@@ -35,7 +35,7 @@ import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 import com.pranshulgg.watchmaster.core.ui.navigation.NavRoutes
-import com.pranshulgg.watchmaster.core.ui.components.MaterialListShape
+import com.pranshulgg.watchmaster.core.ui.components.ListItemShape
 import com.pranshulgg.watchmaster.core.ui.components.media.PosterPlaceholder
 import com.pranshulgg.watchmaster.feature.shared.media.ui.watchstatus.asStatusDates
 import com.pranshulgg.watchmaster.feature.shared.media.ui.watchstatus.toWatchListItemStatusUiPill
@@ -65,7 +65,7 @@ fun WatchlistRow(
 
     val status = item.status.toWatchListItemStatusUiPill(item.asStatusDates())
 
-    val shape = MaterialListShape(isOnly, isFirst, isLast)
+    val shape = ListItemShape(isOnly, isFirst, isLast)
 
 
     Surface(
