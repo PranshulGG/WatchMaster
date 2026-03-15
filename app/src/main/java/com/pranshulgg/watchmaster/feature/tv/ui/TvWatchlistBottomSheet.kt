@@ -42,7 +42,9 @@ fun TvWatchlistBottomSheet(
                 status = seasonItem?.status ?: watchlistItem.status,
                 isTv = true,
                 onUpdateRating = {
-                    tvHomeViewModel.showUpdateRatingDialog()
+                    tvHomeViewModel.showUpdateRatingDialog(
+                        originalRating = seasonItem?.seasonUserRating?.toFloat() ?: 0f
+                    )
                 },
                 onWatchStatus = { status ->
                     if (status != WatchStatus.WATCHING) {
