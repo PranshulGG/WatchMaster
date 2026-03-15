@@ -18,6 +18,7 @@ import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TooltipAnchorPosition
 import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -29,6 +30,7 @@ import androidx.compose.ui.unit.sp
 import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.core.model.WatchStatus
 import com.pranshulgg.watchmaster.core.ui.components.Symbol
+import com.pranshulgg.watchmaster.core.ui.components.Tooltip
 import com.pranshulgg.watchmaster.core.ui.snackbar.SnackbarManager
 import com.pranshulgg.watchmaster.core.ui.theme.Radius
 import com.pranshulgg.watchmaster.data.local.entity.TvEpisodeEntity
@@ -37,15 +39,21 @@ import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun EpisodeItem(item: TvEpisodeEntity, viewModel: TvDetailsViewModel, seasonStatus: WatchStatus) {
+fun EpisodeItem(
+    item: TvEpisodeEntity,
+    viewModel: TvDetailsViewModel,
+    seasonStatus: WatchStatus,
+    onTrailingAction: () -> Unit
+) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
         color = Color.Transparent,
         onClick = {
-            if (seasonStatus == WatchStatus.WANT_TO_WATCH) {
+            if (seasonStatus == WatchStatus.WANT_TO_WATCH || seasonStatus == WatchStatus.FINISHED) {
                 SnackbarManager.show("Please mark the season as 'Watching' to track episodes")
                 return@Surface
             }
+
             if (item.isWatched) {
                 viewModel.markEpUnWatched(item.epId)
             } else {
@@ -54,7 +62,7 @@ fun EpisodeItem(item: TvEpisodeEntity, viewModel: TvDetailsViewModel, seasonStat
         }
     ) {
         Row(
-            modifier = Modifier.padding(end = 16.dp, top = 8.dp, bottom = 8.dp, start = 18.dp),
+            modifier = Modifier.padding(end = 16.dp, top = 8.dp, bottom = 8.dp, start = 20.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -77,12 +85,18 @@ fun EpisodeItem(item: TvEpisodeEntity, viewModel: TvDetailsViewModel, seasonStat
             }
 
 
-            IconButton(
-                onClick = {},
-                modifier = Modifier.size(36.dp),
-                shapes = IconButtonDefaults.shapes()
+            Tooltip(
+                "Episode options",
+                preferredPosition = TooltipAnchorPosition.Below,
+                spacing = 5.dp
             ) {
-                Symbol(R.drawable.more_vert_24px)
+                IconButton(
+                    onClick = { onTrailingAction() },
+                    modifier = Modifier.size(36.dp),
+                    shapes = IconButtonDefaults.shapes()
+                ) {
+                    Symbol(R.drawable.more_vert_24px)
+                }
             }
         }
     }
