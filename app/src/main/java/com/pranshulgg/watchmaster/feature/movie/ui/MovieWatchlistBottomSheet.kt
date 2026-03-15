@@ -33,7 +33,9 @@ fun MovieWatchlistBottomSheet(
                 mediaTitle = watchlistItem.title,
                 status = watchlistItem.status,
                 onUpdateRating = {
-                    movieHomeViewModel.showUpdateRatingDialog()
+                    movieHomeViewModel.showUpdateRatingDialog(
+                        originalRating = watchlistItem.userRating?.toFloat() ?: 0f
+                    )
                 },
                 onWatchStatus = { status ->
                     if (status != WatchStatus.WATCHING) {
