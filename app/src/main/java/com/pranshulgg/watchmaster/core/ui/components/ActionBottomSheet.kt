@@ -40,21 +40,26 @@ fun ActionBottomSheet(
     showActions: Boolean = true,
     confirmBtnMaxWidth: Boolean = false,
     isConfirmDisabled: Boolean = false,
-    content: @Composable ColumnScope.() -> Unit,
+    enableHandle: Boolean = true,
+    content: @Composable ColumnScope.() -> Unit
 ) {
     ModalBottomSheet(
         sheetState = sheetState,
         onDismissRequest = onCancel,
         scrimColor = MaterialTheme.colorScheme.scrim.copy(alpha = 0.5f),
         dragHandle = {
-            Surface(
-                Modifier
-                    .padding(top = 22.dp, bottom = 12.dp)
-                    .height(4.dp)
-                    .width(32.dp),
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                shape = CircleShape
-            ) {}
+            if (enableHandle) {
+                Surface(
+                    Modifier
+                        .padding(top = 22.dp, bottom = 12.dp)
+                        .height(4.dp)
+                        .width(32.dp),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    shape = CircleShape
+                ) {}
+            } else {
+                null
+            }
         }
     ) {
         Column(
