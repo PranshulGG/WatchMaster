@@ -46,10 +46,9 @@ fun AppNavHost(
                 .zIndex(1f)
                 .align(Alignment.BottomCenter)
                 .padding(
-                    bottom =
-                        WindowInsets.navigationBars
-                            .asPaddingValues()
-                            .calculateBottomPadding()
+                    bottom = WindowInsets.navigationBars
+                        .asPaddingValues()
+                        .calculateBottomPadding()
                 )
         )
         NavHost(
