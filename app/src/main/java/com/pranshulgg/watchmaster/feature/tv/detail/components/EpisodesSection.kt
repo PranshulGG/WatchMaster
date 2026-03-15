@@ -1,18 +1,13 @@
 package com.pranshulgg.watchmaster.feature.tv.detail.components
 
-import android.util.Log
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -24,12 +19,13 @@ import androidx.compose.ui.unit.dp
 import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.core.model.WatchStatus
 import com.pranshulgg.watchmaster.core.ui.components.media.MediaSectionCard
+import com.pranshulgg.watchmaster.core.ui.snackbar.SnackbarManager
 import com.pranshulgg.watchmaster.data.local.entity.TvEpisodeEntity
 import com.pranshulgg.watchmaster.feature.tv.detail.TvDetailsViewModel
-import kotlin.math.round
+import com.pranshulgg.watchmaster.feature.tv.detail.ui.TvDetailsEpisodeInfoSheet
 import kotlin.math.roundToInt
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun EpisodesSection(
     episodes: List<TvEpisodeEntity>,
@@ -37,7 +33,11 @@ fun EpisodesSection(
     seasonStatus: WatchStatus
 ) {
 
-    var expanded by remember { mutableStateOf(false) }
+    var expanded by remember { mutableStateOf(false) } // DEFAULT: FALSE
+    var showSheet by remember { mutableStateOf(false) }
+    var currentEp by remember { mutableStateOf<TvEpisodeEntity?>(null) }
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+
 
     val watchedProgress = remember(episodes) {
         val watchedItems = episodes.count { it.isWatched }
@@ -69,14 +69,42 @@ fun EpisodesSection(
                 verticalArrangement = Arrangement.spacedBy(2.dp)
             ) {
                 episodes.forEach { episode ->
-
                     EpisodeItem(
                         episode,
                         viewModel,
-                        seasonStatus
+                        seasonStatus,
+                        onTrailingAction = {
+                            currentEp = episode
+                            showSheet = true
+                        }
                     )
                 }
             }
     }
+
     Spacer(modifier = Modifier.height(12.dp))
+
+    TvDetailsEpisodeInfoSheet(
+        show = showSheet,
+        episode = currentEp,
+        onDismiss = {
+            showSheet = false
+        },
+        onConfirm = {
+            currentEp?.let {
+                if (seasonStatus == WatchStatus.WANT_TO_WATCH || seasonStatus == WatchStatus.FINISHED) {
+                    SnackbarManager.show("Please mark the season as 'Watching' to track episodes")
+                    return@let
+                }
+                if (it.isWatched) {
+                    viewModel.markEpUnWatched(it.epId)
+                } else {
+                    viewModel.markEpWatched(it.epId)
+                }
+            }
+            showSheet = false
+        },
+        sheetState = sheetState
+    )
+
 }
