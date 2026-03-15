@@ -21,12 +21,20 @@ class MovieHomeViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(showRatingDialog = true)
     }
 
-    fun showUpdateRatingDialog() {
-        _uiState.value = _uiState.value.copy(showRatingDialog = true, isUpdateRating = true)
+    fun showUpdateRatingDialog(originalRating: Float = 0f) {
+        _uiState.value = _uiState.value.copy(
+            showRatingDialog = true,
+            originalRating = originalRating,
+            isUpdateRating = true
+        )
     }
 
     fun hideRatingDialog() {
-        _uiState.value = _uiState.value.copy(showRatingDialog = false, isUpdateRating = false)
+        _uiState.value = _uiState.value.copy(
+            showRatingDialog = false,
+            originalRating = 0f,
+            isUpdateRating = false
+        )
     }
 
     fun showBottomSheet(item: WatchlistItemEntity) {
