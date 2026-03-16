@@ -29,6 +29,7 @@ import com.pranshulgg.watchmaster.feature.shared.media.components.OverviewSectio
 import com.pranshulgg.watchmaster.feature.tv.detail.components.EpisodesSection
 import com.pranshulgg.watchmaster.feature.tv.detail.components.TvHeroHeader
 import kotlinx.coroutines.launch
+import kotlin.text.get
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -71,7 +72,11 @@ fun TvDetailsContent(
                         SnackbarManager.show("User rating updated")
                     }
                 )
-                MediaStatusSection(status = season.status)
+
+
+                MediaStatusSection(
+                    status = season.status,
+                    onClick = { viewModel.showWatchProviderSheet(tvItem.watchProviders?.results["US"]) })
                 OverviewSection(tvItem.overview)
                 NotesSection(
                     season.seasonNotes.isNullOrBlank(),
