@@ -26,7 +26,7 @@ import com.pranshulgg.watchmaster.core.ui.components.Symbol
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun MediaStatusSection(status: WatchStatus) {
+fun MediaStatusSection(status: WatchStatus, onClick: () -> Unit = {}) {
     val colorScheme = MaterialTheme.colorScheme
     val statusColor = LocalStatusColors.current
 
@@ -95,7 +95,7 @@ fun MediaStatusSection(status: WatchStatus) {
                 .height(48.dp)
                 .weight(1f),
             onClick = {
-
+                onClick()
             },
             contentPadding = ButtonDefaults.contentPaddingFor(48.dp),
             shapes = ButtonDefaults.shapes()
