@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,13 +21,12 @@ fun EpisodeInfoSheetContent(
 ) {
     EpisodeInfoHeader(episode)
 
-    Column(Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
+    Column(Modifier.padding(start = 16.dp, end = 16.dp, bottom = 12.dp)) {
 
         episode.overview?.let {
-
             Text(
                 text = "Overview",
-                modifier = Modifier.padding(bottom = 5.dp),
+                modifier = Modifier.padding(bottom = 2.dp),
                 fontSize = 16.sp,
                 color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.W700
