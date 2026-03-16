@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -44,9 +45,8 @@ fun SearchItemInfoSeasonSection(
     seasonData: List<TvSeasonDto>,
     onSelectedSeason: (List<TvSeasonDto>?) -> Unit,
     watchlistViewModel: WatchlistViewModel,
-    id: Long,
-
-    ) {
+    id: Long
+) {
     var selectedSeason by remember { mutableIntStateOf(0) }
     val size = ButtonDefaults.MediumContainerHeight
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -60,13 +60,19 @@ fun SearchItemInfoSeasonSection(
         .seasonsForShow(id)
         .collectAsState(initial = emptyList())
 
+
+    val filteredSeasons = remember(seasonData) {
+        seasonData.filter { it.name != "Specials" }
+    }
+
+
     LaunchedEffect(savedSeasons) {
         if (!seasonChanged) {
-            val firstUnsaved = seasonData.firstOrNull { season ->
+            val firstUnsaved = filteredSeasons.firstOrNull { season ->
                 savedSeasons.none { it.name == season.name }
             }
 
-            selectedSeason = seasonData.indexOf(firstUnsaved ?: -1)
+            selectedSeason = filteredSeasons.indexOf(firstUnsaved ?: -1)
 
             if (firstUnsaved != null) {
                 onSelectedSeason(listOf(firstUnsaved))
@@ -102,7 +108,7 @@ fun SearchItemInfoSeasonSection(
             )
             Spacer(Modifier.size(ButtonDefaults.iconSpacingFor(size)))
             Text(
-                if (selectedSeason == -1) "All season saved" else seasonData[selectedSeason].name,
+                if (selectedSeason == -1) "All season saved" else filteredSeasons[selectedSeason].name,
                 style = ButtonDefaults.textStyleFor(size)
             )
         }
@@ -122,56 +128,60 @@ fun SearchItemInfoSeasonSection(
             },
             showActions = false,
         ) {
-            SettingSection(
-                title = "All seasons",
-                isModalOption = true,
-                tiles = seasonData.mapIndexed { index, item ->
+            LazyColumn() {
+                item {
+                    SettingSection(
+                        title = "All seasons",
+                        isModalOption = true,
+                        tiles = filteredSeasons.mapIndexed { index, item ->
 
-                    val seasonExists = savedSeasons.any { it.name == item.name }
+                            val seasonExists = savedSeasons.any { it.name == item.name }
 
-                    SettingTile.ActionTile(
-                        title = item.name,
-                        leading = {
-                            if (index == selectedSeason) {
-                                Symbol(
-                                    R.drawable.check_24px,
-                                    color = MaterialTheme.colorScheme.onSecondaryContainer
-                                )
-                            }
-                        },
-                        description = item.air_date,
-                        selected = index == selectedSeason,
+                            SettingTile.ActionTile(
+                                title = item.name,
+                                leading = {
+                                    if (index == selectedSeason) {
+                                        Symbol(
+                                            R.drawable.check_24px,
+                                            color = MaterialTheme.colorScheme.onSecondaryContainer
+                                        )
+                                    }
+                                },
+                                description = item.air_date,
+                                selected = index == selectedSeason,
 
-                        onClick = {
-                            if (!seasonExists) {
-                                seasonChanged = true
-                                selectedSeason = index
-                                if (!totalSeasons.contains(item)) {
-                                    totalSeasons.add(item)
-                                }
-                                onSelectedSeason(totalSeasons)
-                                scope.launch { sheetState.hide() }
-                            }
-                        },
-                        trailing = {
-                            Surface(
-                                color = if (index == selectedSeason) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.surfaceBright,
-                                shape = RoundedCornerShape(if (index == selectedSeason) Radius.Small else Radius.Full)
-                            ) {
-                                Text(
-                                    item.episode_count.toString() + " episodes ${if (seasonExists) "• Saved" else ""}",
-                                    modifier = Modifier.padding(
-                                        horizontal = 10.dp,
-                                        vertical = 5.dp
-                                    ),
-                                    color = if (index == selectedSeason) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.onSurface,
-                                    style = MaterialTheme.typography.labelMedium
-                                )
-                            }
-                        },
-                        colorDesc = if (index == selectedSeason) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
+                                onClick = {
+                                    if (!seasonExists) {
+                                        seasonChanged = true
+                                        selectedSeason = index
+                                        if (!totalSeasons.contains(item)) {
+                                            totalSeasons.add(item)
+                                        }
+                                        onSelectedSeason(totalSeasons)
+                                        isSheetOpen = false
+                                    }
+                                },
+                                trailing = {
+                                    Surface(
+                                        color = if (index == selectedSeason) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.surfaceBright,
+                                        shape = RoundedCornerShape(if (index == selectedSeason) Radius.Small else Radius.Full)
+                                    ) {
+                                        Text(
+                                            item.episode_count.toString() + " episodes ${if (seasonExists) "• Saved" else ""}",
+                                            modifier = Modifier.padding(
+                                                horizontal = 10.dp,
+                                                vertical = 5.dp
+                                            ),
+                                            color = if (index == selectedSeason) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.onSurface,
+                                            style = MaterialTheme.typography.labelMedium
+                                        )
+                                    }
+                                },
+                                colorDesc = if (index == selectedSeason) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
                     )
                 }
-            )
+            }
         }
 }
