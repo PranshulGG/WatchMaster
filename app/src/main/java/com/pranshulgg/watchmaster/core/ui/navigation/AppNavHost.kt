@@ -53,7 +53,8 @@ fun AppNavHost(
         )
         NavHost(
             navController = navController,
-            startDestination = NavRoutes.MAIN,
+//            startDestination = NavRoutes.MAIN,
+            startDestination = NavRoutes.tvDetail(2085, 1, 1),
             modifier = Modifier.background(MaterialTheme.colorScheme.surfaceContainer),
             enterTransition = { NavTransitions.enter(motionScheme) },
             exitTransition = { NavTransitions.exit(motionScheme) },
