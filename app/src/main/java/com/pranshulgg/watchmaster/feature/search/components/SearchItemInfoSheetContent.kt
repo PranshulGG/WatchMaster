@@ -54,6 +54,8 @@ fun SearchItemInfoSheetContent(
 
     val genreList = item.genreIds?.let { getMovieGenreNames(it) }
 
+    
+
     Column(
         Modifier.padding(horizontal = 16.dp)
     ) {
