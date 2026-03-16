@@ -22,7 +22,6 @@ fun TvDetailsEpisodeInfoSheet(
             sheetState = sheetState,
             onCancel = { onDismiss() },
             onConfirm = { onConfirm() },
-            enableHandle = false,
             confirmBtnMaxWidth = true,
             confirmText = if (episode.isWatched) "Mark as unwatched" else "Mark as watched"
         ) {
