@@ -62,7 +62,7 @@ fun CastMovieSection(movieItem: MovieBundle) {
             crew.job == "Director"
         }
 
-        val mainCast = movieItem.credits.cast.take(8)
+        val mainCast = movieItem.credits.cast
 
 
         LazyRow {
