@@ -105,7 +105,7 @@ class TvDetailsViewModel @Inject constructor(
 
     fun hideWatchProviderSheet() {
         _uiState.value =
-            _uiState.value.copy(isWatchProviderSheetOpen = false, currentWatchProviders = null)
+            _uiState.value.copy(isWatchProviderSheetOpen = false)
     }
 
     fun markEpWatched(epId: Long) {
