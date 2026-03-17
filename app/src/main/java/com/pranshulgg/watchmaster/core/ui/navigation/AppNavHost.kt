@@ -53,8 +53,8 @@ fun AppNavHost(
         )
         NavHost(
             navController = navController,
-//            startDestination = NavRoutes.MAIN,
-            startDestination = NavRoutes.tvDetail(2085, 1, 1),
+            startDestination = NavRoutes.MAIN,
+//            startDestination = NavRoutes.tvDetail(243875, 2, 6),
             modifier = Modifier.background(MaterialTheme.colorScheme.surfaceContainer),
             enterTransition = { NavTransitions.enter(motionScheme) },
             exitTransition = { NavTransitions.exit(motionScheme) },
@@ -62,16 +62,15 @@ fun AppNavHost(
             popExitTransition = { NavTransitions.popExit(motionScheme) }
         ) {
             composable(
-                NavRoutes.MAIN,
-
-                ) {
+                NavRoutes.MAIN
+            ) {
                 MainScreen(
                     navController,
                     motionScheme = MaterialTheme.motionScheme,
                 )
             }
             composable(
-                NavRoutes.SETTINGS,
+                NavRoutes.SETTINGS
             ) {
                 SettingsScreen(navController)
             }
