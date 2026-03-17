@@ -1,10 +1,27 @@
 package com.pranshulgg.watchmaster.feature.tv.detail.ui
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LoadingIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.pranshulgg.watchmaster.core.ui.components.ActionBottomSheet
+import com.pranshulgg.watchmaster.core.ui.components.LoadingPlaceholder
+import com.pranshulgg.watchmaster.core.ui.components.LoadingScreenPlaceholder
+import com.pranshulgg.watchmaster.feature.shared.media.components.WatchProviderItem
 import com.pranshulgg.watchmaster.feature.tv.detail.TvDetailsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -12,7 +29,6 @@ import com.pranshulgg.watchmaster.feature.tv.detail.TvDetailsViewModel
 fun WatchProviderSheet(
     sheetState: SheetState,
     onDismiss: () -> Unit,
-    onConfirm: () -> Unit,
     viewModel: TvDetailsViewModel
 ) {
 
@@ -22,16 +38,24 @@ fun WatchProviderSheet(
         ActionBottomSheet(
             sheetState = sheetState,
             onCancel = { onDismiss() },
-            onConfirm = { onConfirm() },
-            confirmBtnMaxWidth = true
+            onConfirm = { },
+            confirmBtnMaxWidth = true,
+            hideConfirmBtn = true,
+            cancelText = "OK"
         ) {
+            if (providers != null) {
 
-            if (providers != null && providers.buy != null) {
-                providers.buy.forEach {
-                    Text(it.provider_name)
+                if (providers.flatrate != null) {
+                    WatchProviderItem("Flat rate", providers.flatrate)
                 }
-            }
 
+                if (providers.buy != null) {
+                    Spacer(Modifier.height(12.dp))
+                    WatchProviderItem("Buy", providers.buy)
+                }
+
+                Spacer(Modifier.height(10.dp))
+            }
         }
 
 }
