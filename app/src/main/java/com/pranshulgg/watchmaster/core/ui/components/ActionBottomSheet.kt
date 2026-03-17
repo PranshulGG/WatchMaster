@@ -41,7 +41,8 @@ fun ActionBottomSheet(
     confirmBtnMaxWidth: Boolean = false,
     isConfirmDisabled: Boolean = false,
     enableHandle: Boolean = true,
-    content: @Composable ColumnScope.() -> Unit
+    hideConfirmBtn: Boolean = false,
+    content: @Composable ColumnScope.() -> Unit,
 ) {
     ModalBottomSheet(
         sheetState = sheetState,
@@ -76,7 +77,7 @@ fun ActionBottomSheet(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(end = 16.dp, start = 16.dp, bottom = 10.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = if (hideConfirmBtn) Arrangement.End else Arrangement.SpaceBetween
                 ) {
                     Button(
                         modifier = Modifier.defaultMinSize(minWidth = 90.dp, minHeight = 45.dp),
@@ -92,24 +93,25 @@ fun ActionBottomSheet(
                             fontSize = 16.sp
                         )
                     }
-                    if (confirmBtnMaxWidth) {
-                        Spacer(Modifier.width(8.dp))
+                    if (!hideConfirmBtn) {
+                        if (confirmBtnMaxWidth) {
+                            Spacer(Modifier.width(8.dp))
+                        }
+                        Button(
+                            onClick = {
+                                onConfirm()
+                            },
+                            enabled = !isConfirmDisabled,
+                            shapes = ButtonDefaults.shapes(),
+                            modifier = if (confirmBtnMaxWidth) Modifier
+                                .fillMaxWidth()
+                                .defaultMinSize(minHeight = 45.dp)
+                            else
+                                Modifier.defaultMinSize(minWidth = 90.dp, minHeight = 45.dp),
+                        ) {
+                            Text(confirmText, fontSize = 16.sp)
+                        }
                     }
-                    Button(
-                        onClick = {
-                            onConfirm()
-                        },
-                        enabled = !isConfirmDisabled,
-                        shapes = ButtonDefaults.shapes(),
-                        modifier = if (confirmBtnMaxWidth) Modifier
-                            .fillMaxWidth()
-                            .defaultMinSize(minHeight = 45.dp)
-                        else
-                            Modifier.defaultMinSize(minWidth = 90.dp, minHeight = 45.dp),
-                    ) {
-                        Text(confirmText, fontSize = 16.sp)
-                    }
-
                 }
             }
 
