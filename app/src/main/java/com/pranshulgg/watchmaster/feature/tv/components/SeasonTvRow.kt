@@ -103,6 +103,7 @@ fun SeasonTvRow(
                         fontWeight = FontWeight.W900,
                         color = MaterialTheme.colorScheme.onSurface,
                         fontSize = 17.sp,
+                        maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                     )
                     Text(
