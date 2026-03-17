@@ -108,7 +108,6 @@ fun TvDetailsScaffold(
     WatchProviderSheet(
         sheetState,
         onDismiss = { viewModel.hideWatchProviderSheet() },
-        onConfirm = {},
         viewModel
     )
 }
