@@ -11,16 +11,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,18 +28,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.pranshulgg.watchmaster.R
-import com.pranshulgg.watchmaster.core.ui.components.media.MediaDetailsScreenHeader
-import com.pranshulgg.watchmaster.data.local.entity.MovieBundle
-import com.pranshulgg.watchmaster.feature.shared.WatchlistViewModel
-import com.pranshulgg.watchmaster.core.ui.theme.Radius
-import com.pranshulgg.watchmaster.core.ui.components.Symbol
 import com.pranshulgg.watchmaster.core.ui.components.media.MediaChip
+import com.pranshulgg.watchmaster.core.ui.components.media.MediaDetailsScreenHeader
+import com.pranshulgg.watchmaster.core.ui.theme.Radius
+import com.pranshulgg.watchmaster.data.local.entity.MovieBundle
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -168,7 +158,7 @@ private fun formatRuntime(minutes: Int?): String {
     val h = minutes / 60
     val m = minutes % 60
 
-    return if (h > 0) "${h}h-${m}m" else "${m}m"
+    return if (h > 0) "${h}h ${m}m" else "${m}m"
 }
 
 
