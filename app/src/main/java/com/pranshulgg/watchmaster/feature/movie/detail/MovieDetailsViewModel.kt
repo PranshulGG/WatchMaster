@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.pranshulgg.watchmaster.data.CountryWatchProviders
 import com.pranshulgg.watchmaster.data.local.entity.MovieBundle
 import com.pranshulgg.watchmaster.data.repository.MovieRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -66,5 +67,16 @@ class MovieDetailsViewModel @Inject constructor(
     fun hideConfirmationDialog() {
         _uiState.value = _uiState.value.copy(showConfirmationDialog = false)
     }
+
+    fun showWatchProviderSheet(providers: CountryWatchProviders? = null) {
+        _uiState.value =
+            _uiState.value.copy(isWatchProviderSheetOpen = true, currentWatchProviders = providers)
+    }
+
+    fun hideWatchProviderSheet() {
+        _uiState.value =
+            _uiState.value.copy(isWatchProviderSheetOpen = false)
+    }
+
 
 }
