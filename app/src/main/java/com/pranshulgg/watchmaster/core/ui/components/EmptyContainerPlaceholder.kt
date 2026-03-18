@@ -32,8 +32,16 @@ fun EmptyContainerPlaceholder(
     icon: Int,
     text: String,
     description: String = "",
-    fraction: Float = 0.8f
+    fraction: Float = 0.8f,
+    size: Float = 1f
 ) {
+
+    val containerSize = 160.dp * size
+    val iconSize = 76.dp * size
+    val titleSize = 24.sp * size
+    val descSize = 16.sp * size
+    val spacingLarge = 16.dp * size
+    val spacingSmall = 5.dp * size
 
     Column(
         modifier = Modifier
@@ -45,30 +53,30 @@ fun EmptyContainerPlaceholder(
         Surface(
             shape = MaterialShapes.Pill.toShape(),
             modifier = Modifier
-                .height(160.dp)
-                .width(160.dp),
+                .height(containerSize)
+                .width(containerSize),
             color = MaterialTheme.colorScheme.surfaceBright
         ) {
 
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
 
-                Symbol(icon, size = 76.dp, color = MaterialTheme.colorScheme.primary)
+                Symbol(icon, size = iconSize, color = MaterialTheme.colorScheme.primary)
             }
         }
 
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(spacingLarge))
         Text(
             text,
-            fontSize = 24.sp,
+            fontSize = titleSize,
             color = MaterialTheme.colorScheme.onSurface,
             fontFamily = RobotoFlexWide,
         )
         if (description != "") {
-            Spacer(Modifier.height(5.dp))
+            Spacer(Modifier.height(spacingSmall))
             Text(
                 description,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontSize = 16.sp,
+                fontSize = descSize,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
