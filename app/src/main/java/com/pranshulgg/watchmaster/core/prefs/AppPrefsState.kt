@@ -16,5 +16,8 @@ data class AppPrefsState(
     val setDynamicColor: (Boolean) -> Unit,
 
     val themeVariant: ThemeVariantType,
-    val setThemeVariant: (ThemeVariantType) -> Unit
+    val setThemeVariant: (ThemeVariantType) -> Unit,
+
+    val defaultTab: String,
+    val setDefaultTab: (String) -> Unit
 )
