@@ -25,7 +25,6 @@ fun ProfilePlaceholder(
 ) {
     val headSize = size * 0.4f
     val headOffsetY = -size * 0.15f
-    val bodySize = size
     val bodyOffsetY = size * 0.6f
 
     Box(
@@ -47,7 +46,7 @@ fun ProfilePlaceholder(
 
         Box(
             modifier = Modifier
-                .size(bodySize)
+                .size(size)
                 .align(Alignment.BottomCenter)
                 .offset(y = bodyOffsetY)
                 .clip(CircleShape)
