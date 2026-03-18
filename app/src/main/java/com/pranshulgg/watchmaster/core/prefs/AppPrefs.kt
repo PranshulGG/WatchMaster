@@ -12,6 +12,8 @@ object AppPrefs {
     private val _isCustomTheme = mutableStateOf(false)
     private val _useDynamicColor = mutableStateOf(false)
 
+    private val _defaultTab = mutableStateOf("Home")
+
     private val _themeVariant =
         mutableStateOf(ThemeVariantType.EXPRESSIVE)
 
@@ -30,6 +32,7 @@ object AppPrefs {
                     runCatching { ThemeVariantType.valueOf(it) }.getOrNull()
                 }
                 ?: ThemeVariantType.EXPRESSIVE
+        _defaultTab.value = PreferencesHelper.getString("default_tab") ?: "Home"
     }
 
     @Composable
@@ -65,5 +68,10 @@ object AppPrefs {
             PreferencesHelper.setString("theme_variant", it.name)
         },
 
-        )
+        defaultTab = _defaultTab.value,
+        setDefaultTab = {
+            _defaultTab.value = it
+            PreferencesHelper.setString("default_tab", it)
+        }
+    )
 }
