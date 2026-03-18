@@ -74,5 +74,5 @@ private fun formatRuntime(minutes: Int?): String {
     val h = minutes / 60
     val m = minutes % 60
 
-    return if (h > 0) "${h}h-${m}m" else "${m}m"
+    return if (h > 0) "${h}h ${m}m" else "${m}m"
 }
