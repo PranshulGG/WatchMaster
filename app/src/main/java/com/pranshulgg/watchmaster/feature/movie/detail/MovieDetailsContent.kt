@@ -53,7 +53,9 @@ fun MovieDetailsContent(
                         SnackbarManager.show("User rating updated")
                     }
                 )
-                MediaStatusSection(status = watchlistItem.status)
+                MediaStatusSection(
+                    status = watchlistItem.status,
+                    onClick = { viewModel.showWatchProviderSheet(movieItem.watchProviders?.results["US"]) })
                 OverviewSection(movieItem.overview)
                 NotesSection(
                     watchlistItem.notes.isNullOrBlank(),
