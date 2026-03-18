@@ -9,6 +9,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.pranshulgg.watchmaster.data.CountryWatchProviders
 import com.pranshulgg.watchmaster.feature.shared.WatchlistViewModel
 
 
@@ -16,7 +17,9 @@ data class MovieDetailsUiState(
     val showNoteDialog: Boolean = false,
     val note: String = "",
     val showRatingDialog: Boolean = false,
-    val showConfirmationDialog: Boolean = false
+    val showConfirmationDialog: Boolean = false,
+    val isWatchProviderSheetOpen: Boolean = false,
+    val currentWatchProviders: CountryWatchProviders? = null
 )
 
 @OptIn(
