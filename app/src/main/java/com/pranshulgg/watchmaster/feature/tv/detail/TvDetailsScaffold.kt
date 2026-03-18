@@ -21,7 +21,7 @@ import com.pranshulgg.watchmaster.feature.shared.media.ui.MediaActionsFloatingTo
 import com.pranshulgg.watchmaster.feature.tv.detail.ui.TvDetailsConfirmationDialog
 import com.pranshulgg.watchmaster.feature.tv.detail.ui.TvDetailsNoteDialog
 import com.pranshulgg.watchmaster.feature.tv.detail.ui.TvDetailsRatingDialog
-import com.pranshulgg.watchmaster.feature.tv.detail.ui.WatchProviderSheet
+import com.pranshulgg.watchmaster.feature.tv.detail.ui.TvWatchProviderSheet
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -105,7 +105,7 @@ fun TvDetailsScaffold(
         seasons.size,
         navController
     )
-    WatchProviderSheet(
+    TvWatchProviderSheet(
         sheetState,
         onDismiss = { viewModel.hideWatchProviderSheet() },
         viewModel
