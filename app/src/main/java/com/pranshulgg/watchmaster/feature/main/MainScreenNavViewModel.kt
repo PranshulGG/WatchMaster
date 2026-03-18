@@ -2,18 +2,16 @@ package com.pranshulgg.watchmaster.feature.main
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 
-class MainScreenNavViewModel : ViewModel() {
-    var currentDefaultSelectedTab = "tv_series"
-    var selectedTab = when (currentDefaultSelectedTab) {
-        "home" -> 0
-        "movies" -> 1
-        "tv_series" -> 2
+class MainScreenNavViewModel(defaultTab: String) : ViewModel() {
+    val selectedTab = when (defaultTab) {
+        "Home" -> 0
+        "Movies" -> 1
+        "Tv series" -> 2
         else -> 0
     }
+
     var selectedItem by mutableIntStateOf(selectedTab)
 }
