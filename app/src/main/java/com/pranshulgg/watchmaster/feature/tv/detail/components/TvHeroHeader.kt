@@ -165,15 +165,6 @@ fun TvHeroHeader(
     }
 }
 
-private fun formatRuntime(minutes: Int?): String {
-    if (minutes == null || minutes <= 0) return "—"
-
-    val h = minutes / 60
-    val m = minutes % 60
-
-    return if (h > 0) "${h}h ${m}m" else "${m}m"
-}
-
 @Composable
 private fun GenreChip(text: String, rating: Boolean = false) {
     val schemeColor = MaterialTheme.colorScheme
