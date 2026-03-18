@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.pranshulgg.watchmaster.R
+import com.pranshulgg.watchmaster.core.prefs.LocalAppPrefs
 import com.pranshulgg.watchmaster.core.ui.components.Tooltip
 import com.pranshulgg.watchmaster.feature.main.components.MainFloatingToolbar
 import com.pranshulgg.watchmaster.feature.movie.MovieHomeScreen
@@ -39,7 +40,10 @@ fun MainScreen(
     navController: NavController,
     motionScheme: MotionScheme,
 ) {
-    val viewModel: MainScreenNavViewModel = viewModel()
+    val prefs = LocalAppPrefs.current
+
+    val viewModel: MainScreenNavViewModel =
+        viewModel(factory = MainScreenNavViewModelFactory(prefs.defaultTab))
 
     val selectedItem = viewModel.selectedItem
     val appBarTitles = listOf("Home", "Movies", "TV series")
