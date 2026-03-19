@@ -28,6 +28,7 @@ import com.pranshulgg.watchmaster.feature.main.components.MainFloatingToolbar
 import com.pranshulgg.watchmaster.feature.movie.MovieHomeScreen
 import com.pranshulgg.watchmaster.core.ui.navigation.NavRoutes
 import com.pranshulgg.watchmaster.core.ui.components.Symbol
+import com.pranshulgg.watchmaster.core.ui.components.TooltipIconBtn
 import com.pranshulgg.watchmaster.feature.home.HomeScreen
 import com.pranshulgg.watchmaster.feature.tv.TvHomeScreen
 
@@ -64,24 +65,16 @@ fun MainScreen(
                     Text(appBarTitles[selectedItem])
                 },
                 actions = {
-                    Tooltip(
-                        "Settings",
-                        preferredPosition = TooltipAnchorPosition.Below,
-                        spacing = 10.dp
-                    ) {
-                        IconButton(
-                            onClick = {
-                                navController.navigate(NavRoutes.SETTINGS)
-                            },
-                            shapes = IconButtonDefaults.shapes()
-                        ) {
-                            Symbol(
-                                R.drawable.settings_24px,
-                                desc = "settings icon",
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                        }
-                    }
+                    TooltipIconBtn(
+                        onClick = { navController.navigate(NavRoutes.MOVIE_LISTS_SCREEN) },
+                        icon = R.drawable.list_alt_24px,
+                        tooltipText = if (appBarTitles[selectedItem] == "Movies") "Movie lists" else "TV lists"
+                    )
+                    TooltipIconBtn(
+                        onClick = { navController.navigate(NavRoutes.SETTINGS) },
+                        icon = R.drawable.settings_24px,
+                        tooltipText = "Settings"
+                    )
                 }
             )
         },
