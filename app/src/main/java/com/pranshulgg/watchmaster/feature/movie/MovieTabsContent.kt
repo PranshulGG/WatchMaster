@@ -103,8 +103,8 @@ fun MovieTabsContent(
                     onLongActionMovieRequest = { item ->
                         onLongActionMovieRequest(item)
                     }
-
                 )
+
             }
         }
     }
