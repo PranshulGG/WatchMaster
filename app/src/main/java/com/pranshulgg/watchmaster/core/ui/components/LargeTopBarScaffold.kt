@@ -21,14 +21,15 @@ fun LargeTopBarScaffold(
     title: String,
     navigationIcon: @Composable () -> Unit,
     actions: @Composable RowScope.() -> Unit = {},
+    fab: @Composable () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit,
-
-    ) {
+) {
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         containerColor = MaterialTheme.colorScheme.surfaceContainer,
+        floatingActionButton = fab,
         topBar = {
             LargeFlexibleTopAppBar(
                 title = { Text(text = title) },
