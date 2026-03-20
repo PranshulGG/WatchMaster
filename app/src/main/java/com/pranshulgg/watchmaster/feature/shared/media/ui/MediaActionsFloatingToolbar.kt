@@ -89,7 +89,7 @@ fun MediaActionsFloatingToolbar(
                 actions.togglePin()
                 SnackbarManager.show(if (!isPinned) "Media pinned" else "Media unpinned")
             }),
-        MenuItemOptionList("Folder", R.drawable.folder_24px, {}),
+        MenuItemOptionList("List", R.drawable.lists_24px, {}),
         MenuItemOptionList("Share", R.drawable.share_24px, {}),
         MenuItemOptionList(
             "Delete",
