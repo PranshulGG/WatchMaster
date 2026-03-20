@@ -2,14 +2,17 @@ package com.pranshulgg.watchmaster.feature.shared.media.components
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.core.ui.components.media.CastItem
@@ -25,6 +28,11 @@ fun CastTvSection(tvItem: TvBundle) {
         titleIcon = R.drawable.groups_2_24px,
     ) {
         val mainCast = tvItem.credits.cast
+
+        if (mainCast.isEmpty()) {
+            Text("No cast found", modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
+            return@MediaSectionCard
+        }
         LazyRow {
             item {
                 Spacer(Modifier.width(8.dp))
