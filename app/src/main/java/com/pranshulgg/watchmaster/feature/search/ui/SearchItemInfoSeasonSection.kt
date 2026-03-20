@@ -28,6 +28,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.core.network.TvSeasonDto
@@ -109,7 +110,9 @@ fun SearchItemInfoSeasonSection(
             Spacer(Modifier.size(ButtonDefaults.iconSpacingFor(size)))
             Text(
                 if (selectedSeason == -1) "All season saved" else filteredSeasons[selectedSeason].name,
-                style = ButtonDefaults.textStyleFor(size)
+                style = ButtonDefaults.textStyleFor(size),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
     }
