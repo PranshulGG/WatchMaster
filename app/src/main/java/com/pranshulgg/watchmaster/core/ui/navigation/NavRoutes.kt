@@ -9,6 +9,8 @@ object NavRoutes {
 
     const val MOVIE_LISTS_SCREEN = "movie_lists_screen"
 
+    const val MOVIE_LISTS_CREATE_SCREEN = "movie_lists_create_screen"
+
     const val MOVIE_DETAIL_SCREEN = "movie_detail"
     const val TV_DETAIL_SCREEN = "tv_screen"
 
