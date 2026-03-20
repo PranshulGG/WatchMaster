@@ -6,30 +6,23 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingToolbarDefaults
 import androidx.compose.material3.FloatingToolbarExitDirection.Companion.Bottom
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MotionScheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TooltipAnchorPosition
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.core.prefs.LocalAppPrefs
-import com.pranshulgg.watchmaster.core.ui.components.Tooltip
+import com.pranshulgg.watchmaster.core.ui.components.TooltipIconBtn
+import com.pranshulgg.watchmaster.core.ui.navigation.NavRoutes
+import com.pranshulgg.watchmaster.feature.home.HomeScreen
 import com.pranshulgg.watchmaster.feature.main.components.MainFloatingToolbar
 import com.pranshulgg.watchmaster.feature.movie.MovieHomeScreen
-import com.pranshulgg.watchmaster.core.ui.navigation.NavRoutes
-import com.pranshulgg.watchmaster.core.ui.components.Symbol
-import com.pranshulgg.watchmaster.core.ui.components.TooltipIconBtn
-import com.pranshulgg.watchmaster.feature.home.HomeScreen
 import com.pranshulgg.watchmaster.feature.tv.TvHomeScreen
 
 @OptIn(
@@ -67,7 +60,7 @@ fun MainScreen(
                 actions = {
                     TooltipIconBtn(
                         onClick = { navController.navigate(NavRoutes.MOVIE_LISTS_SCREEN) },
-                        icon = R.drawable.list_alt_24px,
+                        icon = R.drawable.lists_24px,
                         tooltipText = if (appBarTitles[selectedItem] == "Movies") "Movie lists" else "TV lists"
                     )
                     TooltipIconBtn(
