@@ -25,6 +25,7 @@ import androidx.navigation.navArgument
 import com.pranshulgg.watchmaster.feature.main.MainScreen
 import com.pranshulgg.watchmaster.feature.movie.detail.MovieDetailPage
 import com.pranshulgg.watchmaster.feature.movie.lists.MovieListsScreen
+import com.pranshulgg.watchmaster.feature.movie.lists.create.MovieListsCreateScreen
 import com.pranshulgg.watchmaster.feature.search.SearchScreen
 import com.pranshulgg.watchmaster.feature.search.SearchType
 import com.pranshulgg.watchmaster.feature.setting.SettingsScreen
@@ -55,7 +56,7 @@ fun AppNavHost(
         NavHost(
             navController = navController,
 //            startDestination = NavRoutes.MAIN,
-            startDestination = NavRoutes.MOVIE_LISTS_SCREEN,
+            startDestination = NavRoutes.MOVIE_LISTS_CREATE_SCREEN,
             modifier = Modifier.background(MaterialTheme.colorScheme.surfaceContainer),
             enterTransition = { NavTransitions.enter(motionScheme) },
             exitTransition = { NavTransitions.exit(motionScheme) },
@@ -127,6 +128,11 @@ fun AppNavHost(
                 NavRoutes.MOVIE_LISTS_SCREEN
             ) {
                 MovieListsScreen(navController)
+            }
+            composable(
+                NavRoutes.MOVIE_LISTS_CREATE_SCREEN
+            ) {
+                MovieListsCreateScreen(navController)
             }
         }
     }
