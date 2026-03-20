@@ -54,7 +54,7 @@ fun SearchItemInfoSheetContent(
 
     val genreList = item.genreIds?.let { getMovieGenreNames(it) }
 
-    
+
 
     Column(
         Modifier.padding(horizontal = 16.dp)
@@ -152,12 +152,21 @@ fun SearchItemInfoSheetContent(
 
         item.overview?.let {
             Text(
+                text = "Overview",
+                modifier = Modifier.padding(bottom = 2.dp),
+                fontSize = 16.sp,
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.W700
+            )
+            Text(
                 it,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 15,
                 overflow = TextOverflow.Ellipsis
             )
+            Spacer(Modifier.height(12.dp))
+
         }
     }
 
