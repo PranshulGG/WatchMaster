@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pranshulgg.watchmaster.core.ui.snackbar.SnackbarManager
 import com.pranshulgg.watchmaster.data.local.entity.MovieListsEntity
+import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 import com.pranshulgg.watchmaster.data.repository.MovieListsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
@@ -33,7 +34,7 @@ class MovieListsViewModel @Inject constructor(
         val item = MovieListsEntity(
             name = uiState.value.listName,
             description = uiState.value.listDescription,
-            movieIds = uiState.value.listMovieIds
+            movieIds = uiState.value.listMovieIds.map { it.id }
         )
 
         repo.insertMovieListsItem(item)
@@ -64,7 +65,7 @@ class MovieListsViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(listDescription = description)
     }
 
-    fun updateList(list: List<Long>) {
+    fun updateList(list: List<WatchlistItemEntity>) {
         _uiState.value = _uiState.value.copy(listMovieIds = list)
     }
 }
