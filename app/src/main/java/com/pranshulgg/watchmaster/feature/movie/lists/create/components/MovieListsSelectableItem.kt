@@ -1,8 +1,10 @@
 package com.pranshulgg.watchmaster.feature.movie.lists.create.components
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -44,6 +47,7 @@ import com.pranshulgg.watchmaster.core.ui.components.ListItemShape
 import com.pranshulgg.watchmaster.core.ui.components.Symbol
 import com.pranshulgg.watchmaster.core.ui.components.media.PosterPlaceholder
 import com.pranshulgg.watchmaster.core.ui.navigation.NavRoutes
+import com.pranshulgg.watchmaster.data.local.entity.MovieListsEntity
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 import com.pranshulgg.watchmaster.feature.shared.media.components.WatchListStatusPill
 import com.pranshulgg.watchmaster.feature.shared.media.ui.watchstatus.asStatusDates
@@ -54,7 +58,8 @@ fun MovieListsSelectableItem(
     item: WatchlistItemEntity,
     index: Int,
     items: List<WatchlistItemEntity>,
-    onMovieSelect: (Long) -> Unit
+    onMovieSelect: (WatchlistItemEntity) -> Unit,
+    onMovieRemove: (WatchlistItemEntity) -> Unit,
 ) {
 
     val isOnly = items.singleOrNull() == item
@@ -82,7 +87,12 @@ fun MovieListsSelectableItem(
             .clickable(
                 onClick = {
                     selected = !selected
-                    onMovieSelect(item.id)
+
+                    if (!selected) {
+                        onMovieSelect(item)
+                    } else {
+                        onMovieRemove(item)
+                    }
                 }
             ),
         color = MaterialTheme.colorScheme.surfaceBright,
@@ -98,39 +108,46 @@ fun MovieListsSelectableItem(
             ),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            AnimatedVisibility(
-                visible = selected,
-                enter = fadeIn(),
-                exit = fadeOut()
-            ) {
+
+            AnimatedContent(
+                targetState = selected,
+                transitionSpec = {
+                    fadeIn() togetherWith fadeOut()
+                },
+                label = "selection_animation"
+            ) { isSelected ->
+
+                if (isSelected) {
+                    SelectedBox()
+                } else {
+                    Box(
+                        modifier = Modifier
+                            .size(80.dp, height = 120.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
 
 
-                Box(
-                    modifier = Modifier
-                        .size(80.dp, height = 120.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    if (!poster.isNullOrBlank()) {
-                        val painter = rememberAsyncImagePainter(model = poster)
+                        if (!poster.isNullOrBlank()) {
+                            val painter = rememberAsyncImagePainter(model = poster)
 
-                        Image(
-                            painter = painter,
-                            contentDescription = null,
-                            modifier = Modifier.matchParentSize(),
-                            contentScale = ContentScale.Crop
-                        )
-
-                        if (painter.state is AsyncImagePainter.State.Loading) {
-                            CircularProgressIndicator(
-                                strokeWidth = 2.dp,
-                                modifier = Modifier.size(24.dp)
+                            Image(
+                                painter = painter,
+                                contentDescription = null,
+                                modifier = Modifier.matchParentSize(),
+                                contentScale = ContentScale.Crop
                             )
+
+                            if (painter.state is AsyncImagePainter.State.Loading) {
+                                CircularProgressIndicator(
+                                    strokeWidth = 2.dp,
+                                    modifier = Modifier.size(24.dp)
+                                )
+                            }
+                        } else {
+                            PosterPlaceholder()
                         }
-                    } else {
-                        PosterPlaceholder()
                     }
                 }
-                SelectedBox()
             }
 
             Column(
@@ -179,12 +196,16 @@ private fun SelectedBox() {
     Box(
         modifier = Modifier
             .size(80.dp, height = 120.dp),
-        contentAlignment = Alignment.Center
+
+        contentAlignment = Alignment.Center,
     ) {
         Box(
             modifier = Modifier
                 .size(50.dp)
-                .background(color = MaterialTheme.colorScheme.primaryContainer),
+                .background(
+                    color = MaterialTheme.colorScheme.primaryContainer,
+                    shape = CircleShape
+                ),
             contentAlignment = Alignment.Center
         ) {
             Symbol(R.drawable.check_24px, color = MaterialTheme.colorScheme.onPrimaryContainer)

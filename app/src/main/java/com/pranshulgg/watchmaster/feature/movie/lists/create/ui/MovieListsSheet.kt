@@ -26,16 +26,18 @@ import androidx.compose.ui.unit.dp
 import com.pranshulgg.watchmaster.core.model.WatchStatus
 import com.pranshulgg.watchmaster.core.network.TvSeasonDto
 import com.pranshulgg.watchmaster.core.ui.components.ActionBottomSheet
+import com.pranshulgg.watchmaster.core.ui.components.LoadingPlaceholder
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 import com.pranshulgg.watchmaster.feature.movie.lists.MovieListsViewModel
 import com.pranshulgg.watchmaster.feature.movie.lists.create.components.MovieListsSheetContent
+import okio.Options
 
 private data class Option(
     val status: WatchStatus,
     val label: String
 )
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MovieListsSheet(
     viewModel: MovieListsViewModel,
@@ -50,7 +52,7 @@ fun MovieListsSheet(
         Option(WatchStatus.FINISHED, "Finished")
     )
     var selected by remember { mutableStateOf(WatchStatus.WANT_TO_WATCH) }
-    val selectedMovies = remember { mutableStateListOf<Long>() }
+    val selectedMovies = remember { mutableStateListOf<WatchlistItemEntity>() }
 
 
     val filteredItems = items.filter { it.status == selected }
@@ -63,37 +65,56 @@ fun MovieListsSheet(
                 viewModel.updateList(selectedMovies)
                 viewModel.hideMovieListSheet()
             },
-            confirmText = "Confirm"
+            confirmText = "Confirm",
+            confirmBtnMaxWidth = true
         ) {
 
             Column() {
-                FlowRow(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 12.dp),
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
-                ) {
-                    options.forEach { option ->
-                        ToggleButton(
-                            checked = option.status == selected,
-                            onCheckedChange = {
-                                selected = option.status
-                            },
-                            modifier = Modifier.semantics { role = Role.RadioButton },
-                            shapes = ToggleButtonDefaults.shapes(),
-                            colors = ToggleButtonDefaults.toggleButtonColors(
-                                checkedContainerColor = MaterialTheme.colorScheme.tertiary,
-                                checkedContentColor = MaterialTheme.colorScheme.onTertiary,
-                                containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                            )
-                        ) {
-                            Text(option.label)
-                        }
-                    }
+                if (!isLoading) {
+                    StatusTabs(options, selected, onSelected = { selected = it })
+
+                    MovieListsSheetContent(
+                        filteredItems,
+                        onMovieSelect = { selectedMovies.add(it) },
+                        onMovieRemove = { selectedMovies.remove(it) }
+                    )
+                } else {
+                    LoadingPlaceholder()
                 }
-
-
-                MovieListsSheetContent(filteredItems, onMovieSelect = { selectedMovies.add(it) })
             }
         }
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+private fun StatusTabs(
+    options: List<Option>,
+    selected: WatchStatus,
+    onSelected: (WatchStatus) -> Unit
+) {
+    FlowRow(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 12.dp),
+        horizontalArrangement = Arrangement.spacedBy(6.dp)
+    ) {
+        options.forEach { option ->
+            ToggleButton(
+                checked = option.status == selected,
+                onCheckedChange = {
+                    onSelected(option.status)
+                },
+                modifier = Modifier.semantics { role = Role.RadioButton },
+                shapes = ToggleButtonDefaults.shapes(),
+                colors = ToggleButtonDefaults.toggleButtonColors(
+                    checkedContainerColor = MaterialTheme.colorScheme.tertiary,
+                    checkedContentColor = MaterialTheme.colorScheme.onTertiary,
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                )
+            ) {
+                Text(option.label)
+            }
+        }
+    }
+
 }
