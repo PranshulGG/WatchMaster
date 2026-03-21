@@ -36,7 +36,7 @@ fun MovieListsCreateContent(
     onNameChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
     onAddMovie: () -> Unit,
-    onSave: () -> Unit
+    onSave: () -> Unit,
 ) {
 
 
@@ -61,6 +61,10 @@ fun MovieListsCreateContent(
             title = "Description (optional)",
             supportingText = "Add a short description to explain what this list is about"
         )
+
+        Gap(15.dp)
+
+
         Gap(15.dp)
         Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
             OutlinedButton(
