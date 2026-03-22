@@ -29,6 +29,7 @@ sealed class SettingTile {
     data class TextTile(
         override val title: String,
         override val description: String? = null,
+        val descriptionMaxLines: Int = Int.MAX_VALUE,
         val leading: (@Composable (() -> Unit))? = null,
     ) : SettingTile()
 
@@ -175,7 +176,8 @@ fun SettingSection(
                     description = tile.description,
                     leading = tile.leading,
                     shapes = shape,
-                    itemBgColor = itemBgColor
+                    itemBgColor = itemBgColor,
+                    descriptionMaxLines = tile.descriptionMaxLines
                 )
 
                 is SettingTile.CategoryTile -> CategoryTile(

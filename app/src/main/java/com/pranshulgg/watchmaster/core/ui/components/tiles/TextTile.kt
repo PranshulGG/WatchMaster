@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
 
 @Composable
 fun TextTile(
@@ -17,7 +18,8 @@ fun TextTile(
     description: String? = null,
     leading: @Composable (() -> Unit)? = null,
     shapes: RoundedCornerShape,
-    itemBgColor: Color
+    itemBgColor: Color,
+    descriptionMaxLines: Int = Int.MAX_VALUE
 ) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
@@ -32,7 +34,11 @@ fun TextTile(
             headlineContent = { Text(headline) },
             supportingContent = {
                 if (description != null) {
-                    Text(description)
+                    Text(
+                        description,
+                        maxLines = descriptionMaxLines,
+                        overflow = TextOverflow.Ellipsis
+                    )
                 }
             }
         )
