@@ -1,14 +1,10 @@
 package com.pranshulgg.watchmaster.feature.movie.lists.create.components
 
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +16,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilledIconToggleButton
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -34,32 +34,31 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.core.ui.components.ListItemShape
 import com.pranshulgg.watchmaster.core.ui.components.Symbol
 import com.pranshulgg.watchmaster.core.ui.components.media.PosterPlaceholder
-import com.pranshulgg.watchmaster.core.ui.navigation.NavRoutes
-import com.pranshulgg.watchmaster.data.local.entity.MovieListsEntity
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 import com.pranshulgg.watchmaster.feature.shared.media.components.WatchListStatusPill
 import com.pranshulgg.watchmaster.feature.shared.media.ui.watchstatus.asStatusDates
 import com.pranshulgg.watchmaster.feature.shared.media.ui.watchstatus.toWatchListItemStatusUiPill
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun MovieListsSelectableItem(
     item: WatchlistItemEntity,
     index: Int,
     items: List<WatchlistItemEntity>,
     onMovieSelect: (WatchlistItemEntity) -> Unit,
-    onMovieRemove: (WatchlistItemEntity) -> Unit,
+    selectedMovies: List<WatchlistItemEntity>
 ) {
 
     val isOnly = items.singleOrNull() == item
@@ -67,8 +66,8 @@ fun MovieListsSelectableItem(
     val isLast = index == items.lastIndex
     var selected by rememberSaveable(item.id) { mutableStateOf(false) }
 
-    val titleMaxLines = 2
-    val overviewMaxLines = remember { mutableIntStateOf(1) }
+
+    selected = selectedMovies.contains(item)
 
     val poster = item.posterPath?.let {
         "https://image.tmdb.org/t/p/w154$it"
@@ -83,24 +82,13 @@ fun MovieListsSelectableItem(
         shape = shape,
         modifier = Modifier
             .fillMaxWidth()
-            .clip(shape)
-            .clickable(
-                onClick = {
-                    selected = !selected
-
-                    if (!selected) {
-                        onMovieSelect(item)
-                    } else {
-                        onMovieRemove(item)
-                    }
-                }
-            ),
-        color = MaterialTheme.colorScheme.surfaceBright,
+            .clip(shape),
+        color = MaterialTheme.colorScheme.surfaceContainerHigh,
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(115.dp)
+                .height(90.dp)
                 .clipToBounds()
                 .padding(end = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(
@@ -109,50 +97,38 @@ fun MovieListsSelectableItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            AnimatedContent(
-                targetState = selected,
-                transitionSpec = {
-                    fadeIn() togetherWith fadeOut()
-                },
-                label = "selection_animation"
-            ) { isSelected ->
 
-                if (isSelected) {
-                    SelectedBox()
-                } else {
-                    Box(
-                        modifier = Modifier
-                            .size(80.dp, height = 120.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
+            Box(
+                modifier = Modifier
+                    .size(60.dp, height = 90.dp),
+                contentAlignment = Alignment.Center
+            ) {
 
 
-                        if (!poster.isNullOrBlank()) {
-                            val painter = rememberAsyncImagePainter(model = poster)
+                if (!poster.isNullOrBlank()) {
+                    val painter = rememberAsyncImagePainter(model = poster)
 
-                            Image(
-                                painter = painter,
-                                contentDescription = null,
-                                modifier = Modifier.matchParentSize(),
-                                contentScale = ContentScale.Crop
-                            )
+                    Image(
+                        painter = painter,
+                        contentDescription = null,
+                        modifier = Modifier.matchParentSize(),
+                        contentScale = ContentScale.Crop
+                    )
 
-                            if (painter.state is AsyncImagePainter.State.Loading) {
-                                CircularProgressIndicator(
-                                    strokeWidth = 2.dp,
-                                    modifier = Modifier.size(24.dp)
-                                )
-                            }
-                        } else {
-                            PosterPlaceholder()
-                        }
+                    if (painter.state is AsyncImagePainter.State.Loading) {
+                        CircularProgressIndicator(
+                            strokeWidth = 2.dp,
+                            modifier = Modifier.size(24.dp)
+                        )
                     }
+                } else {
+                    PosterPlaceholder()
                 }
+
             }
 
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
                     .padding(vertical = 10.dp),
                 horizontalAlignment = Alignment.Start,
             ) {
@@ -160,55 +136,47 @@ fun MovieListsSelectableItem(
                     text = item.title,
                     fontWeight = FontWeight.W900,
                     color = MaterialTheme.colorScheme.onSurface,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
                     fontSize = 17.sp,
-                    maxLines = titleMaxLines,
-                    overflow = TextOverflow.Ellipsis,
-                    onTextLayout = { result ->
-                        val newLines = if (result.lineCount == 1) 2 else 1
-                        if (overviewMaxLines.intValue != newLines) {
-                            overviewMaxLines.intValue = newLines
-                        }
-                    }
+                )
 
-                )
-                Text(
-                    item.overview ?: "No overview found",
-                    maxLines = overviewMaxLines.intValue,
-                    overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
                 Spacer(Modifier.height(5.dp))
                 WatchListStatusPill(
                     status.containerColor,
                     status.contentColor,
                     status.statusLabel,
                     item.status,
-                    item.userRating,
+                    showRating = false
                 )
             }
-        }
-    }
-}
 
-@Composable
-private fun SelectedBox() {
-    Box(
-        modifier = Modifier
-            .size(80.dp, height = 120.dp),
-
-        contentAlignment = Alignment.Center,
-    ) {
-        Box(
-            modifier = Modifier
-                .size(50.dp)
-                .background(
-                    color = MaterialTheme.colorScheme.primaryContainer,
-                    shape = CircleShape
+            Spacer(Modifier.weight(1f))
+            FilledIconToggleButton(
+                modifier = Modifier.size(44.dp),
+                checked = selected,
+                shapes = IconButtonDefaults.toggleableShapes(),
+                colors = IconButtonDefaults.iconToggleButtonColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceBright,
+                    checkedContainerColor = MaterialTheme.colorScheme.tertiaryContainer
                 ),
-            contentAlignment = Alignment.Center
-        ) {
-            Symbol(R.drawable.check_24px, color = MaterialTheme.colorScheme.onPrimaryContainer)
+                onCheckedChange = {
+                    selected = it
+                    onMovieSelect(item)
+                }
+            ) {
+                if (!selected) {
+                    Symbol(R.drawable.add_24px)
+                } else {
+                    Symbol(
+                        R.drawable.close_24px,
+                        color = MaterialTheme.colorScheme.onTertiaryContainer
+                    )
+                }
+            }
         }
+
     }
+
 }
+

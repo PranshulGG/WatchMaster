@@ -2,6 +2,7 @@ package com.pranshulgg.watchmaster.feature.movie.lists.create
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -38,15 +39,17 @@ fun MovieListsCreateScreen(navController: NavController) {
             onNameChange = { viewModel.updateListName(it) },
             onDescriptionChange = { viewModel.updateListDescription(it) },
             onSave = {
-                if (uiState.listMovieIds.isNotEmpty()) {
+                if (uiState.listMoviesList.isNotEmpty()) {
                     viewModel.saveList()
                     navController.popBackStack()
                 } else {
                     SnackbarManager.show("List must have at least one movie")
                 }
             },
-            onAddMovie = { viewModel.showMovieListSheet() }
+            onAddMovie = { viewModel.showMovieListSheet() },
+            selectedMovieList = uiState.listMoviesList
         )
+
     }
 
 

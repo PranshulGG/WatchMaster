@@ -34,7 +34,7 @@ class MovieListsViewModel @Inject constructor(
         val item = MovieListsEntity(
             name = uiState.value.listName,
             description = uiState.value.listDescription,
-            movieIds = uiState.value.listMovieIds.map { it.id }
+            movieIds = uiState.value.listMoviesList.map { it.id }
         )
 
         repo.insertMovieListsItem(item)
@@ -66,6 +66,6 @@ class MovieListsViewModel @Inject constructor(
     }
 
     fun updateList(list: List<WatchlistItemEntity>) {
-        _uiState.value = _uiState.value.copy(listMovieIds = list)
+        _uiState.value = _uiState.value.copy(listMoviesList = list)
     }
 }

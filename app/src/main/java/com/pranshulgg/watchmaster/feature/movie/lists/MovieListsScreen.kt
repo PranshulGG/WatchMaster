@@ -13,7 +13,7 @@ data class MovieListsUiState(
     val listName: String = "",
     val listDescription: String = "",
     val listIcon: Int? = null,
-    val listMovieIds: List<WatchlistItemEntity> = emptyList()
+    val listMoviesList: List<WatchlistItemEntity> = emptyList()
 )
 
 @Composable
