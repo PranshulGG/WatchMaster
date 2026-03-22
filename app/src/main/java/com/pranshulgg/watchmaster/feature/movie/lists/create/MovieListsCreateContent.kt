@@ -1,7 +1,9 @@
 package com.pranshulgg.watchmaster.feature.movie.lists.create
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
@@ -19,12 +22,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.core.ui.components.Gap
+import com.pranshulgg.watchmaster.core.ui.components.SettingSection
+import com.pranshulgg.watchmaster.core.ui.components.SettingTile
 import com.pranshulgg.watchmaster.core.ui.components.Symbol
+import com.pranshulgg.watchmaster.core.ui.components.media.MediaChip
 import com.pranshulgg.watchmaster.core.ui.theme.Radius
+import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -37,6 +46,7 @@ fun MovieListsCreateContent(
     onDescriptionChange: (String) -> Unit,
     onAddMovie: () -> Unit,
     onSave: () -> Unit,
+    selectedMovieList: List<WatchlistItemEntity> = emptyList(),
 ) {
 
 
@@ -63,9 +73,6 @@ fun MovieListsCreateContent(
         )
 
         Gap(15.dp)
-
-
-        Gap(15.dp)
         Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
             OutlinedButton(
                 onClick = {
@@ -86,6 +93,31 @@ fun MovieListsCreateContent(
             }
         }
 
+
+        if (selectedMovieList.isNotEmpty()) {
+            Gap(15.dp)
+            Text(
+                text = "Selected",
+                modifier = Modifier.padding(bottom = 5.dp, top = 5.dp, start = 16.dp + 3.dp),
+                fontSize = 16.sp,
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.W700
+            )
+
+            FlowRow(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(5.dp),
+                horizontalArrangement = Arrangement.spacedBy(5.dp)
+            ) {
+                selectedMovieList.forEach { mov ->
+                    MediaChip(
+                        mov.title,
+                        containerColor = MaterialTheme.colorScheme.surfaceBright,
+                        contentColor = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+            }
+        }
         Spacer(Modifier.weight(1f))
         Button(
             onClick = onSave,
@@ -95,12 +127,14 @@ fun MovieListsCreateContent(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
             contentPadding = ButtonDefaults.contentPaddingFor(size, hasStartIcon = true),
-            shapes = ButtonDefaults.shapes()
+            shapes = ButtonDefaults.shapes(),
         ) {
             Symbol(
                 R.drawable.check_24px,
                 size = ButtonDefaults.iconSizeFor(size),
-                color = MaterialTheme.colorScheme.onPrimary
+                color = if (listNameText.isNotEmpty()) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                    alpha = 0.38f
+                )
             )
             Gap(horizontal = ButtonDefaults.iconSpacingFor(size))
             Text("Save list", style = MaterialTheme.typography.titleMedium)
