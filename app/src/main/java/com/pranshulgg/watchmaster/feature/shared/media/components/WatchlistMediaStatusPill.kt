@@ -29,12 +29,13 @@ fun WatchListStatusPill(
     contentColor: Color,
     text: String,
     status: WatchStatus,
-    rating: Double? = null
+    rating: Double? = null,
+    showRating: Boolean = true,
 ) {
     Row {
         Surface(
             color = containerColor,
-            shape = if (status == WatchStatus.FINISHED) RoundedCornerShape(
+            shape = if (status == WatchStatus.FINISHED && showRating) RoundedCornerShape(
                 topStart = Radius.Full,
                 bottomStart = Radius.Full
             ) else CircleShape
@@ -47,7 +48,7 @@ fun WatchListStatusPill(
                 modifier = Modifier.padding(horizontal = 8.dp)
             )
         }
-        if (status == WatchStatus.FINISHED) {
+        if (status == WatchStatus.FINISHED && showRating) {
             Surface(
                 color = MaterialTheme.colorScheme.primary,
                 shape = RoundedCornerShape(
