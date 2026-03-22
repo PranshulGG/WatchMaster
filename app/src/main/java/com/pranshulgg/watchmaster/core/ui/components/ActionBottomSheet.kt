@@ -7,13 +7,17 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -42,11 +46,16 @@ fun ActionBottomSheet(
     isConfirmDisabled: Boolean = false,
     enableHandle: Boolean = true,
     hideConfirmBtn: Boolean = false,
+    removeBottomInset: Boolean = false,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     ModalBottomSheet(
         sheetState = sheetState,
         onDismissRequest = onCancel,
+        contentWindowInsets = {
+            if (removeBottomInset) BottomSheetDefaults.modalWindowInsets
+                .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top) else BottomSheetDefaults.modalWindowInsets
+        },
         scrimColor = MaterialTheme.colorScheme.scrim.copy(alpha = 0.5f),
         dragHandle = {
             if (enableHandle) {
@@ -71,8 +80,8 @@ fun ActionBottomSheet(
 
             content()
 
-            Spacer(Modifier.height(12.dp))
             if (showActions) {
+                Spacer(Modifier.height(12.dp))
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
