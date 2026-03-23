@@ -1,10 +1,12 @@
 package com.pranshulgg.watchmaster.core.ui.components
 
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Shape
 import com.pranshulgg.watchmaster.core.ui.theme.Radius
 
-fun ListItemShape(isOnly: Boolean, isFirst: Boolean, isLast: Boolean): Shape {
+@Composable
+fun listItemShape(isOnly: Boolean, isFirst: Boolean, isLast: Boolean): RoundedCornerShape {
 
     val shape = when {
         isOnly -> RoundedCornerShape(Radius.Large)
