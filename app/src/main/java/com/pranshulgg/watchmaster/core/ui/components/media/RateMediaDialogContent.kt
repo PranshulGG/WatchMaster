@@ -31,7 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pranshulgg.watchmaster.R
-import com.pranshulgg.watchmaster.core.ui.theme.RobotoFlexWide
+import com.pranshulgg.watchmaster.core.ui.theme.GoogleFlexBoldRounded
 import com.pranshulgg.watchmaster.core.ui.theme.Radius
 import kotlin.math.roundToInt
 
@@ -72,15 +72,7 @@ fun RateMediaDialogContent(
         Column {
             Text(
                 displayRating, fontSize = 100.sp,
-                fontFamily = FontFamily(
-                    Font(
-                        R.font.roboto_flex,
-                        variationSettings = FontVariation.Settings(
-                            FontVariation.width(150f),
-                            FontVariation.weight(1000)
-                        )
-                    )
-                ),
+                fontFamily = GoogleFlexBoldRounded,
                 color = MaterialTheme.colorScheme.secondary
             )
             Box(
@@ -93,7 +85,7 @@ fun RateMediaDialogContent(
             Text(
                 "10",
                 fontSize = 34.sp,
-                fontFamily = RobotoFlexWide,
+                fontFamily = GoogleFlexBoldRounded,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 

@@ -11,43 +11,37 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.pranshulgg.watchmaster.R
 
+
 @OptIn(ExperimentalTextApi::class)
-val RobotoFlexRegular = FontFamily(
+val GoogleFlexRegular = FontFamily(
     Font(
-        resId = R.font.roboto_flex,
+        resId = R.font.google_sans_flex,
         variationSettings = FontVariation.Settings(
-            FontVariation.weight(400),
+            FontVariation.Setting("wght", 400f),
+            FontVariation.Setting("ROND", 50f)
         )
     )
 )
 
 @OptIn(ExperimentalTextApi::class)
-val RobotoFlexMedium = FontFamily(
+val GoogleFlexMedium = FontFamily(
     Font(
-        resId = R.font.roboto_flex,
+        resId = R.font.google_sans_flex,
         variationSettings = FontVariation.Settings(
-            FontVariation.weight(500),
+            FontVariation.Setting("wght", 500f),
+            FontVariation.Setting("ROND", 50f)
         )
     )
 )
 
-@OptIn(ExperimentalTextApi::class)
-val RobotoFlexBold = FontFamily(
-    Font(
-        resId = R.font.roboto_flex,
-        variationSettings = FontVariation.Settings(
-            FontVariation.weight(700),
-        )
-    )
-)
 
 @OptIn(ExperimentalTextApi::class)
-val RobotoFlexWide = FontFamily(
+val GoogleFlexBoldRounded = FontFamily(
     Font(
-        R.font.roboto_flex,
+        R.font.google_sans_flex,
         variationSettings = FontVariation.Settings(
-            FontVariation.weight(700),
-            FontVariation.width(125f)
+            FontVariation.Setting("ROND", 100f),
+            FontVariation.Setting("wght", 1000f),
         )
     )
 )
@@ -56,77 +50,77 @@ val RobotoFlexWide = FontFamily(
 val AppTypography = Typography().run {
     copy(
         displayLarge = displayLarge.copy(
-            fontFamily = RobotoFlexRegular,
+            fontFamily = GoogleFlexRegular,
             fontSize = 57.sp,
             lineHeight = 64.sp
         ),
         displayMedium = displayMedium.copy(
-            fontFamily = RobotoFlexRegular,
+            fontFamily = GoogleFlexRegular,
             fontSize = 45.sp,
             lineHeight = 52.sp
         ),
         displaySmall = displaySmall.copy(
-            fontFamily = RobotoFlexRegular,
+            fontFamily = GoogleFlexRegular,
             fontSize = 36.sp,
             lineHeight = 44.sp
         ),
         headlineLarge = headlineLarge.copy(
-            fontFamily = RobotoFlexRegular,
+            fontFamily = GoogleFlexRegular,
             fontSize = 32.sp,
             lineHeight = 40.sp
         ),
         headlineMedium = headlineMedium.copy(
-            fontFamily = RobotoFlexRegular,
+            fontFamily = GoogleFlexRegular,
             fontSize = 28.sp,
             lineHeight = 36.sp
         ),
         headlineSmall = headlineSmall.copy(
-            fontFamily = RobotoFlexRegular,
+            fontFamily = GoogleFlexRegular,
             fontSize = 24.sp,
             lineHeight = 32.sp
         ),
         titleLarge = titleLarge.copy(
-            fontFamily = RobotoFlexRegular,
+            fontFamily = GoogleFlexRegular,
             fontSize = 22.sp,
             lineHeight = 28.sp
         ),
         titleMedium = titleMedium.copy(
-            fontFamily = RobotoFlexMedium,
+            fontFamily = GoogleFlexMedium,
             fontSize = 16.sp,
             lineHeight = 24.sp
         ),
         titleSmall = titleSmall.copy(
-            fontFamily = RobotoFlexMedium,
+            fontFamily = GoogleFlexMedium,
             fontSize = 14.sp,
             lineHeight = 20.sp
         ),
         bodyLarge = bodyLarge.copy(
-            fontFamily = RobotoFlexRegular,
+            fontFamily = GoogleFlexRegular,
             fontSize = 16.sp,
             lineHeight = 24.sp
         ),
         bodyMedium = bodyMedium.copy(
-            fontFamily = RobotoFlexRegular,
+            fontFamily = GoogleFlexRegular,
             fontSize = 14.sp,
             lineHeight = 20.sp
         ),
         bodySmall = bodySmall.copy(
-            fontFamily = RobotoFlexRegular,
+            fontFamily = GoogleFlexRegular,
             fontSize = 12.sp,
             lineHeight = 16.sp
         ),
         labelLarge = labelLarge.copy(
-            fontFamily = RobotoFlexMedium,
+            fontFamily = GoogleFlexMedium,
             fontSize = 14.sp,
             lineHeight = 20.sp
         ),
         labelMedium = labelMedium.copy(
-            fontFamily = RobotoFlexMedium,
+            fontFamily = GoogleFlexMedium,
             fontSize = 12.sp,
             lineHeight = 16.sp
         ),
         labelSmall = labelSmall.copy(
-            fontFamily = RobotoFlexMedium,
+            fontFamily = GoogleFlexMedium,
             fontSize = 11.sp,
             lineHeight = 16.sp
         ),
