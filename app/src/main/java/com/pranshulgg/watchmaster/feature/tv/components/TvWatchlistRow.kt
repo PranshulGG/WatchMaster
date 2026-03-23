@@ -34,8 +34,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.pranshulgg.watchmaster.R
-import com.pranshulgg.watchmaster.core.ui.components.ListItemShape
 import com.pranshulgg.watchmaster.core.ui.components.Symbol
+import com.pranshulgg.watchmaster.core.ui.components.listItemShape
 import com.pranshulgg.watchmaster.core.ui.components.media.PosterBox
 import com.pranshulgg.watchmaster.core.ui.theme.Radius
 import com.pranshulgg.watchmaster.data.local.entity.SeasonEntity
@@ -55,7 +55,7 @@ fun TvWatchlistRow(
     val isFirst = index == 0
     val isLast = index == items.lastIndex
 
-    val shape = ListItemShape(isOnly, isFirst, isLast)
+    val shape = listItemShape(isOnly, isFirst, isLast)
 
 
     var expanded by rememberSaveable(item.id) { mutableStateOf(false) }
@@ -148,7 +148,7 @@ fun TvWatchlistRow(
                         val isFirst = i == 0
                         val isLast = i == seasons.lastIndex
 
-                        val shapeSeasonRow = ListItemShape(isOnly, isFirst, isLast)
+                        val shapeSeasonRow = listItemShape(isOnly, isFirst, isLast)
 
                         SeasonTvRow(
                             season,

@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
-import com.pranshulgg.watchmaster.core.ui.components.ListItemShape
+import com.pranshulgg.watchmaster.core.ui.components.listItemShape
 import com.pranshulgg.watchmaster.core.ui.components.media.PosterPlaceholder
 import com.pranshulgg.watchmaster.core.ui.navigation.NavRoutes
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
@@ -64,7 +64,7 @@ fun WatchlistRow(
 
     val status = item.status.toWatchListItemStatusUiPill(item.asStatusDates())
 
-    val shape = ListItemShape(isOnly, isFirst, isLast)
+    val shape = listItemShape(isOnly, isFirst, isLast)
 
 
     Surface(
