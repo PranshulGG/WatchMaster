@@ -18,17 +18,26 @@ import com.pranshulgg.watchmaster.core.ui.components.LargeTopBarScaffold
 import com.pranshulgg.watchmaster.core.ui.components.NavigateUpBtn
 import com.pranshulgg.watchmaster.core.ui.components.Symbol
 import com.pranshulgg.watchmaster.core.ui.navigation.NavRoutes
+import com.pranshulgg.watchmaster.feature.shared.WatchlistViewModel
 
 @Composable
-fun MovieListsScaffold(navController: NavController, viewModel: MovieListsViewModel) {
+fun MovieListsScaffold(
+    navController: NavController,
+    viewModel: MovieListsViewModel,
+    watchlistViewModel: WatchlistViewModel
+) {
 
     val movieLists by viewModel.movieLists.collectAsStateWithLifecycle(initialValue = emptyList())
+    val watchlistItems by watchlistViewModel.watchlist.collectAsStateWithLifecycle()
+    val movies = watchlistItems.filter { it.mediaType == "movie" }
 
     LargeTopBarScaffold(
         title = "Movie lists",
         navigationIcon = { NavigateUpBtn(navController) },
         fab = {
             ExtendedFloatingActionButton(
+                containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
                 onClick = { navController.navigate(NavRoutes.MOVIE_LISTS_CREATE_SCREEN) },
                 text = { Text("Create list", style = MaterialTheme.typography.titleMedium) },
                 icon = {
@@ -44,7 +53,7 @@ fun MovieListsScaffold(navController: NavController, viewModel: MovieListsViewMo
                 .fillMaxWidth()
                 .padding(innerPadding)
         ) {
-            MovieListsContent(movieLists, onDelete = { viewModel.delete(it) })
+            MovieListsContent(movieLists, onLongPress = { viewModel.delete(it) }, movies = movies)
         }
 
     }

@@ -43,8 +43,8 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.pranshulgg.watchmaster.R
-import com.pranshulgg.watchmaster.core.ui.components.ListItemShape
 import com.pranshulgg.watchmaster.core.ui.components.Symbol
+import com.pranshulgg.watchmaster.core.ui.components.listItemShape
 import com.pranshulgg.watchmaster.core.ui.components.media.PosterPlaceholder
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 import com.pranshulgg.watchmaster.feature.shared.media.components.WatchListStatusPill
@@ -75,7 +75,7 @@ fun MovieListsSelectableItem(
 
     val status = item.status.toWatchListItemStatusUiPill(item.asStatusDates())
 
-    val shape = ListItemShape(isOnly, isFirst, isLast)
+    val shape = listItemShape(isOnly, isFirst, isLast)
 
 
     Surface(

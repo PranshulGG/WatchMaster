@@ -7,6 +7,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 import com.pranshulgg.watchmaster.feature.movie.lists.create.ui.MovieListsSheet
+import com.pranshulgg.watchmaster.feature.shared.WatchlistViewModel
 
 data class MovieListsUiState(
     val isSheetOpen: Boolean = false,
@@ -20,7 +21,8 @@ data class MovieListsUiState(
 fun MovieListsScreen(navController: NavController) {
 
     val viewModel: MovieListsViewModel = hiltViewModel()
+    val watchlistViewModel: WatchlistViewModel = hiltViewModel()
 
-    MovieListsScaffold(navController, viewModel)
+    MovieListsScaffold(navController, viewModel, watchlistViewModel)
 
 }
