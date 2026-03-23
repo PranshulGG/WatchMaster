@@ -23,7 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.pranshulgg.watchmaster.core.ui.theme.RobotoFlexWide
+import com.pranshulgg.watchmaster.core.ui.theme.GoogleFlexBoldRounded
 
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
@@ -69,7 +69,7 @@ fun EmptyContainerPlaceholder(
             text,
             fontSize = titleSize,
             color = MaterialTheme.colorScheme.onSurface,
-            fontFamily = RobotoFlexWide,
+            fontFamily = GoogleFlexBoldRounded,
         )
         if (description != "") {
             Spacer(Modifier.height(spacingSmall))
