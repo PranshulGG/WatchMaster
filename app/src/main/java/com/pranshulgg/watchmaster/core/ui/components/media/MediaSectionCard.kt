@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.core.ui.theme.Radius
 import com.pranshulgg.watchmaster.core.ui.components.Symbol
+import com.pranshulgg.watchmaster.core.ui.theme.GoogleFlexBoldRounded
 
 @OptIn(ExperimentalTextApi::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -62,15 +63,7 @@ fun MediaSectionCard(
                 Text(
                     title,
                     style = MaterialTheme.typography.titleMedium,
-                    fontFamily = FontFamily(
-                        Font(
-                            R.font.roboto_flex,
-                            variationSettings = FontVariation.Settings(
-                                FontVariation.width(150f),
-                                FontVariation.weight(1000)
-                            )
-                        )
-                    ),
+                    fontFamily = GoogleFlexBoldRounded,
                     color = MaterialTheme.colorScheme.secondary
                 )
 
