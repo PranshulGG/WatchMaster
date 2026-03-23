@@ -27,7 +27,7 @@ fun CastTvSection(tvItem: TvBundle) {
         title = "Cast",
         titleIcon = R.drawable.groups_2_24px,
     ) {
-        val mainCast = tvItem.credits.cast
+        val mainCast = tvItem.credits.cast.take(8)
 
         if (mainCast.isEmpty()) {
             Text("No cast found", modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
@@ -70,7 +70,7 @@ fun CastMovieSection(movieItem: MovieBundle) {
             crew.job == "Director"
         }
 
-        val mainCast = movieItem.credits.cast
+        val mainCast = movieItem.credits.cast.take(8)
 
 
         LazyRow {
