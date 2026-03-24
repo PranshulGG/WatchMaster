@@ -1,19 +1,14 @@
-package com.pranshulgg.watchmaster.feature.movie.lists.create.ui
+package com.pranshulgg.watchmaster.feature.movie.lists.movieListEntry.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
@@ -31,18 +26,12 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.core.model.WatchStatus
-import com.pranshulgg.watchmaster.core.network.TvSeasonDto
 import com.pranshulgg.watchmaster.core.ui.components.ActionBottomSheet
-import com.pranshulgg.watchmaster.core.ui.components.Gap
 import com.pranshulgg.watchmaster.core.ui.components.LoadingPlaceholder
-import com.pranshulgg.watchmaster.core.ui.components.Symbol
-import com.pranshulgg.watchmaster.core.ui.components.TooltipIconBtn
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 import com.pranshulgg.watchmaster.feature.movie.lists.MovieListsViewModel
-import com.pranshulgg.watchmaster.feature.movie.lists.create.components.MovieListsSheetContent
-import okio.Options
+import com.pranshulgg.watchmaster.feature.movie.lists.movieListEntry.components.MovieListEntrySheetContent
 
 private data class Option(
     val status: WatchStatus,
@@ -51,7 +40,7 @@ private data class Option(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MovieListsSheet(
+fun MovieListEntrySheet(
     viewModel: MovieListsViewModel,
     sheetState: SheetState,
     items: List<WatchlistItemEntity>,
@@ -86,7 +75,7 @@ fun MovieListsSheet(
                 if (!isLoading) {
                     StatusTabs(options, selected, onSelected = { selected = it })
                     HorizontalDivider(modifier = Modifier.padding(top = 16.dp))
-                    MovieListsSheetContent(
+                    MovieListEntrySheetContent(
                         filteredItems,
                         onMovieSelect = {
                             if (selectedMovies.contains(it)) {

@@ -1,8 +1,6 @@
-package com.pranshulgg.watchmaster.feature.movie.lists.create
+package com.pranshulgg.watchmaster.feature.movie.lists.movieListEntry
 
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -13,12 +11,13 @@ import com.pranshulgg.watchmaster.core.ui.components.LargeTopBarScaffold
 import com.pranshulgg.watchmaster.core.ui.components.NavigateUpBtn
 import com.pranshulgg.watchmaster.core.ui.snackbar.SnackbarManager
 import com.pranshulgg.watchmaster.feature.movie.lists.MovieListsViewModel
-import com.pranshulgg.watchmaster.feature.movie.lists.create.ui.MovieListsSheet
+import com.pranshulgg.watchmaster.feature.movie.lists.movieListEntry.ui.MovieListEntrySheet
+import com.pranshulgg.watchmaster.feature.movie.lists.movieListEntry.ui.MovieListSelectIconDialog
 import com.pranshulgg.watchmaster.feature.shared.WatchlistViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MovieListsCreateScreen(navController: NavController) {
+fun MovieListEntryScreen(navController: NavController) {
 
     val viewModel: MovieListsViewModel = hiltViewModel()
     val uiState = viewModel.uiState.value
@@ -32,7 +31,7 @@ fun MovieListsCreateScreen(navController: NavController) {
         title = "Create movie list",
         navigationIcon = { NavigateUpBtn(navController) }
     ) { paddingValues ->
-        MovieListsCreateContent(
+        MovieListEntryContent(
             paddingValues,
             listNameText = uiState.listName,
             listDescriptionText = uiState.listDescription,
@@ -47,13 +46,14 @@ fun MovieListsCreateScreen(navController: NavController) {
                 }
             },
             onAddMovie = { viewModel.showMovieListSheet() },
-            selectedMovieList = uiState.listMoviesList
+            selectedMovieList = uiState.listMoviesList,
+            onSelectIcon = { viewModel.showSelectListIconDialog() }
         )
 
     }
 
 
 
-    MovieListsSheet(viewModel, sheetState, items, isLoading)
-
+    MovieListEntrySheet(viewModel, sheetState, items, isLoading)
+    MovieListSelectIconDialog(viewModel)
 }

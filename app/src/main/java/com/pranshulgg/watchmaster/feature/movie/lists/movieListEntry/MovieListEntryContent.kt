@@ -1,10 +1,12 @@
-package com.pranshulgg.watchmaster.feature.movie.lists.create
+package com.pranshulgg.watchmaster.feature.movie.lists.movieListEntry
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -12,25 +14,25 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TooltipAnchorPosition
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.core.ui.components.Gap
-import com.pranshulgg.watchmaster.core.ui.components.SettingSection
-import com.pranshulgg.watchmaster.core.ui.components.SettingTile
 import com.pranshulgg.watchmaster.core.ui.components.Symbol
+import com.pranshulgg.watchmaster.core.ui.components.Tooltip
 import com.pranshulgg.watchmaster.core.ui.components.media.MediaChip
 import com.pranshulgg.watchmaster.core.ui.theme.Radius
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
@@ -38,7 +40,7 @@ import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun MovieListsCreateContent(
+fun MovieListEntryContent(
     paddingValues: PaddingValues,
     listNameText: String,
     listDescriptionText: String,
@@ -47,10 +49,12 @@ fun MovieListsCreateContent(
     onAddMovie: () -> Unit,
     onSave: () -> Unit,
     selectedMovieList: List<WatchlistItemEntity> = emptyList(),
+    onSelectIcon: () -> Unit
 ) {
 
-
     val size = ButtonDefaults.MediumContainerHeight
+    val colorScheme = MaterialTheme.colorScheme
+
     Column(
         Modifier.padding(
             top = paddingValues.calculateTopPadding() + 8.dp,
@@ -62,7 +66,11 @@ fun MovieListsCreateContent(
             value = listNameText,
             onValueChange = { onNameChange(it) },
             title = "Name",
-            supportingText = "Give your list a short, memorable name"
+            supportingText = "Give your list a short, memorable name",
+            hasSelectIcon = true,
+            onSelectIcon = {
+                onSelectIcon()
+            }
         )
         Gap(15.dp)
         Field(
@@ -71,7 +79,6 @@ fun MovieListsCreateContent(
             title = "Description (optional)",
             supportingText = "Add a short description to explain what this list is about"
         )
-
         Gap(15.dp)
         Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
             OutlinedButton(
@@ -85,7 +92,7 @@ fun MovieListsCreateContent(
                 Symbol(
                     R.drawable.add_24px,
                     size = ButtonDefaults.iconSizeFor(ButtonDefaults.MinHeight),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = colorScheme.onSurfaceVariant
                 )
                 Gap(horizontal = ButtonDefaults.iconSpacingFor(ButtonDefaults.MinHeight))
 
@@ -100,7 +107,7 @@ fun MovieListsCreateContent(
                 text = "Selected",
                 modifier = Modifier.padding(bottom = 5.dp, top = 5.dp, start = 16.dp + 3.dp),
                 fontSize = 16.sp,
-                color = MaterialTheme.colorScheme.primary,
+                color = colorScheme.primary,
                 fontWeight = FontWeight.W700
             )
 
@@ -112,8 +119,8 @@ fun MovieListsCreateContent(
                 selectedMovieList.forEach { mov ->
                     MediaChip(
                         mov.title,
-                        containerColor = MaterialTheme.colorScheme.surfaceBright,
-                        contentColor = MaterialTheme.colorScheme.onSurface
+                        containerColor = colorScheme.surfaceBright,
+                        contentColor = colorScheme.onSurface
                     )
                 }
             }
@@ -132,7 +139,7 @@ fun MovieListsCreateContent(
             Symbol(
                 R.drawable.check_24px,
                 size = ButtonDefaults.iconSizeFor(size),
-                color = if (listNameText.isNotEmpty()) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                color = if (listNameText.isNotEmpty()) colorScheme.onPrimary else colorScheme.onSurfaceVariant.copy(
                     alpha = 0.38f
                 )
             )
@@ -145,36 +152,75 @@ fun MovieListsCreateContent(
 }
 
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun Field(
     value: String,
     onValueChange: (String) -> Unit,
     singleLine: Boolean = true,
     title: String,
-    supportingText: String
+    supportingText: String,
+    hasSelectIcon: Boolean = false,
+    onSelectIcon: () -> Unit = {}
 ) {
 
     Column(
-        modifier = Modifier.padding(horizontal = 18.dp)
+        modifier = Modifier.padding(horizontal = 18.dp),
     ) {
-        Text(
-            title,
-            modifier = Modifier.padding(start = 5.dp),
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onSurface
-        )
-        Gap(6.dp)
-        OutlinedTextField(
-            value = value,
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(Radius.Large),
-            onValueChange = { onValueChange(it) },
-            singleLine = singleLine,
-        )
+        if (!hasSelectIcon) {
+            OutlinedTextField(
+                value = value,
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(Radius.Large),
+                onValueChange = { onValueChange(it) },
+                placeholder = { Text(title) },
+                singleLine = singleLine,
+            )
+        } else {
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.Bottom,
+            ) {
+
+                Tooltip(
+                    tooltipText = "Select list icon",
+                    preferredPosition = TooltipAnchorPosition.Below,
+
+                    ) {
+                    OutlinedIconButton(
+                        onClick = {
+                            onSelectIcon()
+                        },
+                        modifier = Modifier.size(56.dp),
+                        shapes = IconButtonDefaults.shapes(),
+                        border = BorderStroke(
+                            1.dp,
+                            MaterialTheme.colorScheme.outlineVariant
+                        )
+                    ) {
+                        Symbol(
+                            R.drawable.folder_24px,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            size = 32.dp
+                        )
+                    }
+                }
+
+                Gap(horizontal = 12.dp)
+                OutlinedTextField(
+                    value = value,
+                    modifier = Modifier.weight(1f),
+                    shape = RoundedCornerShape(Radius.Large),
+                    onValueChange = { onValueChange(it) },
+                    placeholder = { Text(title) },
+                    singleLine = singleLine,
+                )
+            }
+        }
         Gap(5.dp)
         Text(
             supportingText,
-            modifier = Modifier.padding(start = 5.dp),
+            modifier = Modifier.padding(start = if (!hasSelectIcon) 5.dp else 73.dp),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )

@@ -1,4 +1,4 @@
-package com.pranshulgg.watchmaster.feature.movie.lists.create.components
+package com.pranshulgg.watchmaster.feature.movie.lists.movieListEntry.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -6,10 +6,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
@@ -18,7 +16,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingToolbarDefaults
 import androidx.compose.material3.HorizontalFloatingToolbar
 import androidx.compose.material3.MaterialTheme
@@ -31,12 +28,11 @@ import androidx.compose.ui.unit.sp
 import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.core.ui.components.EmptyContainerPlaceholder
 import com.pranshulgg.watchmaster.core.ui.components.Gap
-import com.pranshulgg.watchmaster.core.ui.components.Symbol
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun MovieListsSheetContent(
+fun MovieListEntrySheetContent(
     items: List<WatchlistItemEntity>,
     onMovieSelect: (WatchlistItemEntity) -> Unit,
     selectedMovies: List<WatchlistItemEntity>,
@@ -63,7 +59,7 @@ fun MovieListsSheetContent(
             ) {
                 item { Gap(16.dp) }
                 itemsIndexed(items, key = { _, item -> item.id }) { index, item ->
-                    MovieListsSelectableItem(item, index, items, onMovieSelect, selectedMovies)
+                    MovieListEntrySelectableItem(item, index, items, onMovieSelect, selectedMovies)
                 }
                 item {
                     Gap(WindowInsets.systemBars.asPaddingValues().calculateBottomPadding() + 100.dp)
