@@ -12,6 +12,7 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.pranshulgg.watchmaster.data.local.converters.InstantConverters
 import com.pranshulgg.watchmaster.data.local.converters.LongListConverter
+import com.pranshulgg.watchmaster.data.local.converters.MediaListsIconConverter
 import com.pranshulgg.watchmaster.data.local.converters.SeasonNameConverter
 import com.pranshulgg.watchmaster.data.local.converters.WatchStatusConverter
 import com.pranshulgg.watchmaster.data.local.dao.MovieBundleDao
@@ -27,14 +28,15 @@ import com.pranshulgg.watchmaster.data.local.entity.TvEpisodeEntity
 
 @Database(
     entities = [WatchlistItemEntity::class, MovieBundleEntity::class, TvBundleEntity::class, SeasonEntity::class, TvEpisodeEntity::class, MovieListsEntity::class],
-    version = 27
+    version = 28
 )
 @TypeConverters(
     GenreIdsConverter::class,
     InstantConverters::class,
     WatchStatusConverter::class,
     SeasonNameConverter::class,
-    LongListConverter::class
+    LongListConverter::class,
+    MediaListsIconConverter::class
 )
 abstract class WatchMasterDatabase : RoomDatabase() {
 
@@ -59,7 +61,8 @@ abstract class WatchMasterDatabase : RoomDatabase() {
                     context.applicationContext,
                     WatchMasterDatabase::class.java,
                     "watchmaster.db"
-                ).addMigrations(MIGRATION_25_26, MIGRATION_26_27).build().also { INSTANCE = it }
+                ).addMigrations(MIGRATION_25_26, MIGRATION_26_27, MIGRATION_27_28).build()
+                    .also { INSTANCE = it }
             }
         }
     }
@@ -102,6 +105,37 @@ val MIGRATION_26_27 = object : Migration(26, 27) {
             INSERT INTO movie_lists_new (id, name, description, icon, movieIds)
             SELECT id, name, 
                    COALESCE(description, ''), 
+                   icon, 
+                   movieIds
+            FROM movie_lists
+        """.trimIndent()
+        )
+
+        db.execSQL("DROP TABLE movie_lists")
+        db.execSQL("ALTER TABLE movie_lists_new RENAME TO movie_lists")
+    }
+}
+
+val MIGRATION_27_28 = object : Migration(27, 28) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+
+        db.execSQL(
+            """
+            CREATE TABLE movie_lists_new (
+                id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                name TEXT NOT NULL,
+                description TEXT NOT NULL,
+                icon TEXT,
+                movieIds TEXT NOT NULL
+            )
+        """.trimIndent()
+        )
+
+        db.execSQL(
+            """
+            INSERT INTO movie_lists_new (id, name, description, icon, movieIds)
+            SELECT id, name, 
+                   description, 
                    icon, 
                    movieIds
             FROM movie_lists
