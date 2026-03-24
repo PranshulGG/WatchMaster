@@ -31,8 +31,8 @@ fun DialogBasic(
     dismissText: String = "Cancel",
     onConfirm: () -> Unit = {},
     onDismiss: () -> Unit,
-    content: @Composable () -> Unit,
     showDefaultActions: Boolean = true,
+    content: @Composable () -> Unit,
 ) {
     if (!show) return
 

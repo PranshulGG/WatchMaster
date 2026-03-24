@@ -3,28 +3,33 @@ package com.pranshulgg.watchmaster.core.ui.components
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pranshulgg.watchmaster.R
+import com.pranshulgg.watchmaster.core.ui.theme.Radius
 
 @Composable
 fun AvatarMonogram(
     text: String,
     containerColor: Color = MaterialTheme.colorScheme.primaryContainer,
     contentColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
+    cornerRadius: Dp = Radius.Full
 ) {
 
     Surface(
         color = containerColor,
-        shape = CircleShape,
+        shape = RoundedCornerShape(cornerRadius),
     ) {
         Box(
             contentAlignment = Alignment.Center,
@@ -41,8 +46,36 @@ fun AvatarMonogram(
 
         }
     }
-
 }
+
+@Composable
+fun AvatarIcon(
+    icon: Int,
+    containerColor: Color = MaterialTheme.colorScheme.primaryContainer,
+    contentColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
+    cornerRadius: Dp = Radius.Full,
+    avatarSize: Dp = 40.dp,
+    iconSize: Dp = 24.dp
+) {
+
+    Surface(
+        color = containerColor,
+        shape = RoundedCornerShape(cornerRadius),
+    ) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.size(avatarSize)
+
+        ) {
+            Symbol(
+                icon,
+                color = contentColor,
+                size = iconSize
+            )
+        }
+    }
+}
+
 
 @Composable
 fun AvatarCheck() {
