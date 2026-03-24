@@ -4,6 +4,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.pranshulgg.watchmaster.core.model.MediaListsIcons
 import com.pranshulgg.watchmaster.core.ui.snackbar.SnackbarManager
 import com.pranshulgg.watchmaster.data.local.entity.MovieListsEntity
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
@@ -45,6 +46,10 @@ class MovieListsViewModel @Inject constructor(
         repo.deleteMovieListsItem(id)
     }
 
+    fun updateListIcon(id: Long, icon: MediaListsIcons) = viewModelScope.launch {
+        repo.updateListIcon(id, icon)
+    }
+
 
     private val _uiState = mutableStateOf(MovieListsUiState())
     val uiState: State<MovieListsUiState> = _uiState
@@ -67,5 +72,14 @@ class MovieListsViewModel @Inject constructor(
 
     fun updateList(list: List<WatchlistItemEntity>) {
         _uiState.value = _uiState.value.copy(listMoviesList = list)
+    }
+
+    fun showSelectListIconSheet() {
+        _uiState.value = _uiState.value.copy(isSelectListIconSheetOpen = true)
+    }
+
+
+    fun hideSelectListIconSheet() {
+        _uiState.value = _uiState.value.copy(isSelectListIconSheetOpen = false)
     }
 }

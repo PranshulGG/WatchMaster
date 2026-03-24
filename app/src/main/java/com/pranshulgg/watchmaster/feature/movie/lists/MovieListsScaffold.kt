@@ -36,9 +36,7 @@ fun MovieListsScaffold(
         navigationIcon = { NavigateUpBtn(navController) },
         fab = {
             ExtendedFloatingActionButton(
-                containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
-                onClick = { navController.navigate(NavRoutes.MOVIE_LISTS_CREATE_SCREEN) },
+                onClick = { navController.navigate(NavRoutes.MOVIE_LISTS_ENTRY_SCREEN) },
                 text = { Text("Create list", style = MaterialTheme.typography.titleMedium) },
                 icon = {
                     Symbol(

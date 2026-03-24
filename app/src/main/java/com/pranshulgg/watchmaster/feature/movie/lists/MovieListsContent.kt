@@ -12,9 +12,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.pranshulgg.watchmaster.R
+import com.pranshulgg.watchmaster.core.ui.components.AvatarIcon
 import com.pranshulgg.watchmaster.core.ui.components.AvatarMonogram
 import com.pranshulgg.watchmaster.core.ui.components.listItemShape
 import com.pranshulgg.watchmaster.core.ui.components.media.PosterBox
+import com.pranshulgg.watchmaster.core.ui.theme.Radius
 import com.pranshulgg.watchmaster.data.local.entity.MovieListsEntity
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 import com.pranshulgg.watchmaster.feature.shared.media.components.MediaListsRow
@@ -25,6 +28,8 @@ fun MovieListsContent(
     onLongPress: (Long) -> Unit,
     movies: List<WatchlistItemEntity>
 ) {
+
+    val colorScheme = MaterialTheme.colorScheme
 
     LazyColumn(
         modifier = Modifier.padding(horizontal = 16.dp),
@@ -51,7 +56,11 @@ fun MovieListsContent(
                 },
                 leading = {
                     Box(modifier = Modifier.padding(top = 5.dp)) {
-                        AvatarMonogram(item.name.first().uppercase())
+                        AvatarIcon(
+                            R.drawable.folder_24px,
+                            containerColor = colorScheme.tertiaryContainer,
+                            contentColor = colorScheme.onTertiaryContainer,
+                        )
                     }
                 },
                 media = {
@@ -78,8 +87,8 @@ fun MovieListsContent(
                             ) {
                                 AvatarMonogram(
                                     "${moviesFiltered.size}+",
-                                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
-                                    contentColor = MaterialTheme.colorScheme.onSurface
+                                    containerColor = colorScheme.surfaceContainer,
+                                    contentColor = colorScheme.onSurface
                                 )
                             }
                         }
