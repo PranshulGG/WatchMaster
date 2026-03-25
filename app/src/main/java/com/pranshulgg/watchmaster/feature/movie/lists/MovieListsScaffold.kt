@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.pranshulgg.watchmaster.R
+import com.pranshulgg.watchmaster.core.ui.components.EmptyContainerPlaceholder
 import com.pranshulgg.watchmaster.core.ui.components.LargeTopBarScaffold
 import com.pranshulgg.watchmaster.core.ui.components.NavigateUpBtn
 import com.pranshulgg.watchmaster.core.ui.components.Symbol
@@ -51,7 +52,18 @@ fun MovieListsScaffold(
                 .fillMaxWidth()
                 .padding(innerPadding)
         ) {
-            MovieListsContent(movieLists, onLongPress = { viewModel.delete(it) }, movies = movies)
+            if (movieLists.isEmpty()) {
+                EmptyContainerPlaceholder(
+                    text = "No lists found",
+                    description = "Create a list to get started",
+                    icon = R.drawable.lists_24px
+                )
+            }
+            MovieListsContent(
+                movieLists,
+                onClick = { navController.navigate(NavRoutes.viewMovieList(it)) },
+                movies = movies
+            )
         }
 
     }
