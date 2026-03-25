@@ -15,6 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
@@ -28,87 +29,92 @@ import com.pranshulgg.watchmaster.core.ui.components.Gap
 @Composable
 fun MediaListsRow(
     headline: String,
-    description: String? = null,
+    description: String = "null",
     leading: @Composable (() -> Unit)? = null,
     shapes: RoundedCornerShape,
-    onLongClick: () -> Unit,
+    onClick: () -> Unit,
     trailing: @Composable (() -> Unit)? = null,
-    media: @Composable (() -> Unit)
+    media: @Composable (() -> Unit)? = null
 ) {
     Surface(
         shape = shapes,
         color = MaterialTheme.colorScheme.surfaceBright,
         modifier = Modifier
             .fillMaxWidth()
-            .clip(shapes)
-            .combinedClickable(
-                onClick = {},
-                onLongClick = {
-                    onLongClick()
-                }
-            )
     ) {
-        Row(
-            modifier = Modifier.padding(vertical = 10.dp, horizontal = 16.dp),
-        ) {
-            if (leading != null) {
-                leading()
-                Gap(horizontal = 12.dp)
-            }
-
-            Column() {
-                Text(
-                    headline,
-                    fontSize = 17.sp,
-                    fontWeight = FontWeight.W900,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                if (description != null) {
-                    Text(
-                        description,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
-
-
-                media()
-
-            }
-            if (trailing != null) {
-                Spacer(Modifier.weight(1f))
-                Gap(horizontal = 12.dp)
-                trailing()
-            }
-
-        }
-//        ListItem(
-//            modifier = Modifier.clickable(
-//                onClick = onClick
-//            ),
-//            leadingContent = leading,
-//            colors = ListItemDefaults.colors(
-//                containerColor = MaterialTheme.colorScheme.surfaceBright
-//            ),
-//            headlineContent = {
+//        Row(
+//            modifier = Modifier.padding(vertical = 10.dp, horizontal = 16.dp),
+//            verticalAlignment = if (description == "" && media == null) Alignment.CenterVertically else Alignment.CenterVertically,
+//        ) {
+//            if (leading != null) {
+//                leading()
+//                Gap(horizontal = 12.dp)
+//            }
+//
+//            Column(
+//            ) {
 //                Text(
 //                    headline,
-//                    color = MaterialTheme.colorScheme.onSurface,
-//                    style = MaterialTheme.typography.bodyLarge
+//                    fontSize = 17.sp,
+//                    fontWeight = FontWeight.W900,
+//                    color = MaterialTheme.colorScheme.onSurface
 //                )
-//            },
-//            supportingContent = {
-//                if (description != null) {
+//                if (description != "") {
 //                    Text(
 //                        description,
-//                        color = colorDesc,
-//                        style = MaterialTheme.typography.bodyMedium
+//                        style = MaterialTheme.typography.bodyMedium,
+//                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+//                        maxLines = 2,
+//                        overflow = TextOverflow.Ellipsis
 //                    )
 //                }
-//            },
-//            trailingContent = trailing
-//        )
+//
+//
+//                if (media != null) {
+//                    media()
+//                }
+//
+//            }
+//            if (trailing != null) {
+//                Spacer(Modifier.weight(1f))
+//                Gap(horizontal = 12.dp)
+//                trailing()
+//            }
+//
+//        }
+        ListItem(
+            modifier = Modifier.clickable(
+                onClick = { onClick() }
+            ),
+            leadingContent = leading,
+            colors = ListItemDefaults.colors(
+                containerColor = MaterialTheme.colorScheme.surfaceBright
+            ),
+            headlineContent = {
+                Text(
+                    headline,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontWeight = FontWeight.W900,
+                    fontSize = 17.sp,
+                )
+            },
+            supportingContent = {
+                Column {
+                    if (description != "") {
+                        Text(
+                            description,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            style = MaterialTheme.typography.bodyMedium,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                    if (media != null) {
+                        media()
+                    }
+                }
+            },
+            trailingContent = trailing
+        )
     }
 }
