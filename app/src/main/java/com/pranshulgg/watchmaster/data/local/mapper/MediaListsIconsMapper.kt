@@ -1,10 +1,11 @@
 package com.pranshulgg.watchmaster.data.local.mapper
 
+import androidx.compose.runtime.Composable
 import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.core.model.MediaListsIcons
 
-fun MediaListsIcons.toIcon(icons: MediaListsIcons): Int {
-    return when (icons) {
+fun MediaListsIcons.toIcon(): Int {
+    return when (this) {
         MediaListsIcons.FAVORITE -> R.drawable.favorite_24px
         MediaListsIcons.FOLDER_SPECIAL -> R.drawable.folder_special_24px
         MediaListsIcons.STAR -> R.drawable.star_24px
