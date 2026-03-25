@@ -7,13 +7,26 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.pranshulgg.watchmaster.core.model.MediaListsIcons
 import com.pranshulgg.watchmaster.core.ui.components.LargeTopBarScaffold
 import com.pranshulgg.watchmaster.core.ui.components.NavigateUpBtn
 import com.pranshulgg.watchmaster.core.ui.snackbar.SnackbarManager
+import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
+import com.pranshulgg.watchmaster.data.local.mapper.toIcon
 import com.pranshulgg.watchmaster.feature.movie.lists.MovieListsViewModel
 import com.pranshulgg.watchmaster.feature.movie.lists.movieListEntry.ui.MovieListEntrySheet
-import com.pranshulgg.watchmaster.feature.movie.lists.movieListEntry.ui.MovieListSelectIconDialog
+import com.pranshulgg.watchmaster.feature.movie.lists.movieListEntry.ui.MovieListSelectIconSheet
 import com.pranshulgg.watchmaster.feature.shared.WatchlistViewModel
+
+
+data class MovieListEntryUiState(
+    val isSheetOpen: Boolean = false,
+    val listName: String = "",
+    val listDescription: String = "",
+    val listIcon: MediaListsIcons = MediaListsIcons.FOLDER,
+    val listMoviesList: List<WatchlistItemEntity> = emptyList(),
+    val isSelectListIconSheetOpen: Boolean = false,
+)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,16 +51,17 @@ fun MovieListEntryScreen(navController: NavController) {
             onNameChange = { viewModel.updateListName(it) },
             onDescriptionChange = { viewModel.updateListDescription(it) },
             onSave = {
-                if (uiState.listMoviesList.isNotEmpty()) {
-                    viewModel.saveList()
-                    navController.popBackStack()
-                } else {
-                    SnackbarManager.show("List must have at least one movie")
-                }
+//                if (uiState.listMoviesList.isNotEmpty()) {
+                viewModel.saveList()
+                navController.popBackStack()
+//                } else {
+//                    SnackbarManager.show("List must have at least one movie")
+//                }
             },
             onAddMovie = { viewModel.showMovieListSheet() },
             selectedMovieList = uiState.listMoviesList,
-            onSelectIcon = { viewModel.showSelectListIconDialog() }
+            onSelectIcon = { viewModel.showSelectListIconSheet() },
+            selectedListIcon = uiState.listIcon.toIcon()
         )
 
     }
@@ -55,5 +69,5 @@ fun MovieListEntryScreen(navController: NavController) {
 
 
     MovieListEntrySheet(viewModel, sheetState, items, isLoading)
-    MovieListSelectIconDialog(viewModel)
+    MovieListSelectIconSheet(viewModel, sheetState)
 }

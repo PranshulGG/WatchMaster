@@ -49,7 +49,8 @@ fun MovieListEntryContent(
     onAddMovie: () -> Unit,
     onSave: () -> Unit,
     selectedMovieList: List<WatchlistItemEntity> = emptyList(),
-    onSelectIcon: () -> Unit
+    onSelectIcon: () -> Unit,
+    selectedListIcon: Int
 ) {
 
     val size = ButtonDefaults.MediumContainerHeight
@@ -68,6 +69,7 @@ fun MovieListEntryContent(
             title = "Name",
             supportingText = "Give your list a short, memorable name",
             hasSelectIcon = true,
+            selectedListIcon = selectedListIcon,
             onSelectIcon = {
                 onSelectIcon()
             }
@@ -161,6 +163,7 @@ private fun Field(
     title: String,
     supportingText: String,
     hasSelectIcon: Boolean = false,
+    selectedListIcon: Int = R.drawable.folder_24px,
     onSelectIcon: () -> Unit = {}
 ) {
 
@@ -199,7 +202,7 @@ private fun Field(
                         )
                     ) {
                         Symbol(
-                            R.drawable.folder_24px,
+                            selectedListIcon,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             size = 32.dp
                         )
