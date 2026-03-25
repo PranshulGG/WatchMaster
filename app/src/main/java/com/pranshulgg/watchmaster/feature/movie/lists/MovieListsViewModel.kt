@@ -9,6 +9,7 @@ import com.pranshulgg.watchmaster.core.ui.snackbar.SnackbarManager
 import com.pranshulgg.watchmaster.data.local.entity.MovieListsEntity
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 import com.pranshulgg.watchmaster.data.repository.MovieListsRepository
+import com.pranshulgg.watchmaster.feature.movie.lists.movieListEntry.MovieListEntryUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
@@ -20,7 +21,8 @@ class MovieListsViewModel @Inject constructor(
     private val repo: MovieListsRepository
 ) : ViewModel() {
 
-
+    private val _uiState = mutableStateOf(MovieListEntryUiState())
+    val uiState: State<MovieListEntryUiState> = _uiState
     val movieLists = repo
         .getMovieLists()
         .stateIn(
@@ -35,7 +37,8 @@ class MovieListsViewModel @Inject constructor(
         val item = MovieListsEntity(
             name = uiState.value.listName,
             description = uiState.value.listDescription,
-            movieIds = uiState.value.listMoviesList.map { it.id }
+            movieIds = uiState.value.listMoviesList.map { it.id },
+            icon = uiState.value.listIcon
         )
 
         repo.insertMovieListsItem(item)
@@ -45,14 +48,6 @@ class MovieListsViewModel @Inject constructor(
     fun delete(id: Long) = viewModelScope.launch {
         repo.deleteMovieListsItem(id)
     }
-
-    fun updateListIcon(id: Long, icon: MediaListsIcons) = viewModelScope.launch {
-        repo.updateListIcon(id, icon)
-    }
-
-
-    private val _uiState = mutableStateOf(MovieListsUiState())
-    val uiState: State<MovieListsUiState> = _uiState
 
     fun showMovieListSheet() {
         _uiState.value = _uiState.value.copy(isSheetOpen = true)
@@ -69,6 +64,11 @@ class MovieListsViewModel @Inject constructor(
     fun updateListDescription(description: String) {
         _uiState.value = _uiState.value.copy(listDescription = description)
     }
+
+    fun updateListIcon(icon: MediaListsIcons) {
+        _uiState.value = _uiState.value.copy(listIcon = icon)
+    }
+
 
     fun updateList(list: List<WatchlistItemEntity>) {
         _uiState.value = _uiState.value.copy(listMoviesList = list)
