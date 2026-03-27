@@ -11,11 +11,17 @@ object NavRoutes {
 
     const val MOVIE_LISTS_ENTRY_SCREEN = "movie_lists_entry_screen"
 
+    const val MOVIE_LISTS_VIEW_SCREEN = "movie_lists_view_screen"
+
     const val MOVIE_DETAIL_SCREEN = "movie_detail"
     const val TV_DETAIL_SCREEN = "tv_screen"
 
     fun movieDetail(id: Long): String {
         return "$MOVIE_DETAIL_SCREEN/$id"
+    }
+
+    fun viewMovieList(id: Long): String {
+        return "$MOVIE_LISTS_VIEW_SCREEN/$id"
     }
 
     fun tvDetail(id: Long, seasonNumber: Int, seasonId: Long): String {
