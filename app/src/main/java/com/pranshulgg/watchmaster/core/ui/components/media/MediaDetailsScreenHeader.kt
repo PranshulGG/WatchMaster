@@ -57,7 +57,6 @@ fun MediaDetailsScreenHeader(
             ) {
                 Symbol(
                     R.drawable.arrow_back_24px,
-                    desc = "settings icon",
                     color = MaterialTheme.colorScheme.onPrimary
                 )
             }
