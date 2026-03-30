@@ -11,7 +11,9 @@ import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 import com.pranshulgg.watchmaster.data.repository.MovieListsRepository
 import com.pranshulgg.watchmaster.feature.movie.lists.movieListEntry.MovieListEntryUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,6 +25,11 @@ class MovieListsViewModel @Inject constructor(
 
     private val _uiState = mutableStateOf(MovieListEntryUiState())
     val uiState: State<MovieListEntryUiState> = _uiState
+
+    private val _currentMovieList = MutableStateFlow<MovieListsEntity?>(null)
+    val currentMovieList: StateFlow<MovieListsEntity?> = _currentMovieList
+
+
     val movieLists = repo
         .getMovieLists()
         .stateIn(
@@ -42,6 +49,12 @@ class MovieListsViewModel @Inject constructor(
         )
 
         repo.insertMovieListsItem(item)
+    }
+
+    fun getMovieListById(id: Long) {
+        viewModelScope.launch {
+            _currentMovieList.value = repo.getMovieListById(id)
+        }
     }
 
 
