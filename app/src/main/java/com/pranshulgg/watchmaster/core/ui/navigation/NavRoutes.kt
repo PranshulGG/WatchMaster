@@ -31,4 +31,8 @@ object NavRoutes {
     fun search(type: SearchType = SearchType.MULTI): String {
         return "$SEARCH?searchType=${type.name}"
     }
+
+    fun movieListEntry(id: Long): String {
+        return "$MOVIE_LISTS_ENTRY_SCREEN/$id"
+    }
 }
