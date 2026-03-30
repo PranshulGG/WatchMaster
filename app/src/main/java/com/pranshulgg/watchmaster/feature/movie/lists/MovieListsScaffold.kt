@@ -37,7 +37,7 @@ fun MovieListsScaffold(
         navigationIcon = { NavigateUpBtn(navController) },
         fab = {
             ExtendedFloatingActionButton(
-                onClick = { navController.navigate(NavRoutes.MOVIE_LISTS_ENTRY_SCREEN) },
+                onClick = { navController.navigate(NavRoutes.movieListEntry(-1L)) },
                 text = { Text("Create list", style = MaterialTheme.typography.titleMedium) },
                 icon = {
                     Symbol(
