@@ -23,4 +23,7 @@ interface MovieListsDao {
     @Query("UPDATE movie_lists SET icon = :icon WHERE id = :id")
     suspend fun updateListIcon(id: Long, icon: MediaListsIcons)
 
+    @Query("SELECT * FROM movie_lists WHERE id = :id LIMIT 1")
+    suspend fun getMovieListById(id: Long): MovieListsEntity
+
 }

@@ -16,4 +16,8 @@ class MovieListsRepository(
 
     suspend fun updateListIcon(id: Long, icon: MediaListsIcons) = dao.updateListIcon(id, icon)
 
+    suspend fun getMovieListById(id: Long): MovieListsEntity {
+        return dao.getMovieListById(id)
+    }
+
 }
