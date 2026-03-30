@@ -1,10 +1,16 @@
 package com.pranshulgg.watchmaster.feature.movie.lists.movieListEntry
 
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.pranshulgg.watchmaster.core.model.MediaListsIcons
@@ -17,6 +23,7 @@ import com.pranshulgg.watchmaster.feature.movie.lists.MovieListsViewModel
 import com.pranshulgg.watchmaster.feature.movie.lists.movieListEntry.ui.MovieListEntrySheet
 import com.pranshulgg.watchmaster.feature.movie.lists.movieListEntry.ui.MovieListSelectIconSheet
 import com.pranshulgg.watchmaster.feature.shared.WatchlistViewModel
+import kotlinx.coroutines.launch
 
 
 data class MovieListEntryUiState(
@@ -30,20 +37,31 @@ data class MovieListEntryUiState(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MovieListEntryScreen(navController: NavController) {
+fun MovieListEntryScreen(id: Long = -1L, navController: NavController) {
 
     val viewModel: MovieListsViewModel = hiltViewModel()
+
+    LaunchedEffect(id) {
+        if (id != -1L) {
+            viewModel.getMovieListById(id)
+        }
+    }
+
     val uiState = viewModel.uiState.value
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val watchlistViewModel: WatchlistViewModel = hiltViewModel()
     val itemsFlow by watchlistViewModel.watchlist.collectAsState()
     val items = itemsFlow.filter { it.mediaType == "movie" }
     val isLoading by watchlistViewModel.isLoading.collectAsState()
+    val currentMovieList by viewModel.currentMovieList.collectAsState(initial = null)
+
+
 
     LargeTopBarScaffold(
         title = "Create movie list",
-        navigationIcon = { NavigateUpBtn(navController) }
+        navigationIcon = { NavigateUpBtn(navController) },
     ) { paddingValues ->
+
         MovieListEntryContent(
             paddingValues,
             listNameText = uiState.listName,
@@ -51,19 +69,20 @@ fun MovieListEntryScreen(navController: NavController) {
             onNameChange = { viewModel.updateListName(it) },
             onDescriptionChange = { viewModel.updateListDescription(it) },
             onSave = {
-//                if (uiState.listMoviesList.isNotEmpty()) {
                 viewModel.saveList()
                 navController.popBackStack()
-//                } else {
-//                    SnackbarManager.show("List must have at least one movie")
-//                }
             },
             onAddMovie = { viewModel.showMovieListSheet() },
             selectedMovieList = uiState.listMoviesList,
             onSelectIcon = { viewModel.showSelectListIconSheet() },
-            selectedListIcon = uiState.listIcon.toIcon()
+            selectedListIcon = uiState.listIcon.toIcon(),
+            isEditingList = id != -1L,
+            editingItem = currentMovieList,
+            watchlistMovies = items,
+            onUpdateMovieList = {
+                viewModel.updateList(it)
+            }
         )
-
     }
 
 
