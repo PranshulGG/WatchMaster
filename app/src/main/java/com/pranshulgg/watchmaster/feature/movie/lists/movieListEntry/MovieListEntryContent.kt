@@ -1,5 +1,6 @@
 package com.pranshulgg.watchmaster.feature.movie.lists.movieListEntry
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,6 +25,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TooltipAnchorPosition
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -35,6 +37,7 @@ import com.pranshulgg.watchmaster.core.ui.components.Symbol
 import com.pranshulgg.watchmaster.core.ui.components.Tooltip
 import com.pranshulgg.watchmaster.core.ui.components.media.MediaChip
 import com.pranshulgg.watchmaster.core.ui.theme.Radius
+import com.pranshulgg.watchmaster.data.local.entity.MovieListsEntity
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 
 
@@ -50,11 +53,28 @@ fun MovieListEntryContent(
     onSave: () -> Unit,
     selectedMovieList: List<WatchlistItemEntity> = emptyList(),
     onSelectIcon: () -> Unit,
-    selectedListIcon: Int
+    selectedListIcon: Int,
+    isEditingList: Boolean = false,
+    editingItem: MovieListsEntity? = null,
+    watchlistMovies: List<WatchlistItemEntity>,
+    onUpdateMovieList: (List<WatchlistItemEntity>) -> Unit
 ) {
 
     val size = ButtonDefaults.MediumContainerHeight
     val colorScheme = MaterialTheme.colorScheme
+
+    LaunchedEffect(editingItem) {
+        Log.d("MovieListEntryContent", "editingItem: $editingItem")
+        if (editingItem != null) {
+            val moviesFiltered = watchlistMovies.filter { editingItem.movieIds.contains(it.id) }
+
+            onNameChange(editingItem.name)
+            onDescriptionChange(editingItem.description)
+            onUpdateMovieList(moviesFiltered)
+            Log.d("MovieListEntryContent", "updated data ${moviesFiltered}")
+
+        }
+    }
 
     Column(
         Modifier.padding(
@@ -76,7 +96,7 @@ fun MovieListEntryContent(
         )
         Gap(15.dp)
         Field(
-            value = listDescriptionText,
+            value = editingItem?.description ?: listDescriptionText,
             onValueChange = { onDescriptionChange(it) },
             title = "Description (optional)",
             supportingText = "Add a short description to explain what this list is about"
@@ -103,29 +123,11 @@ fun MovieListEntryContent(
         }
 
 
-        if (selectedMovieList.isNotEmpty()) {
-            Gap(15.dp)
-            Text(
-                text = "Selected",
-                modifier = Modifier.padding(bottom = 5.dp, top = 5.dp, start = 16.dp + 3.dp),
-                fontSize = 16.sp,
-                color = colorScheme.primary,
-                fontWeight = FontWeight.W700
-            )
-
-            FlowRow(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(5.dp),
-                horizontalArrangement = Arrangement.spacedBy(5.dp)
-            ) {
-                selectedMovieList.forEach { mov ->
-                    MediaChip(
-                        mov.title,
-                        containerColor = colorScheme.surfaceBright,
-                        contentColor = colorScheme.onSurface
-                    )
-                }
-            }
+        if (selectedMovieList.isNotEmpty() && !isEditingList) {
+            AddedMovieChips(selectedMovieList)
+        } else if (isEditingList && editingItem != null) {
+            val moviesFiltered = watchlistMovies.filter { editingItem.movieIds.contains(it.id) }
+            AddedMovieChips(moviesFiltered)
         }
         Spacer(Modifier.weight(1f))
         Button(
@@ -146,7 +148,10 @@ fun MovieListEntryContent(
                 )
             )
             Gap(horizontal = ButtonDefaults.iconSpacingFor(size))
-            Text("Save list", style = MaterialTheme.typography.titleMedium)
+            Text(
+                if (isEditingList) "Update list" else "Save list",
+                style = MaterialTheme.typography.titleMedium
+            )
         }
         Gap(15.dp)
     }
@@ -231,3 +236,29 @@ private fun Field(
 
 }
 
+
+@Composable
+private fun AddedMovieChips(selectedMovieList: List<WatchlistItemEntity>) {
+    Gap(15.dp)
+    Text(
+        text = "Selected",
+        modifier = Modifier.padding(bottom = 5.dp, top = 5.dp, start = 16.dp + 3.dp),
+        fontSize = 16.sp,
+        color = MaterialTheme.colorScheme.primary,
+        fontWeight = FontWeight.W700
+    )
+
+    FlowRow(
+        modifier = Modifier.padding(horizontal = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(5.dp),
+        horizontalArrangement = Arrangement.spacedBy(5.dp)
+    ) {
+        selectedMovieList.forEach { mov ->
+            MediaChip(
+                mov.title,
+                containerColor = MaterialTheme.colorScheme.surfaceBright,
+                contentColor = MaterialTheme.colorScheme.onSurface
+            )
+        }
+    }
+}
