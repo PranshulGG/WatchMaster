@@ -1,5 +1,6 @@
 package com.pranshulgg.watchmaster.feature.movie.lists.movieListEntry.ui
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.ToggleButtonDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -47,21 +49,24 @@ fun MovieListEntrySheet(
     isLoading: Boolean
 ) {
     val uiState = viewModel.uiState.value
+
     val options = listOf(
         Option(WatchStatus.WANT_TO_WATCH, "Watching"),
         Option(WatchStatus.WATCHING, "Watching"),
         Option(WatchStatus.FINISHED, "Finished")
     )
+
     var selected by remember { mutableStateOf(WatchStatus.WANT_TO_WATCH) }
-
-    val selectedMovies = rememberSaveable {
-        mutableStateListOf<WatchlistItemEntity>()
-    }
-
-
     val filteredItems = items.filter { it.status == selected }
 
-    if (uiState.isSheetOpen)
+    if (uiState.isSheetOpen) {
+
+        val selectedMovies = rememberSaveable {
+            mutableStateListOf<WatchlistItemEntity>().apply {
+                addAll(uiState.listMoviesList)
+            }
+        }
+
         ActionBottomSheet(
             sheetState = sheetState,
             onCancel = { viewModel.hideMovieListSheet() },
@@ -98,6 +103,7 @@ fun MovieListEntrySheet(
                 }
             }
         }
+    }
 }
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
