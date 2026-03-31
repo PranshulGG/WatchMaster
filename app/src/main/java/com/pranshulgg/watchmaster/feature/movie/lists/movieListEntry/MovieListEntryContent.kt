@@ -26,12 +26,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TooltipAnchorPosition
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pranshulgg.watchmaster.R
+import com.pranshulgg.watchmaster.core.model.MediaListsIcons
 import com.pranshulgg.watchmaster.core.ui.components.Gap
 import com.pranshulgg.watchmaster.core.ui.components.Symbol
 import com.pranshulgg.watchmaster.core.ui.components.Tooltip
@@ -55,26 +57,26 @@ fun MovieListEntryContent(
     onSelectIcon: () -> Unit,
     selectedListIcon: Int,
     isEditingList: Boolean = false,
-    editingItem: MovieListsEntity? = null,
-    watchlistMovies: List<WatchlistItemEntity>,
-    onUpdateMovieList: (List<WatchlistItemEntity>) -> Unit
+//    editingItem: MovieListsEntity? = null,
+//    watchlistMovies: List<WatchlistItemEntity>,
+//    onUpdateMovieList: (List<WatchlistItemEntity>) -> Unit,
+//    onUpdateSelectedIcon: (MediaListsIcons) -> Unit,
 ) {
 
     val size = ButtonDefaults.MediumContainerHeight
     val colorScheme = MaterialTheme.colorScheme
 
-    LaunchedEffect(editingItem) {
-        Log.d("MovieListEntryContent", "editingItem: $editingItem")
-        if (editingItem != null) {
-            val moviesFiltered = watchlistMovies.filter { editingItem.movieIds.contains(it.id) }
 
-            onNameChange(editingItem.name)
-            onDescriptionChange(editingItem.description)
-            onUpdateMovieList(moviesFiltered)
-            Log.d("MovieListEntryContent", "updated data ${moviesFiltered}")
-
-        }
-    }
+//
+//    LaunchedEffect(moviesFiltered) {
+//        if (editingItem != null) {
+//            onNameChange(editingItem.name)
+//            onDescriptionChange(editingItem.description)
+//            onUpdateMovieList(moviesFiltered)
+//            onUpdateSelectedIcon(editingItem.icon ?: MediaListsIcons.FOLDER)
+//
+//        }
+//    }
 
     Column(
         Modifier.padding(
@@ -96,7 +98,7 @@ fun MovieListEntryContent(
         )
         Gap(15.dp)
         Field(
-            value = editingItem?.description ?: listDescriptionText,
+            value = listDescriptionText,
             onValueChange = { onDescriptionChange(it) },
             title = "Description (optional)",
             supportingText = "Add a short description to explain what this list is about"
@@ -123,11 +125,10 @@ fun MovieListEntryContent(
         }
 
 
-        if (selectedMovieList.isNotEmpty() && !isEditingList) {
+        if (selectedMovieList.isNotEmpty()) {
             AddedMovieChips(selectedMovieList)
-        } else if (isEditingList && editingItem != null) {
-            val moviesFiltered = watchlistMovies.filter { editingItem.movieIds.contains(it.id) }
-            AddedMovieChips(moviesFiltered)
+//        } else if (isEditingList && editingItem != null) {
+//            AddedMovieChips(moviesFiltered)
         }
         Spacer(Modifier.weight(1f))
         Button(
