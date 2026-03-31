@@ -1,5 +1,6 @@
 package com.pranshulgg.watchmaster.feature.movie.lists.movieListEntry.ui
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.FlowRow
@@ -14,6 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.ToggleButtonDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,13 +31,18 @@ import com.pranshulgg.watchmaster.feature.movie.lists.MovieListsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun MovieListSelectIconSheet(viewModel: MovieListsViewModel, sheetState: SheetState) {
+fun MovieListSelectIconSheet(
+    viewModel: MovieListsViewModel,
+    sheetState: SheetState,
+) {
 
     val uiState = viewModel.uiState.value
     val icons = MediaListsIcons.entries.toList()
-    var selectedIcon by remember { mutableStateOf(MediaListsIcons.FOLDER) }
 
-    if (uiState.isSelectListIconSheetOpen)
+    if (uiState.isSelectListIconSheetOpen) {
+
+        var selectedIcon by remember { mutableStateOf(uiState.listIcon) }
+
         ActionBottomSheet(
             sheetState = sheetState,
             onConfirm = {
@@ -78,5 +85,5 @@ fun MovieListSelectIconSheet(viewModel: MovieListsViewModel, sheetState: SheetSt
                 }
             }
         }
-
+    }
 }
