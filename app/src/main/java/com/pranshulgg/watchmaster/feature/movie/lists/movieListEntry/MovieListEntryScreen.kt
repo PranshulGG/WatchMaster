@@ -1,5 +1,6 @@
 package com.pranshulgg.watchmaster.feature.movie.lists.movieListEntry
 
+import android.util.Log
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -7,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -55,6 +57,22 @@ fun MovieListEntryScreen(id: Long = -1L, navController: NavController) {
     val isLoading by watchlistViewModel.isLoading.collectAsState()
     val currentMovieList by viewModel.currentMovieList.collectAsState(initial = null)
 
+    val currentListMoviesFiltered = remember(currentMovieList, items) {
+        val list = currentMovieList
+        if (list == null) emptyList()
+        else items.filter { list.movieIds.contains(it.id) }
+    }
+
+    
+    LaunchedEffect(currentListMoviesFiltered) {
+        val item = currentMovieList
+        if (item != null) {
+            viewModel.updateListName(item.name)
+            viewModel.updateListDescription(item.description)
+            viewModel.updateList(currentListMoviesFiltered)
+            viewModel.updateListIcon(item.icon ?: MediaListsIcons.FOLDER)
+        }
+    }
 
 
     LargeTopBarScaffold(
@@ -77,14 +95,16 @@ fun MovieListEntryScreen(id: Long = -1L, navController: NavController) {
             onSelectIcon = { viewModel.showSelectListIconSheet() },
             selectedListIcon = uiState.listIcon.toIcon(),
             isEditingList = id != -1L,
-            editingItem = currentMovieList,
-            watchlistMovies = items,
-            onUpdateMovieList = {
-                viewModel.updateList(it)
-            }
+//            editingItem = currentMovieList,
+//            watchlistMovies = items,
+//            onUpdateMovieList = {
+//                viewModel.updateList(it)
+//            },
+//            onUpdateSelectedIcon = {
+//                viewModel.updateListIcon(it)
+//            },
         )
     }
-
 
 
     MovieListEntrySheet(viewModel, sheetState, items, isLoading)
