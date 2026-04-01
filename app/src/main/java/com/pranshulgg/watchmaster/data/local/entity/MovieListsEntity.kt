@@ -14,5 +14,7 @@ data class MovieListsEntity(
 
     val icon: MediaListsIcons? = null,
 
-    val movieIds: List<Long>
+    val movieIds: List<Long>,
+
+    val isPinned: Boolean = false
 )
