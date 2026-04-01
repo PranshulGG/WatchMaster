@@ -14,10 +14,18 @@ class MovieListsRepository(
 
     suspend fun deleteMovieListsItem(id: Long) = dao.deleteMovieListsItem(id)
 
-    suspend fun updateListIcon(id: Long, icon: MediaListsIcons) = dao.updateListIcon(id, icon)
-
     suspend fun getMovieListById(id: Long): MovieListsEntity {
         return dao.getMovieListById(id)
+    }
+
+    suspend fun updateList(
+        id: Long,
+        name: String,
+        description: String,
+        movieIds: List<Long>,
+        icon: MediaListsIcons
+    ) {
+        dao.updateList(id, name, description, movieIds, icon)
     }
 
 }
