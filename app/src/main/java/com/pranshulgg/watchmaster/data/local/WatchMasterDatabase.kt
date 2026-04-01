@@ -28,7 +28,7 @@ import com.pranshulgg.watchmaster.data.local.entity.TvEpisodeEntity
 
 @Database(
     entities = [WatchlistItemEntity::class, MovieBundleEntity::class, TvBundleEntity::class, SeasonEntity::class, TvEpisodeEntity::class, MovieListsEntity::class],
-    version = 28
+    version = 29
 )
 @TypeConverters(
     GenreIdsConverter::class,
@@ -61,7 +61,8 @@ abstract class WatchMasterDatabase : RoomDatabase() {
                     context.applicationContext,
                     WatchMasterDatabase::class.java,
                     "watchmaster.db"
-                ).addMigrations(MIGRATION_25_26, MIGRATION_26_27, MIGRATION_27_28).build()
+                ).addMigrations(MIGRATION_25_26, MIGRATION_26_27, MIGRATION_27_28, MIGRATION_28_29)
+                    .build()
                     .also { INSTANCE = it }
             }
         }
@@ -144,5 +145,15 @@ val MIGRATION_27_28 = object : Migration(27, 28) {
 
         db.execSQL("DROP TABLE movie_lists")
         db.execSQL("ALTER TABLE movie_lists_new RENAME TO movie_lists")
+    }
+}
+
+val MIGRATION_28_29 = object : Migration(28, 29) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL(
+            """
+            ALTER TABLE movie_lists ADD COLUMN isPinned INTEGER NOT NULL DEFAULT 0
+        """.trimIndent()
+        )
     }
 }
