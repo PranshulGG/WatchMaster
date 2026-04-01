@@ -52,31 +52,16 @@ fun MovieListEntryContent(
     onNameChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
     onAddMovie: () -> Unit,
-    onSave: () -> Unit,
+    onSave: (updatingList: Boolean) -> Unit,
     selectedMovieList: List<WatchlistItemEntity> = emptyList(),
     onSelectIcon: () -> Unit,
     selectedListIcon: Int,
     isEditingList: Boolean = false,
-//    editingItem: MovieListsEntity? = null,
-//    watchlistMovies: List<WatchlistItemEntity>,
-//    onUpdateMovieList: (List<WatchlistItemEntity>) -> Unit,
-//    onUpdateSelectedIcon: (MediaListsIcons) -> Unit,
 ) {
 
     val size = ButtonDefaults.MediumContainerHeight
     val colorScheme = MaterialTheme.colorScheme
 
-
-//
-//    LaunchedEffect(moviesFiltered) {
-//        if (editingItem != null) {
-//            onNameChange(editingItem.name)
-//            onDescriptionChange(editingItem.description)
-//            onUpdateMovieList(moviesFiltered)
-//            onUpdateSelectedIcon(editingItem.icon ?: MediaListsIcons.FOLDER)
-//
-//        }
-//    }
 
     Column(
         Modifier.padding(
@@ -127,12 +112,12 @@ fun MovieListEntryContent(
 
         if (selectedMovieList.isNotEmpty()) {
             AddedMovieChips(selectedMovieList)
-//        } else if (isEditingList && editingItem != null) {
-//            AddedMovieChips(moviesFiltered)
         }
         Spacer(Modifier.weight(1f))
         Button(
-            onClick = onSave,
+            onClick = {
+                onSave(isEditingList)
+            },
             enabled = listNameText.isNotEmpty(),
             modifier = Modifier
                 .heightIn(size)
