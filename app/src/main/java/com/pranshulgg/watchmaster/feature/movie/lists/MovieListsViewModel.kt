@@ -39,7 +39,7 @@ class MovieListsViewModel @Inject constructor(
         )
 
 
-    fun saveList() = viewModelScope.launch {
+    fun saveList(updatingList: Boolean = false, id: Long = -1L) = viewModelScope.launch {
 
         val item = MovieListsEntity(
             name = uiState.value.listName,
@@ -48,7 +48,17 @@ class MovieListsViewModel @Inject constructor(
             icon = uiState.value.listIcon
         )
 
-        repo.insertMovieListsItem(item)
+        if (!updatingList) {
+            repo.insertMovieListsItem(item)
+        } else if (id != -1L) {
+            repo.updateList(
+                id,
+                item.name,
+                item.description,
+                item.movieIds,
+                item.icon ?: MediaListsIcons.FOLDER
+            )
+        }
     }
 
     fun getMovieListById(id: Long) {
