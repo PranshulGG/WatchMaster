@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,17 +13,27 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TooltipAnchorPosition
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -32,12 +43,18 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.pranshulgg.watchmaster.R
+import com.pranshulgg.watchmaster.core.model.WatchStatus
+import com.pranshulgg.watchmaster.core.ui.components.ActionBottomSheet
 import com.pranshulgg.watchmaster.core.ui.components.AvatarIcon
 import com.pranshulgg.watchmaster.core.ui.components.LargeTopBarScaffold
 import com.pranshulgg.watchmaster.core.ui.components.NavigateUpBtn
+import com.pranshulgg.watchmaster.core.ui.components.SettingSection
+import com.pranshulgg.watchmaster.core.ui.components.SettingTile
+import com.pranshulgg.watchmaster.core.ui.components.SettingsTileIcon
 import com.pranshulgg.watchmaster.core.ui.components.Symbol
 import com.pranshulgg.watchmaster.core.ui.components.Tooltip
 import com.pranshulgg.watchmaster.core.ui.navigation.NavRoutes
+import com.pranshulgg.watchmaster.core.ui.theme.Radius
 import com.pranshulgg.watchmaster.data.local.mapper.toIcon
 import com.pranshulgg.watchmaster.feature.movie.lists.MovieListsViewModel
 import com.pranshulgg.watchmaster.feature.shared.WatchlistViewModel
@@ -61,9 +78,7 @@ fun ViewMovieListScreen(navController: NavController, id: Long) {
         navigationIcon = { NavigateUpBtn(navController) },
         subtitle = movieListEntity?.description,
         actions = {
-            Actions(movieListEntity?.icon?.toIcon() ?: R.drawable.folder_24px, onClick = {
-                navController.navigate(NavRoutes.movieListEntry(id))
-            })
+            Actions(movieListEntity?.icon?.toIcon() ?: R.drawable.folder_24px, {}, {})
         }
     ) { pad ->
         Box(
@@ -82,9 +97,25 @@ fun ViewMovieListScreen(navController: NavController, id: Long) {
 
 
 // Edit list action
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
-private fun Actions(icon: Int, onClick: () -> Unit) {
+private fun Actions(icon: Int, onEdit: () -> Unit, onDelete: () -> Unit) {
+
+    data class Option(
+        val title: String,
+        val leading: Int,
+        val action: () -> Unit,
+    )
+
+    var isSheetOpen by remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+
+    val options = listOf(
+        Option("Edit", R.drawable.edit_24px) { onEdit() },
+        Option("Delete", R.drawable.delete_24px) { onDelete() },
+        Option("Pin", R.drawable.keep_24px) {}
+    )
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.padding(end = 8.dp)
@@ -105,7 +136,7 @@ private fun Actions(icon: Int, onClick: () -> Unit) {
         Spacer(Modifier.width(5.dp))
 
         Tooltip(
-            tooltipText = "Edit list",
+            tooltipText = "More options",
             spacing = 10.dp,
             preferredPosition = TooltipAnchorPosition.Below
         ) {
@@ -116,15 +147,34 @@ private fun Actions(icon: Int, onClick: () -> Unit) {
                     color = MaterialTheme.colorScheme.outlineVariant
                 ),
                 onClick = {
-                    onClick()
+                    isSheetOpen = true
                 }, shapes = IconButtonDefaults.shapes()
             ) {
                 Symbol(
-                    R.drawable.edit_24px,
+                    R.drawable.more_vert_24px,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
-
     }
+
+
+    if (isSheetOpen)
+        ActionBottomSheet(
+            sheetState,
+            onConfirm = {},
+            showActions = false,
+            onCancel = { isSheetOpen = false }
+        ) {
+            SettingSection(
+                isModalOption = true,
+                tiles = options.map { op ->
+                    SettingTile.ActionTile(
+                        title = op.title,
+                        leading = { SettingsTileIcon(op.leading) },
+                        onClick = { op.action() }
+                    )
+                }
+            )
+        }
 }
