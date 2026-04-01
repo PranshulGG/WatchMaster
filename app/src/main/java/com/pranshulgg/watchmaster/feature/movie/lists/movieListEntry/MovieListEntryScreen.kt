@@ -63,7 +63,7 @@ fun MovieListEntryScreen(id: Long = -1L, navController: NavController) {
         else items.filter { list.movieIds.contains(it.id) }
     }
 
-    
+
     LaunchedEffect(currentListMoviesFiltered) {
         val item = currentMovieList
         if (item != null) {
@@ -76,7 +76,7 @@ fun MovieListEntryScreen(id: Long = -1L, navController: NavController) {
 
 
     LargeTopBarScaffold(
-        title = "Create movie list",
+        title = if (id != 1L) "Update movie list" else "Create movie list",
         navigationIcon = { NavigateUpBtn(navController) },
     ) { paddingValues ->
 
@@ -86,8 +86,8 @@ fun MovieListEntryScreen(id: Long = -1L, navController: NavController) {
             listDescriptionText = uiState.listDescription,
             onNameChange = { viewModel.updateListName(it) },
             onDescriptionChange = { viewModel.updateListDescription(it) },
-            onSave = {
-                viewModel.saveList()
+            onSave = { updatingList ->
+                viewModel.saveList(updatingList, id)
                 navController.popBackStack()
             },
             onAddMovie = { viewModel.showMovieListSheet() },
@@ -95,14 +95,6 @@ fun MovieListEntryScreen(id: Long = -1L, navController: NavController) {
             onSelectIcon = { viewModel.showSelectListIconSheet() },
             selectedListIcon = uiState.listIcon.toIcon(),
             isEditingList = id != -1L,
-//            editingItem = currentMovieList,
-//            watchlistMovies = items,
-//            onUpdateMovieList = {
-//                viewModel.updateList(it)
-//            },
-//            onUpdateSelectedIcon = {
-//                viewModel.updateListIcon(it)
-//            },
         )
     }
 
