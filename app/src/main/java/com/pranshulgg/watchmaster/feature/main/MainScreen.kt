@@ -58,11 +58,13 @@ fun MainScreen(
                     Text(appBarTitles[selectedItem])
                 },
                 actions = {
-                    TooltipIconBtn(
-                        onClick = { navController.navigate(NavRoutes.MOVIE_LISTS_SCREEN) },
-                        icon = R.drawable.lists_24px,
-                        tooltipText = if (appBarTitles[selectedItem] == "Movies") "Movie lists" else "TV lists"
-                    )
+                    if (selectedItem == 1) {
+                        TooltipIconBtn(
+                            onClick = { navController.navigate(NavRoutes.MOVIE_LISTS_SCREEN) },
+                            icon = R.drawable.lists_24px,
+                            tooltipText = if (appBarTitles[selectedItem] == "Movies") "Movie lists" else "TV lists"
+                        )
+                    }
                     TooltipIconBtn(
                         onClick = { navController.navigate(NavRoutes.SETTINGS) },
                         icon = R.drawable.settings_24px,

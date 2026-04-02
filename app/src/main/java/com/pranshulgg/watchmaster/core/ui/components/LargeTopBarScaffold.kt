@@ -22,7 +22,6 @@ fun LargeTopBarScaffold(
     navigationIcon: @Composable () -> Unit,
     actions: @Composable RowScope.() -> Unit = {},
     fab: @Composable () -> Unit = {},
-    subtitle: String? = null,
     content: @Composable (PaddingValues) -> Unit,
 ) {
     val scrollBehavior =
@@ -37,7 +36,6 @@ fun LargeTopBarScaffold(
                 navigationIcon = navigationIcon,
                 scrollBehavior = scrollBehavior,
                 actions = actions,
-                subtitle = { subtitle?.let { Text(it) } },
                 colors =
                     TopAppBarDefaults.topAppBarColors(
                         containerColor = MaterialTheme.colorScheme.surfaceContainer,
