@@ -28,4 +28,7 @@ class MovieListsRepository(
         dao.updateList(id, name, description, movieIds, icon)
     }
 
+    suspend fun setPinned(id: Long, isPinned: Boolean) {
+        dao.setPinned(id, isPinned)
+    }
 }

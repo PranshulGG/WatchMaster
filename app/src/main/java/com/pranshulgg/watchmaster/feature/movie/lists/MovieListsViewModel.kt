@@ -67,6 +67,11 @@ class MovieListsViewModel @Inject constructor(
         }
     }
 
+    fun setPinned(id: Long, isPinned: Boolean) {
+        viewModelScope.launch {
+            repo.setPinned(id, isPinned)
+        }
+    }
 
     fun delete(id: Long) = viewModelScope.launch {
         repo.deleteMovieListsItem(id)

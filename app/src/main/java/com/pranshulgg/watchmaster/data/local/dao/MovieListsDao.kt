@@ -43,4 +43,6 @@ interface MovieListsDao {
     )
 
 
+    @Query("UPDATE movie_lists SET isPinned = :isPinned WHERE id = :id")
+    suspend fun setPinned(id: Long, isPinned: Boolean)
 }
