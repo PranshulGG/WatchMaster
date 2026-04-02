@@ -46,14 +46,18 @@ import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.core.model.WatchStatus
 import com.pranshulgg.watchmaster.core.ui.components.ActionBottomSheet
 import com.pranshulgg.watchmaster.core.ui.components.AvatarIcon
+import com.pranshulgg.watchmaster.core.ui.components.DialogBasic
 import com.pranshulgg.watchmaster.core.ui.components.LargeTopBarScaffold
 import com.pranshulgg.watchmaster.core.ui.components.NavigateUpBtn
 import com.pranshulgg.watchmaster.core.ui.components.SettingSection
 import com.pranshulgg.watchmaster.core.ui.components.SettingTile
 import com.pranshulgg.watchmaster.core.ui.components.SettingsTileIcon
 import com.pranshulgg.watchmaster.core.ui.components.Symbol
+import com.pranshulgg.watchmaster.core.ui.components.TextAlertDialog
 import com.pranshulgg.watchmaster.core.ui.components.Tooltip
+import com.pranshulgg.watchmaster.core.ui.components.media.MediaSectionCard
 import com.pranshulgg.watchmaster.core.ui.navigation.NavRoutes
+import com.pranshulgg.watchmaster.core.ui.snackbar.SnackbarManager
 import com.pranshulgg.watchmaster.core.ui.theme.Radius
 import com.pranshulgg.watchmaster.data.local.mapper.toIcon
 import com.pranshulgg.watchmaster.feature.movie.lists.MovieListsViewModel
@@ -73,12 +77,24 @@ fun ViewMovieListScreen(navController: NavController, id: Long) {
     val movies =
         watchlistItems.filter { it.mediaType == "movie" && movieListEntity?.movieIds?.contains(it.id) == true }
 
+    val isPinned = !(movieListEntity?.isPinned ?: false)
+
+    var isConfirmationDialogOpen by remember { mutableStateOf(false) }
+
     LargeTopBarScaffold(
         title = movieListEntity?.name ?: "List",
         navigationIcon = { NavigateUpBtn(navController) },
-        subtitle = movieListEntity?.description,
+//        subtitle = movieListEntity?.description,
         actions = {
-            Actions(movieListEntity?.icon?.toIcon() ?: R.drawable.folder_24px, {}, {})
+            Actions(
+                movieListEntity?.icon?.toIcon() ?: R.drawable.folder_24px,
+                { navController.navigate(NavRoutes.movieListEntry(id)) },
+                {
+                    isConfirmationDialogOpen = true
+                },
+                { viewModel.setPinned(id, isPinned) },
+                !isPinned
+            )
         }
     ) { pad ->
         Box(
@@ -86,20 +102,35 @@ fun ViewMovieListScreen(navController: NavController, id: Long) {
                 .padding(pad)
                 .fillMaxSize()
         ) {
-
-            Column() {
-                movies.forEach { mov -> Text(mov.title) }
-
-            }
+            ViewMovieListContent(movies, navController, movieListEntity?.description ?: "")
         }
     }
+
+
+    TextAlertDialog(
+        show = isConfirmationDialogOpen,
+        onConfirm = {
+            SnackbarManager.show("Deleted ${movieListEntity?.name ?: "list"}")
+            viewModel.delete(id)
+            navController.popBackStack()
+        },
+        onDismiss = { isConfirmationDialogOpen = false },
+        title = "Delete ${movieListEntity?.name ?: "list"}",
+        message = "Are you sure you want to delete this list? This can’t be undone"
+    )
 }
 
 
 // Edit list action
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
-private fun Actions(icon: Int, onEdit: () -> Unit, onDelete: () -> Unit) {
+private fun Actions(
+    icon: Int,
+    onEdit: () -> Unit,
+    onDelete: () -> Unit,
+    onPin: () -> Unit,
+    isPinned: Boolean = false
+) {
 
     data class Option(
         val title: String,
@@ -113,7 +144,7 @@ private fun Actions(icon: Int, onEdit: () -> Unit, onDelete: () -> Unit) {
     val options = listOf(
         Option("Edit", R.drawable.edit_24px) { onEdit() },
         Option("Delete", R.drawable.delete_24px) { onDelete() },
-        Option("Pin", R.drawable.keep_24px) {}
+        Option(if (isPinned) "Unpin" else "Pin", R.drawable.keep_24px) { onPin() }
     )
 
     Row(
@@ -172,7 +203,10 @@ private fun Actions(icon: Int, onEdit: () -> Unit, onDelete: () -> Unit) {
                     SettingTile.ActionTile(
                         title = op.title,
                         leading = { SettingsTileIcon(op.leading) },
-                        onClick = { op.action() }
+                        onClick = {
+                            op.action()
+                            isSheetOpen = false
+                        }
                     )
                 }
             )
