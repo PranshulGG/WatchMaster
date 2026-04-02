@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
+import com.pranshulgg.watchmaster.feature.shared.media.components.MovieWatchlistRow
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -63,7 +64,7 @@ fun MovieItems(
             itemsIndexed(
                 pinnedItems,
                 key = { _, item -> item.id }) { index, item ->
-                WatchlistRow(
+                MovieWatchlistRow(
                     item,
                     index,
                     pinnedItems,
@@ -87,7 +88,7 @@ fun MovieItems(
         }
 
         itemsIndexed(normalItems, key = { _, item -> item.id }) { index, item ->
-            WatchlistRow(
+            MovieWatchlistRow(
                 item,
                 index,
                 normalItems,

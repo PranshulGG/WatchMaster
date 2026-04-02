@@ -1,4 +1,4 @@
-package com.pranshulgg.watchmaster.feature.movie.components
+package com.pranshulgg.watchmaster.feature.shared.media.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
@@ -36,14 +36,13 @@ import com.pranshulgg.watchmaster.core.ui.components.listItemShape
 import com.pranshulgg.watchmaster.core.ui.components.media.PosterPlaceholder
 import com.pranshulgg.watchmaster.core.ui.navigation.NavRoutes
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
-import com.pranshulgg.watchmaster.feature.shared.media.components.WatchListStatusPill
 import com.pranshulgg.watchmaster.feature.shared.media.ui.watchstatus.asStatusDates
 import com.pranshulgg.watchmaster.feature.shared.media.ui.watchstatus.toWatchListItemStatusUiPill
 
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun WatchlistRow(
+fun MovieWatchlistRow(
     item: WatchlistItemEntity,
     index: Int,
     items: List<WatchlistItemEntity>,
