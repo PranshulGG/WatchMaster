@@ -25,7 +25,8 @@ import androidx.navigation.navArgument
 import com.pranshulgg.watchmaster.feature.main.MainScreen
 import com.pranshulgg.watchmaster.feature.movie.detail.MovieDetailPage
 import com.pranshulgg.watchmaster.feature.movie.lists.MovieListsScreen
-import com.pranshulgg.watchmaster.feature.movie.lists.create.MovieListsCreateScreen
+import com.pranshulgg.watchmaster.feature.movie.lists.movieListEntry.MovieListEntryScreen
+import com.pranshulgg.watchmaster.feature.movie.lists.view.ViewMovieListScreen
 import com.pranshulgg.watchmaster.feature.search.SearchScreen
 import com.pranshulgg.watchmaster.feature.search.SearchType
 import com.pranshulgg.watchmaster.feature.setting.SettingsScreen
@@ -55,8 +56,8 @@ fun AppNavHost(
         )
         NavHost(
             navController = navController,
-//            startDestination = NavRoutes.MAIN,
-            startDestination = NavRoutes.MOVIE_LISTS_CREATE_SCREEN,
+            startDestination = NavRoutes.MAIN,
+//            startDestination = NavRoutes.viewMovieList(20),
             modifier = Modifier.background(MaterialTheme.colorScheme.surfaceContainer),
             enterTransition = { NavTransitions.enter(motionScheme) },
             exitTransition = { NavTransitions.exit(motionScheme) },
@@ -130,9 +131,27 @@ fun AppNavHost(
                 MovieListsScreen(navController)
             }
             composable(
-                NavRoutes.MOVIE_LISTS_CREATE_SCREEN
-            ) {
-                MovieListsCreateScreen(navController)
+                route = "${NavRoutes.MOVIE_LISTS_ENTRY_SCREEN}/{id}",
+                arguments = listOf(
+                    navArgument("id") {
+                        type = NavType.LongType
+                        defaultValue = -1L
+                    }
+                )
+            ) { backStackEntry ->
+                val id = backStackEntry.arguments?.getLong("id") ?: -1L
+                MovieListEntryScreen(id, navController)
+
+            }
+            composable(
+                route = "${NavRoutes.MOVIE_LISTS_VIEW_SCREEN}/{id}",
+                arguments = listOf(
+                    navArgument("id") { type = NavType.LongType }
+                )
+            ) { backStackEntry ->
+                val id = backStackEntry.arguments!!.getLong("id")
+                ViewMovieListScreen(navController, id)
+
             }
         }
     }
