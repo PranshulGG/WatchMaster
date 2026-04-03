@@ -32,6 +32,7 @@ fun DialogBasic(
     onConfirm: () -> Unit = {},
     onDismiss: () -> Unit,
     showDefaultActions: Boolean = true,
+    confirmBtnDisabled: Boolean = false,
     content: @Composable () -> Unit,
 ) {
     if (!show) return
@@ -50,11 +51,12 @@ fun DialogBasic(
             color = MaterialTheme.colorScheme.surfaceContainerHigh,
             shadowElevation = 6.dp
         ) {
-            Column(modifier = Modifier.padding(24.dp)) {
+            Column() {
                 Text(
                     title,
                     style = MaterialTheme.typography.headlineSmall,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.padding(top = 24.dp, start = 24.dp, end = 24.dp)
                 )
                 Spacer(Modifier.height(16.dp))
                 content()
@@ -62,8 +64,10 @@ fun DialogBasic(
                 if (showDefaultActions) {
                     Spacer(Modifier.height(16.dp))
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.End
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 24.dp, start = 24.dp, end = 24.dp),
+                        horizontalArrangement = Arrangement.End,
                     ) {
                         TextButton(
                             onClick = {
@@ -75,6 +79,7 @@ fun DialogBasic(
                         }
                         Spacer(Modifier.width(8.dp))
                         TextButton(
+                            enabled = !confirmBtnDisabled,
                             onClick = {
                                 onConfirm()
                                 onDismiss()
