@@ -37,13 +37,15 @@ fun SettingsScreen(navController: NavController) {
     val isAndroid12Plus = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
     val context = LocalContext.current
 
-    val exportLauncher = exportLauncher(context)
+
+    var exportWatchlistChecked by remember { mutableStateOf(false) }
+    var exportMovieListChecked by remember { mutableStateOf(false) }
+
+    val exportLauncher = exportLauncher(context, exportWatchlistChecked, exportMovieListChecked)
     val importLauncher = importLauncher(context)
 
     var isExportDialogOpen by remember { mutableStateOf(false) }
 
-    var exportWatchlistChecked by remember { mutableStateOf(false) }
-    var exportMovieListChecked by remember { mutableStateOf(false) }
 
     var isWarningImportDialogOpen by remember { mutableStateOf(false) }
 
