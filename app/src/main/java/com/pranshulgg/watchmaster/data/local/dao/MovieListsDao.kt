@@ -6,7 +6,9 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.pranshulgg.watchmaster.core.model.MediaListsIcons
 import com.pranshulgg.watchmaster.data.local.entity.MovieListsEntity
+import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 import kotlinx.coroutines.flow.Flow
+import kotlin.collections.forEach
 
 @Dao
 interface MovieListsDao {
@@ -45,4 +47,12 @@ interface MovieListsDao {
 
     @Query("UPDATE movie_lists SET isPinned = :isPinned WHERE id = :id")
     suspend fun setPinned(id: Long, isPinned: Boolean)
+
+    @Query("DELETE FROM movie_lists")
+    suspend fun clearAll()
+
+    suspend fun insertAll(items: List<MovieListsEntity>) {
+        items.forEach { insertMovieListItem(it) }
+    }
+
 }

@@ -61,4 +61,12 @@ interface WatchlistDao {
     @Query("UPDATE watchlist SET notes = :note WHERE id = :id")
     suspend fun setUserNote(id: Long, note: String)
 
+    @Query("DELETE FROM watchlist")
+    suspend fun clearAll()
+
+
+    suspend fun insertAll(items: List<WatchlistItemEntity>) {
+        items.forEach { insert(it) }
+    }
+
 }
