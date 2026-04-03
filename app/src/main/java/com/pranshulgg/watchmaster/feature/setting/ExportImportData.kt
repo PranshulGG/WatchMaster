@@ -41,7 +41,7 @@ fun exportLauncher(
         val uri = result.data?.data
         uri?.let {
             scope.launch {
-                export(context, uri)
+                export(context, uri, exportWatchlist, exportMovieList)
             }
         }
     }
