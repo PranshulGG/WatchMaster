@@ -1,11 +1,14 @@
 package com.pranshulgg.watchmaster.feature.shared.media.components
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.pranshulgg.watchmaster.core.model.WatchStatus
 import com.pranshulgg.watchmaster.core.ui.components.DialogBasic
 import com.pranshulgg.watchmaster.core.ui.components.TextAlertDialog
@@ -36,7 +39,9 @@ fun MediaNoteDialogContent(
         confirmText = "Save",
         content = {
             OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp),
                 shape = RoundedCornerShape(Radius.Large),
                 value = note,
                 onValueChange = onNoteChange,

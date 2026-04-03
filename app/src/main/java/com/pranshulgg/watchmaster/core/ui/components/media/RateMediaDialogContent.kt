@@ -64,6 +64,7 @@ fun RateMediaDialogContent(
     Row(
         modifier = Modifier
             .height(250.dp)
+            .padding(horizontal = 24.dp)
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
@@ -113,7 +114,7 @@ fun RateMediaDialogContent(
 
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier.padding(top = 12.dp)
+        modifier = Modifier.padding(top = 12.dp, bottom = 24.dp, start = 24.dp, end = 24.dp)
     ) {
         Button(
             modifier = Modifier
