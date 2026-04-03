@@ -7,19 +7,27 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.core.prefs.LocalAppPrefs
+import com.pranshulgg.watchmaster.core.ui.components.CheckboxRow
+import com.pranshulgg.watchmaster.core.ui.components.DialogBasic
 import com.pranshulgg.watchmaster.core.ui.components.LargeTopBarScaffold
 import com.pranshulgg.watchmaster.core.ui.components.NavigateUpBtn
 import com.pranshulgg.watchmaster.core.ui.components.SettingSection
 import com.pranshulgg.watchmaster.core.ui.components.SettingTile
 import com.pranshulgg.watchmaster.core.ui.components.SettingsTileIcon
-import com.pranshulgg.watchmaster.core.ui.snackbar.LocalSnackbarHostState
-import com.pranshulgg.watchmaster.core.ui.snackbar.SnackbarManager
+import com.pranshulgg.watchmaster.core.ui.components.TextAlertDialog
 import com.pranshulgg.watchmaster.feature.setting.components.ColorPickerBtn
 
 @Composable
@@ -27,6 +35,17 @@ fun SettingsScreen(navController: NavController) {
 
     val prefs = LocalAppPrefs.current
     val isAndroid12Plus = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+    val context = LocalContext.current
+
+    val exportLauncher = exportLauncher(context)
+    val importLauncher = importLauncher(context)
+
+    var isExportDialogOpen by remember { mutableStateOf(false) }
+
+    var exportWatchlistChecked by remember { mutableStateOf(false) }
+    var exportMovieListChecked by remember { mutableStateOf(false) }
+
+    var isWarningImportDialogOpen by remember { mutableStateOf(false) }
 
     LargeTopBarScaffold(
         title = "Settings",
@@ -107,6 +126,65 @@ fun SettingsScreen(navController: NavController) {
                     )
                 )
             )
+            SettingSection(
+                title = "Data",
+                tiles = listOf(
+                    SettingTile.ActionTile(
+                        leading = { SettingsTileIcon(R.drawable.upload_24px) },
+                        title = "Export app data",
+                        onClick = {
+                            isExportDialogOpen = true
+                        }
+                    ),
+                    SettingTile.ActionTile(
+                        leading = { SettingsTileIcon(R.drawable.download_24px) },
+                        title = "Import app data",
+                        onClick = {
+                            isWarningImportDialogOpen = true
+                        }
+                    )
+                )
+            )
         }
     }
+
+
+    DialogBasic(
+        show = isExportDialogOpen,
+        onConfirm = {
+            val intent = createNewDocumentIntent()
+            exportLauncher(intent)
+        },
+        onDismiss = {
+            isExportDialogOpen = false
+        },
+        title = "Export data",
+        confirmBtnDisabled = !exportWatchlistChecked && !exportMovieListChecked,
+    ) {
+        Column() {
+            CheckboxRow(
+                label = "Export watchlist",
+                checked = exportWatchlistChecked
+            ) { exportWatchlistChecked = it }
+            CheckboxRow(
+                label = "Export movie lists",
+                checked = exportMovieListChecked
+            ) { exportMovieListChecked = it }
+
+        }
+    }
+
+    TextAlertDialog(
+        show = isWarningImportDialogOpen,
+        onDismiss = {
+            isWarningImportDialogOpen = false
+        },
+        title = "Import data",
+        onConfirm = {
+            val intent = createOpenDocumentIntent()
+            importLauncher(intent)
+        },
+        message = "Importing data will replace the current data. Are you sure you want to continue?"
+    )
 }
+
