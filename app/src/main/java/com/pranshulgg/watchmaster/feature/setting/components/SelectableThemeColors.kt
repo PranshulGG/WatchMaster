@@ -42,7 +42,7 @@ import androidx.compose.ui.semantics.semantics
 import com.pranshulgg.watchmaster.core.ui.theme.ThemeVariantType
 
 
-val scheme = listOf(
+private val scheme = listOf(
     "#f44336",
     "#ff5252",
     "#e91e63",
