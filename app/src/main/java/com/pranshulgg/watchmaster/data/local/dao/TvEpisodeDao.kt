@@ -29,5 +29,10 @@ interface TvEpisodeDao {
     @Query("SELECT EXISTS(SELECT 1 FROM tv_episodes WHERE seasonId = :seasonId)")
     suspend fun hasEpisodes(seasonId: Long): Boolean
 
+    @Query("SELECT * FROM tv_episodes")
+    suspend fun getAllEpisodes(): List<TvEpisodeEntity>
+
+    @Query("DELETE FROM tv_episodes")
+    suspend fun clearAll()
 
 }
