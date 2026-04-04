@@ -1,10 +1,12 @@
 package com.pranshulgg.watchmaster.feature.tv.detail.components
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -13,16 +15,20 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.core.model.WatchStatus
+import com.pranshulgg.watchmaster.core.ui.components.Gap
 import com.pranshulgg.watchmaster.core.ui.components.media.MediaSectionCard
 import com.pranshulgg.watchmaster.core.ui.snackbar.SnackbarManager
 import com.pranshulgg.watchmaster.data.local.entity.TvEpisodeEntity
 import com.pranshulgg.watchmaster.feature.tv.detail.TvDetailsViewModel
 import com.pranshulgg.watchmaster.feature.tv.detail.ui.TvDetailsEpisodeInfoSheet
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
@@ -37,7 +43,20 @@ fun EpisodesSection(
     var showSheet by remember { mutableStateOf(false) }
     var currentEp by remember { mutableStateOf<TvEpisodeEntity?>(null) }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val epScrollState = rememberLazyListState()
+    val scope = rememberCoroutineScope()
 
+//    val filteredEps = episodes.filter { !it.still_path.isNullOrEmpty() }
+
+
+    LaunchedEffect(episodes) {
+        if (episodes.isNotEmpty()) {
+
+            scope.launch {
+                epScrollState.animateScrollToItem(episodes.size - 1)
+            }
+        }
+    }
 
     val watchedProgress = remember(episodes) {
         val watchedItems = episodes.count { it.isWatched }
@@ -64,11 +83,21 @@ fun EpisodesSection(
         showAction = true
     ) {
         if (expanded) {
-            Column(
+            LazyRow(
                 modifier = Modifier.padding(top = 10.dp),
-                verticalArrangement = Arrangement.spacedBy(2.dp)
+                state = epScrollState,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                episodes.forEach { episode ->
+                itemsIndexed(episodes, key = { _, item -> item.epId }) { index, episode ->
+
+
+                    val prevEpWatched = if (index > 0) episodes[index - 1].isWatched else false
+
+
+                    if (index == 0) {
+                        Gap(horizontal = 16.dp)
+                    }
+
                     EpisodeItem(
                         episode,
                         viewModel,
@@ -76,8 +105,13 @@ fun EpisodesSection(
                         onTrailingAction = {
                             currentEp = episode
                             showSheet = true
-                        }
+                        },
+                        prevEpWatched
                     )
+
+                    if (index == episodes.size - 1) {
+                        Gap(horizontal = 16.dp)
+                    }
                 }
             }
         }
