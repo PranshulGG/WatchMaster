@@ -32,12 +32,10 @@ import com.pranshulgg.watchmaster.feature.tv.TvHomeScreen
 @Composable
 fun MainScreen(
     navController: NavController,
-    motionScheme: MotionScheme,
+    motionScheme: MotionScheme
 ) {
-    val prefs = LocalAppPrefs.current
 
-    val viewModel: MainScreenNavViewModel =
-        viewModel(factory = MainScreenNavViewModelFactory(prefs.defaultTab))
+    val viewModel: MainScreenNavViewModel = viewModel()
 
     val selectedItem = viewModel.selectedItem
     val appBarTitles = listOf("Home", "Movies", "TV series")
