@@ -5,10 +5,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.CircularWavyProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -16,6 +19,7 @@ import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.pranshulgg.watchmaster.core.ui.theme.Radius
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun PosterBox(
     posterUrl: String?,
@@ -25,6 +29,7 @@ fun PosterBox(
     cornerRadius: Dp = Radius.Medium,
     circular: Boolean = false,
     placeholder: @Composable () -> Unit = { PosterPlaceholder() },
+    progressIndicatorSize: Dp = 24.dp,
     apiPath: String? // to check if the API provided a valid image before loading
 ) {
     Box(
@@ -44,9 +49,8 @@ fun PosterBox(
             )
 
             if (painter.state is AsyncImagePainter.State.Loading) {
-                CircularProgressIndicator(
-                    strokeWidth = 2.dp,
-                    modifier = Modifier.size(24.dp)
+                CircularWavyProgressIndicator(
+                    modifier = Modifier.size(progressIndicatorSize),
                 )
             }
         } else {
