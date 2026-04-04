@@ -76,7 +76,7 @@ fun MovieListEntryScreen(id: Long = -1L, navController: NavController) {
 
 
     LargeTopBarScaffold(
-        title = if (id != 1L) "Update movie list" else "Create movie list",
+        title = if (id != -1L) "Update movie list" else "Create movie list",
         navigationIcon = { NavigateUpBtn(navController) },
     ) { paddingValues ->
 
