@@ -36,6 +36,7 @@ fun WatchMasterTheme(
     seedColor: Color = Color.Green,
     themeVariantType: ThemeVariantType,
     dynamicColor: Boolean = false,
+    applySystemUi: Boolean = true,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
@@ -56,9 +57,12 @@ fun WatchMasterTheme(
 
     val view = LocalView.current
     if (!view.isInEditMode) {
-        SideEffect {
-            val window = (view.context as Activity).window
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
+        if (applySystemUi) {
+            SideEffect {
+                val window = (view.context as Activity).window
+                WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars =
+                    !darkTheme
+            }
         }
     }
 
