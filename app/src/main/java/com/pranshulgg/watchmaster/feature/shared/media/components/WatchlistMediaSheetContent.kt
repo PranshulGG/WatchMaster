@@ -1,8 +1,12 @@
 package com.pranshulgg.watchmaster.feature.shared.media.components
 
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.sp
 import com.pranshulgg.watchmaster.R
@@ -28,9 +32,12 @@ fun WatchlistMediaSheetContent(
     onDeleteSeries: (seriesId: Long) -> Unit = {},
     onDelete: () -> Unit,
     onDismiss: () -> Unit,
+    onChangeFinishData: () -> Unit,
     viewModel: WatchlistViewModel,
     mediaOptions: Boolean = true
 ) {
+
+
     SettingSection(
         isModalOption = true,
         title = mediaTitle,
@@ -95,8 +102,21 @@ fun WatchlistMediaSheetContent(
                         onDismiss()
                     }
                 )
+            } else null,
+
+            if (status == WatchStatus.FINISHED) {
+                SettingTile.ActionTile(
+                    leading = { SettingsTileIcon(R.drawable.date_range_24px) },
+                    title = "Change finish date",
+                    onClick = {
+                        onChangeFinishData()
+                        onDismiss()
+                    }
+                )
             } else null
         )
     )
 
+
 }
+

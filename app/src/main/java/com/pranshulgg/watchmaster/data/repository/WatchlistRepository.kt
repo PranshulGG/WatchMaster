@@ -91,10 +91,14 @@ class WatchlistRepository(
     suspend fun deleteItem(id: Long) {
         dao.deleteById(id)
         movieRepository.deleteCachedMovie(id)
-        tvRepository?.deleteCachedTv(id)
+        tvRepository.deleteCachedTv(id)
     }
 
     suspend fun deleteFinishedItems() = dao.deleteFinished()
+
+
+    suspend fun updateFinishedDate(id: Long, finished: Instant) =
+        dao.updateFinishedDate(id, finished)
 
     suspend fun itemExists(id: Long): Boolean = dao.exists(id)
 

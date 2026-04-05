@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.time.Instant
 
 @HiltViewModel
 class WatchlistViewModel @Inject constructor(
@@ -141,5 +142,9 @@ class WatchlistViewModel @Inject constructor(
 
     fun deleteSeason(seasonId: Long) = viewModelScope.launch {
         repository.deleteSeason(seasonId)
+    }
+
+    fun updateFinishedDate(id: Long, finished: Instant) = viewModelScope.launch {
+        repository.updateFinishedDate(id, finished)
     }
 }

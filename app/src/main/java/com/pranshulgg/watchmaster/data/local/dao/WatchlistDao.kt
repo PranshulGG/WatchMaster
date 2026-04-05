@@ -69,4 +69,7 @@ interface WatchlistDao {
         items.forEach { insert(it) }
     }
 
+    @Query("UPDATE watchlist SET finishedDate = :finished WHERE id = :id")
+    suspend fun updateFinishedDate(id: Long, finished: Instant)
+
 }
