@@ -1,14 +1,18 @@
 package com.pranshulgg.watchmaster.feature.tv.detail.components
 
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
+import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -18,16 +22,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.core.model.WatchStatus
-import com.pranshulgg.watchmaster.core.ui.components.Gap
+import com.pranshulgg.watchmaster.core.ui.components.media.MediaChip
 import com.pranshulgg.watchmaster.core.ui.components.media.MediaSectionCard
 import com.pranshulgg.watchmaster.core.ui.snackbar.SnackbarManager
+import com.pranshulgg.watchmaster.core.ui.theme.ShapeRadius
 import com.pranshulgg.watchmaster.data.local.entity.TvEpisodeEntity
 import com.pranshulgg.watchmaster.feature.tv.detail.TvDetailsViewModel
 import com.pranshulgg.watchmaster.feature.tv.detail.ui.TvDetailsEpisodeInfoSheet
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
@@ -39,27 +44,19 @@ fun EpisodesSection(
     seasonStatus: WatchStatus
 ) {
 
-    var expanded by remember { mutableStateOf(false) } // DEFAULT: FALSE
     var showSheet by remember { mutableStateOf(false) }
     var currentEp by remember { mutableStateOf<TvEpisodeEntity?>(null) }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    val epScrollState = rememberLazyListState()
+    val carouselItemWidth = 512.dp
+    val carouselState = rememberCarouselState(
+        itemCount = { episodes.count() },
+        initialItem = episodes.indexOfLast { it.isWatched }.coerceAtLeast(0)
+    )
     val scope = rememberCoroutineScope()
+    val watchedItems = episodes.count { it.isWatched }
 
-//    val filteredEps = episodes.filter { !it.still_path.isNullOrEmpty() }
-
-
-    LaunchedEffect(episodes) {
-        if (episodes.isNotEmpty()) {
-
-            scope.launch {
-                epScrollState.animateScrollToItem(episodes.size - 1)
-            }
-        }
-    }
 
     val watchedProgress = remember(episodes) {
-        val watchedItems = episodes.count { it.isWatched }
         (watchedItems.toFloat() / episodes.size) * 100
     }
 
@@ -76,43 +73,73 @@ fun EpisodesSection(
     MediaSectionCard(
         title = "Episodes",
         titleIcon = R.drawable.list_alt_24px,
-        actionText = if (expanded) "Hide episodes" else "Show episodes",
-        actionOnClick = {
-            expanded = !expanded
-        },
-        showAction = true
+        trailingContent = {
+            MediaChip(
+                "$watchedItems / ${episodes.size} watched",
+                containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                contentColor = MaterialTheme.colorScheme.onTertiaryContainer
+            )
+        }
     ) {
-        if (expanded) {
-            LazyRow(
-                modifier = Modifier.padding(top = 10.dp),
-                state = epScrollState,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                itemsIndexed(episodes, key = { _, item -> item.epId }) { index, episode ->
+        HorizontalMultiBrowseCarousel(
+            state = carouselState,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(130.dp)
+                .padding(top = 10.dp, start = 16.dp, end = 16.dp),
+            preferredItemWidth = carouselItemWidth,
+            itemSpacing = 8.dp,
+            contentPadding = PaddingValues(0.dp),
+        ) { index ->
 
 
-                    val prevEpWatched = if (index > 0) episodes[index - 1].isWatched else false
-
-
-                    if (index == 0) {
-                        Gap(horizontal = 16.dp)
-                    }
-
-                    EpisodeItem(
-                        episode,
-                        viewModel,
-                        seasonStatus,
-                        onTrailingAction = {
-                            currentEp = episode
-                            showSheet = true
-                        },
-                        prevEpWatched
-                    )
-
-                    if (index == episodes.size - 1) {
-                        Gap(horizontal = 16.dp)
-                    }
+            val isUnlocked =
+                when (index) {
+                    0 -> episodes.getOrNull(1)?.isWatched == false
+                    else -> episodes[index - 1].isWatched
                 }
+
+            val item = episodes[index]
+
+            Box(
+                modifier = Modifier
+                    .maskClip(RoundedCornerShape(ShapeRadius.ExtraLarge))
+                    .width(carouselItemWidth)
+                    .height(130.dp)
+            ) {
+                EpisodeItem(
+                    item,
+                    onTrailingAction = {
+                        currentEp = item
+                        showSheet = true
+                    },
+                    carouselItemWidth,
+                    onItemClick = {
+
+                        if (carouselState.currentItem != index) {
+                            scope.launch {
+                                carouselState.animateScrollToItem(index)
+                            }
+                            return@EpisodeItem
+                        }
+
+                        if (!isUnlocked) {
+                            SnackbarManager.show("Previous episode not watched")
+                            return@EpisodeItem
+                        }
+
+                        if (seasonStatus == WatchStatus.WANT_TO_WATCH || seasonStatus == WatchStatus.FINISHED) {
+                            SnackbarManager.show("Please mark the season as 'Watching' to track episodes")
+                            return@EpisodeItem
+                        }
+
+                        if (item.isWatched) {
+                            viewModel.markEpUnWatched(item.epId)
+                        } else {
+                            viewModel.markEpWatched(item.epId)
+                        }
+                    }
+                )
             }
         }
     }
