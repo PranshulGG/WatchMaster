@@ -11,12 +11,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.pranshulgg.watchmaster.core.ui.components.media.DatePickerSheet
+import com.pranshulgg.watchmaster.core.ui.snackbar.SnackbarManager
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 import com.pranshulgg.watchmaster.feature.movie.ui.MovieStatusWatchlistConfirmationDialog
 import com.pranshulgg.watchmaster.feature.movie.ui.MovieWatchlistBottomSheet
 import com.pranshulgg.watchmaster.feature.movie.ui.MovieWatchlistConfirmationDialog
 import com.pranshulgg.watchmaster.feature.movie.ui.MovieWatchlistRatingDialog
 import com.pranshulgg.watchmaster.feature.shared.WatchlistViewModel
+import java.time.Instant
 
 
 data class MovieHomeUiState(
@@ -26,7 +29,8 @@ data class MovieHomeUiState(
     val isUpdateRating: Boolean = false,
     val originalRating: Float = 0f,
     val isSheetOpen: Boolean = false,
-    val showStatusConfirmationDialog: Boolean = false
+    val showStatusConfirmationDialog: Boolean = false,
+    val showDatePicker: Boolean = false
 )
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -85,6 +89,20 @@ fun MovieHomeScreen(
         watchlistViewModel = viewModel,
         movieHomeViewModel = movieHomeViewModel,
         watchlistItem = currentItem
+    )
+
+    DatePickerSheet(
+        show = movieHomeViewModel.uiState.value.showDatePicker,
+        initialDate = currentItem?.finishedDate?.toEpochMilli(),
+        id = currentItem?.id ?: -1L,
+        onDateSelected = { idIt, dateIt ->
+            if (dateIt != null) {
+                viewModel.updateFinishedDate(idIt, Instant.ofEpochMilli(dateIt))
+            }
+        },
+        onDismiss = {
+            movieHomeViewModel.hideDatePicker()
+        }
     )
 
 }

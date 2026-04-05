@@ -60,4 +60,12 @@ class MovieHomeViewModel @Inject constructor(
     fun hideConfirmationDialog() {
         _uiState.value = _uiState.value.copy(showConfirmationDialog = false)
     }
+
+    fun showDatePicker() {
+        _uiState.value = _uiState.value.copy(showDatePicker = true)
+    }
+
+    fun hideDatePicker() {
+        _uiState.value = _uiState.value.copy(showDatePicker = false)
+    }
 }
