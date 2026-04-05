@@ -9,10 +9,11 @@ import com.pranshulgg.watchmaster.core.utils.PreferencesHelper
 class MainScreenNavViewModel : ViewModel() {
 
     val defaultTab = PreferencesHelper.getString("default_tab")
+
     val selectedTab = when (defaultTab) {
         "Home" -> 0
         "Movies" -> 1
-        "Tv series" -> 2
+        "TV series" -> 2
         else -> 0
     }
 
