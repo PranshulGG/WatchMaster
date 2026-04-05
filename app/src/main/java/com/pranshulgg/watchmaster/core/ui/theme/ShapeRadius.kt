@@ -2,7 +2,7 @@ package com.pranshulgg.watchmaster.core.ui.theme
 
 import androidx.compose.ui.unit.dp
 
-object Radius {
+object ShapeRadius {
     val None = 0.dp
     val ExtraSmall = 4.dp
     val Small = 8.dp

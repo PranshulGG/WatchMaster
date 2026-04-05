@@ -33,7 +33,7 @@ import coil.compose.AsyncImage
 import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.core.ui.components.media.MediaChip
 import com.pranshulgg.watchmaster.core.ui.components.media.MediaDetailsScreenHeader
-import com.pranshulgg.watchmaster.core.ui.theme.Radius
+import com.pranshulgg.watchmaster.core.ui.theme.ShapeRadius
 import com.pranshulgg.watchmaster.data.local.entity.MovieBundle
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 
@@ -92,7 +92,7 @@ fun MovieHeroHeader(
                 modifier = Modifier
                     .height(180.dp)
                     .width(120.dp)
-                    .clip(RoundedCornerShape(Radius.Large))
+                    .clip(RoundedCornerShape(ShapeRadius.Large))
             ) {
                 AsyncImage(
                     model = posterUrl(movie),
@@ -141,7 +141,7 @@ fun MovieHeroHeader(
                         "%.1f".format(watchlistItem?.avgRating),
                         containerColor = MaterialTheme.colorScheme.tertiary,
                         contentColor = MaterialTheme.colorScheme.onTertiary,
-                        shapeRadius = Radius.Small,
+                        shapeRadius = ShapeRadius.Small,
                         icon = R.drawable.star_24px
                     )
                 }

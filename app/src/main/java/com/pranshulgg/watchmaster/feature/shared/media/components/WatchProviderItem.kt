@@ -23,7 +23,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pranshulgg.watchmaster.core.ui.components.media.PosterBox
-import com.pranshulgg.watchmaster.core.ui.theme.Radius
+import com.pranshulgg.watchmaster.core.ui.theme.ShapeRadius
 import com.pranshulgg.watchmaster.data.Provider
 
 @Composable
@@ -45,7 +45,7 @@ fun WatchProviderItem(title: String, providers: List<Provider>) {
         ) {
             items(providers) {
                 Surface(
-                    shape = RoundedCornerShape(Radius.Medium),
+                    shape = RoundedCornerShape(ShapeRadius.Medium),
                     color = MaterialTheme.colorScheme.surfaceContainerHigh,
                 ) {
                     Row(
@@ -60,7 +60,7 @@ fun WatchProviderItem(title: String, providers: List<Provider>) {
                         PosterBox(
                             posterUrl = "https://image.tmdb.org/t/p/original${it.logo_path}",
                             apiPath = it.logo_path,
-                            cornerRadius = Radius.Small,
+                            cornerRadius = ShapeRadius.Small,
                             width = 30.dp,
                             height = 30.dp
                         )

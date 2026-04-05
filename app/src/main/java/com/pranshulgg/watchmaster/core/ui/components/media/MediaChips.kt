@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pranshulgg.watchmaster.core.ui.components.Symbol
-import com.pranshulgg.watchmaster.core.ui.theme.Radius
+import com.pranshulgg.watchmaster.core.ui.theme.ShapeRadius
 
 @Composable
 fun MediaChip(
@@ -27,7 +27,7 @@ fun MediaChip(
     icon: Int? = null,
     contentColor: Color,
     containerColor: Color,
-    shapeRadius: Dp = Radius.Full
+    shapeRadius: Dp = ShapeRadius.Full
 ) {
 
     Surface(

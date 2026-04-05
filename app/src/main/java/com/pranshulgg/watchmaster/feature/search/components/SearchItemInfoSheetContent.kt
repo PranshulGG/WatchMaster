@@ -31,7 +31,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.feature.search.SearchItem
 import com.pranshulgg.watchmaster.core.network.TvSeasonDto
-import com.pranshulgg.watchmaster.core.ui.theme.Radius
+import com.pranshulgg.watchmaster.core.ui.theme.ShapeRadius
 import com.pranshulgg.watchmaster.core.ui.components.media.MediaChip
 import com.pranshulgg.watchmaster.core.ui.components.media.PosterPlaceholder
 import com.pranshulgg.watchmaster.data.getMovieGenreNames
@@ -120,7 +120,7 @@ fun SearchItemInfoSheetContent(
                         "%.1f".format(item.avg_rating),
                         containerColor = MaterialTheme.colorScheme.tertiary,
                         contentColor = MaterialTheme.colorScheme.onTertiary,
-                        shapeRadius = Radius.Small,
+                        shapeRadius = ShapeRadius.Small,
                         icon = R.drawable.star_24px
                     )
                 }

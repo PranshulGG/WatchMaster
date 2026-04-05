@@ -62,7 +62,8 @@ fun TvWatchlistBottomSheet(
                 onDismiss = { onDismiss() },
                 viewModel = viewModel,
                 isPinned = watchlistItem.isPinned,
-                mediaOptions = mediaOptions
+                mediaOptions = mediaOptions,
+                onChangeFinishData = {}
             )
         }
 }

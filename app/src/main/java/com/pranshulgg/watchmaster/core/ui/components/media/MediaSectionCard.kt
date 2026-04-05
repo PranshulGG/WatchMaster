@@ -10,21 +10,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.ExperimentalTextApi
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.unit.dp
-import com.pranshulgg.watchmaster.R
-import com.pranshulgg.watchmaster.core.ui.theme.Radius
 import com.pranshulgg.watchmaster.core.ui.components.Symbol
 import com.pranshulgg.watchmaster.core.ui.theme.GoogleFlexBoldRounded
+import com.pranshulgg.watchmaster.core.ui.theme.ShapeRadius
 
 @OptIn(ExperimentalTextApi::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -35,6 +30,7 @@ fun MediaSectionCard(
     actionText: String = "",
     actionOnClick: () -> Unit = {},
     noPadding: Boolean = false,
+    trailingContent: @Composable () -> Unit = {},
     content: @Composable () -> Unit,
 ) {
 
@@ -42,7 +38,7 @@ fun MediaSectionCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = if (noPadding) 0.dp else 16.dp),
-        shape = RoundedCornerShape(Radius.ExtraLarge),
+        shape = RoundedCornerShape(ShapeRadius.ExtraLarge),
     ) {
         Column(
             modifier = Modifier.padding(bottom = 16.dp),
@@ -74,12 +70,15 @@ fun MediaSectionCard(
                     }
                 }
 
+                if (trailingContent != {} && !showAction) {
+                    Spacer(Modifier.weight(1f))
+                    trailingContent()
+                }
 
             }
             content()
         }
     }
-
 }
 
 

@@ -1,5 +1,6 @@
 package com.pranshulgg.watchmaster.core.ui.components
 
+import android.graphics.drawable.shapes.Shape
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -17,14 +18,14 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pranshulgg.watchmaster.R
-import com.pranshulgg.watchmaster.core.ui.theme.Radius
+import com.pranshulgg.watchmaster.core.ui.theme.ShapeRadius
 
 @Composable
 fun AvatarMonogram(
     text: String,
     containerColor: Color = MaterialTheme.colorScheme.primaryContainer,
     contentColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
-    cornerRadius: Dp = Radius.Full
+    cornerRadius: Dp = ShapeRadius.Full
 ) {
 
     Surface(
@@ -53,7 +54,7 @@ fun AvatarIcon(
     icon: Int,
     containerColor: Color = MaterialTheme.colorScheme.primaryContainer,
     contentColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
-    cornerRadius: Dp = Radius.Full,
+    cornerRadius: Dp = ShapeRadius.Full,
     avatarSize: Dp = 40.dp,
     iconSize: Dp = 24.dp
 ) {

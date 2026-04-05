@@ -13,7 +13,7 @@ import com.pranshulgg.watchmaster.core.model.WatchStatus
 import com.pranshulgg.watchmaster.core.ui.components.DialogBasic
 import com.pranshulgg.watchmaster.core.ui.components.TextAlertDialog
 import com.pranshulgg.watchmaster.core.ui.components.media.RateMediaDialogContent
-import com.pranshulgg.watchmaster.core.ui.theme.Radius
+import com.pranshulgg.watchmaster.core.ui.theme.ShapeRadius
 import com.pranshulgg.watchmaster.feature.shared.media.ui.watchstatus.dialogMessage
 
 @Composable
@@ -42,7 +42,7 @@ fun MediaNoteDialogContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 24.dp),
-                shape = RoundedCornerShape(Radius.Large),
+                shape = RoundedCornerShape(ShapeRadius.Large),
                 value = note,
                 onValueChange = onNoteChange,
                 placeholder = { Text("Note...") }

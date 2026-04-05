@@ -27,7 +27,8 @@ fun CastItem(character: String, name: String, profilePath: String?) {
             height = 80.dp,
             circular = true,
             apiPath = profilePath,
-            placeholder = { ProfilePlaceholder(size = 80.dp) }
+            placeholder = { ProfilePlaceholder(size = 80.dp) },
+            progressIndicatorSize = 40.dp
         )
         Spacer(Modifier.height(3.dp))
         Text(

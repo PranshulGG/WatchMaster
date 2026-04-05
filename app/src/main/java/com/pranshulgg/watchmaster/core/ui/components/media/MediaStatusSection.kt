@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.core.ui.theme.LocalStatusColors
 import com.pranshulgg.watchmaster.core.model.WatchStatus
-import com.pranshulgg.watchmaster.core.ui.theme.Radius
+import com.pranshulgg.watchmaster.core.ui.theme.ShapeRadius
 import com.pranshulgg.watchmaster.core.ui.components.Symbol
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -66,7 +66,7 @@ fun MediaStatusSection(status: WatchStatus, onClick: () -> Unit = {}) {
     ) {
         Surface(
             color = statusContainerColor,
-            shape = RoundedCornerShape(Radius.Large),
+            shape = RoundedCornerShape(ShapeRadius.Large),
         ) {
             Row(
                 modifier = Modifier

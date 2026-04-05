@@ -38,7 +38,7 @@ import com.pranshulgg.watchmaster.core.ui.components.Gap
 import com.pranshulgg.watchmaster.core.ui.components.Symbol
 import com.pranshulgg.watchmaster.core.ui.components.Tooltip
 import com.pranshulgg.watchmaster.core.ui.components.media.MediaChip
-import com.pranshulgg.watchmaster.core.ui.theme.Radius
+import com.pranshulgg.watchmaster.core.ui.theme.ShapeRadius
 import com.pranshulgg.watchmaster.data.local.entity.MovieListsEntity
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 
@@ -165,7 +165,7 @@ private fun Field(
             OutlinedTextField(
                 value = value,
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(Radius.Large),
+                shape = RoundedCornerShape(ShapeRadius.Large),
                 onValueChange = { onValueChange(it) },
                 placeholder = { Text(title) },
                 singleLine = singleLine,
@@ -204,7 +204,7 @@ private fun Field(
                 OutlinedTextField(
                     value = value,
                     modifier = Modifier.weight(1f),
-                    shape = RoundedCornerShape(Radius.Large),
+                    shape = RoundedCornerShape(ShapeRadius.Large),
                     onValueChange = { onValueChange(it) },
                     placeholder = { Text(title) },
                     singleLine = singleLine,

@@ -41,7 +41,7 @@ import com.pranshulgg.watchmaster.core.model.WatchStatus
 import com.pranshulgg.watchmaster.core.ui.components.Symbol
 import com.pranshulgg.watchmaster.core.ui.components.TextAlertDialog
 import com.pranshulgg.watchmaster.core.ui.snackbar.SnackbarManager
-import com.pranshulgg.watchmaster.core.ui.theme.Radius
+import com.pranshulgg.watchmaster.core.ui.theme.ShapeRadius
 import com.pranshulgg.watchmaster.feature.shared.media.ui.watchstatus.buttonIcon
 import com.pranshulgg.watchmaster.feature.shared.media.ui.watchstatus.actionLabel
 import com.pranshulgg.watchmaster.feature.shared.media.ui.watchstatus.confirmAction
@@ -146,7 +146,7 @@ fun MediaActionsFloatingToolbar(
                             expanded = uiState.expanded,
                             onDismissRequest = { uiState = uiState.copy(expanded = false) },
                             containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                            shape = RoundedCornerShape(Radius.Large)
+                            shape = RoundedCornerShape(ShapeRadius.Large)
                         ) {
                             menuItemOptionList.forEach { option ->
 

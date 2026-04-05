@@ -35,7 +35,7 @@ import coil.compose.AsyncImage
 import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.core.ui.components.Symbol
 import com.pranshulgg.watchmaster.core.ui.components.media.MediaDetailsScreenHeader
-import com.pranshulgg.watchmaster.core.ui.theme.Radius
+import com.pranshulgg.watchmaster.core.ui.theme.ShapeRadius
 import com.pranshulgg.watchmaster.data.getTvGenreNames
 import com.pranshulgg.watchmaster.data.local.entity.SeasonEntity
 import com.pranshulgg.watchmaster.data.local.entity.TvBundle
@@ -103,7 +103,7 @@ fun TvHeroHeader(
                 modifier = Modifier
                     .height(180.dp)
                     .width(120.dp)
-                    .clip(RoundedCornerShape(Radius.Large))
+                    .clip(RoundedCornerShape(ShapeRadius.Large))
             ) {
                 AsyncImage(
                     model = "https://image.tmdb.org/t/p/w500${seasonItem.posterPath}",
@@ -160,7 +160,7 @@ private fun GenreChip(text: String, rating: Boolean = false) {
 
     Surface(
         color = if (rating) schemeColor.tertiary else schemeColor.tertiaryContainer,
-        shape = if (rating) RoundedCornerShape(Radius.Small) else CircleShape
+        shape = if (rating) RoundedCornerShape(ShapeRadius.Small) else CircleShape
     ) {
         Row(
             horizontalArrangement = Arrangement.Center,

@@ -50,6 +50,9 @@ fun MovieWatchlistBottomSheet(
                 onDismiss = { onDismiss() },
                 viewModel = viewModel,
                 isPinned = watchlistItem.isPinned,
+                onChangeFinishData = {
+                    movieHomeViewModel.showDatePicker()
+                }
             )
         }
 }

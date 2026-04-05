@@ -34,7 +34,7 @@ import com.pranshulgg.watchmaster.core.model.WatchStatus
 import com.pranshulgg.watchmaster.core.ui.components.media.MediaChip
 import com.pranshulgg.watchmaster.core.ui.components.media.PosterBox
 import com.pranshulgg.watchmaster.core.ui.navigation.NavRoutes
-import com.pranshulgg.watchmaster.core.ui.theme.Radius
+import com.pranshulgg.watchmaster.core.ui.theme.ShapeRadius
 import com.pranshulgg.watchmaster.data.local.entity.SeasonEntity
 import com.pranshulgg.watchmaster.feature.shared.media.components.WatchListStatusPill
 import com.pranshulgg.watchmaster.feature.shared.media.ui.watchstatus.asStatusDates
@@ -88,7 +88,7 @@ fun SeasonTvRow(
                 PosterBox(
                     posterUrl = "https://image.tmdb.org/t/p/w154${season.posterPath}",
                     apiPath = season.posterPath,
-                    cornerRadius = Radius.None,
+                    cornerRadius = ShapeRadius.None,
                     height = 100.dp,
                     width = 65.dp
                 )
@@ -122,7 +122,6 @@ fun SeasonTvRow(
                             season.seasonUserRating
                         )
 
-
                         if (season.status != WatchStatus.FINISHED) {
                             Spacer(Modifier.width(3.dp))
                             SeasonProgress(season.seasonProgress ?: 0)
@@ -139,7 +138,7 @@ fun SeasonTvRow(
 private fun SeasonProgress(seasonProgress: Int) {
     Surface(
         color = MaterialTheme.colorScheme.tertiaryContainer,
-        shape = RoundedCornerShape(Radius.Small)
+        shape = RoundedCornerShape(ShapeRadius.Small)
     ) {
         Text(
             "${seasonProgress}%",

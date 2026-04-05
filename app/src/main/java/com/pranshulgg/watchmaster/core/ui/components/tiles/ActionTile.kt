@@ -11,7 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.pranshulgg.watchmaster.core.ui.theme.Radius
+import com.pranshulgg.watchmaster.core.ui.theme.ShapeRadius
 
 @Composable
 fun ActionTile(
@@ -28,7 +28,7 @@ fun ActionTile(
 ) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
-        shape = if (selected) RoundedCornerShape(Radius.Large) else shapes,
+        shape = if (selected) RoundedCornerShape(ShapeRadius.Large) else shapes,
     ) {
         ListItem(
             modifier = Modifier.clickable(

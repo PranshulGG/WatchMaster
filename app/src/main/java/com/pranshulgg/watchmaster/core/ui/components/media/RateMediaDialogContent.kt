@@ -24,15 +24,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.text.ExperimentalTextApi
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontVariation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.core.ui.theme.GoogleFlexBoldRounded
-import com.pranshulgg.watchmaster.core.ui.theme.Radius
+import com.pranshulgg.watchmaster.core.ui.theme.ShapeRadius
 import kotlin.math.roundToInt
 
 
@@ -103,7 +98,7 @@ fun RateMediaDialogContent(
                             .drawWithContent {
                                 drawContent()
                             },
-                    trackCornerSize = Radius.Medium,
+                    trackCornerSize = ShapeRadius.Medium,
                 )
             },
             reverseDirection = true

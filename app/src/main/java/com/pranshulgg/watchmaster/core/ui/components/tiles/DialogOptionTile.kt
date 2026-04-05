@@ -36,7 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.pranshulgg.watchmaster.core.ui.theme.Radius
+import com.pranshulgg.watchmaster.core.ui.theme.ShapeRadius
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -112,7 +112,7 @@ fun <T> DialogOptionTile(
                 modifier = Modifier
                     .width(300.dp)
                     .heightIn(max = 500.dp),
-                shape = RoundedCornerShape(Radius.ExtraLarge),
+                shape = RoundedCornerShape(ShapeRadius.ExtraLarge),
                 color = MaterialTheme.colorScheme.surfaceContainerHigh,
                 shadowElevation = 6.dp
             ) {

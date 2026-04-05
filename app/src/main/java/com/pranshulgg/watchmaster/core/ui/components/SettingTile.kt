@@ -20,7 +20,7 @@ import com.pranshulgg.watchmaster.core.ui.components.tiles.DialogTextFieldTile
 import com.pranshulgg.watchmaster.core.ui.components.tiles.SingleSwitchTile
 import com.pranshulgg.watchmaster.core.ui.components.tiles.SwitchTile
 import com.pranshulgg.watchmaster.core.ui.components.tiles.TextTile
-import com.pranshulgg.watchmaster.core.ui.theme.Radius
+import com.pranshulgg.watchmaster.core.ui.theme.ShapeRadius
 
 sealed class SettingTile {
     abstract val title: String
@@ -151,23 +151,23 @@ fun SettingSection(
 
 
             val shape = when {
-                primarySwitch -> RoundedCornerShape(Radius.Full)
-                isOnly -> RoundedCornerShape(Radius.Large)
+                primarySwitch -> RoundedCornerShape(ShapeRadius.Full)
+                isOnly -> RoundedCornerShape(ShapeRadius.Large)
                 isFirst -> RoundedCornerShape(
-                    topStart = Radius.Large,
-                    topEnd = Radius.Large,
-                    bottomStart = Radius.ExtraSmall,
-                    bottomEnd = Radius.ExtraSmall
+                    topStart = ShapeRadius.Large,
+                    topEnd = ShapeRadius.Large,
+                    bottomStart = ShapeRadius.ExtraSmall,
+                    bottomEnd = ShapeRadius.ExtraSmall
                 )
 
                 isLast -> RoundedCornerShape(
-                    topStart = Radius.ExtraSmall,
-                    topEnd = Radius.ExtraSmall,
-                    bottomStart = Radius.Large,
-                    bottomEnd = Radius.Large
+                    topStart = ShapeRadius.ExtraSmall,
+                    topEnd = ShapeRadius.ExtraSmall,
+                    bottomStart = ShapeRadius.Large,
+                    bottomEnd = ShapeRadius.Large
                 )
 
-                else -> RoundedCornerShape(Radius.ExtraSmall)
+                else -> RoundedCornerShape(ShapeRadius.ExtraSmall)
             }
 
             when (tile) {

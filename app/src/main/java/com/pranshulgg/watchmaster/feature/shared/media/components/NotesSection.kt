@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.core.ui.components.media.MediaSectionCard
-import com.pranshulgg.watchmaster.core.ui.theme.Radius
+import com.pranshulgg.watchmaster.core.ui.theme.ShapeRadius
 
 @Composable
 fun NotesSection(isSeasonNoteNull: Boolean = true, action: () -> Unit, noteText: String) {
@@ -25,7 +25,6 @@ fun NotesSection(isSeasonNoteNull: Boolean = true, action: () -> Unit, noteText:
         showAction = true,
         actionOnClick = {
             action()
-//            uiState = uiState.copy(showNoteDialog = true)
         },
         actionText = "Edit note"
     ) {
@@ -35,7 +34,7 @@ fun NotesSection(isSeasonNoteNull: Boolean = true, action: () -> Unit, noteText:
             ) {
                 Surface(
                     color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                    shape = RoundedCornerShape(Radius.Medium),
+                    shape = RoundedCornerShape(ShapeRadius.Medium),
                     modifier = Modifier
                         .fillMaxWidth()
                         .heightIn(min = 64.dp)

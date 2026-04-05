@@ -36,7 +36,7 @@ import com.pranshulgg.watchmaster.core.ui.components.ActionBottomSheet
 import com.pranshulgg.watchmaster.core.ui.components.SettingSection
 import com.pranshulgg.watchmaster.core.ui.components.SettingTile
 import com.pranshulgg.watchmaster.core.ui.components.Symbol
-import com.pranshulgg.watchmaster.core.ui.theme.Radius
+import com.pranshulgg.watchmaster.core.ui.theme.ShapeRadius
 import com.pranshulgg.watchmaster.feature.shared.WatchlistViewModel
 import kotlinx.coroutines.launch
 
@@ -167,7 +167,7 @@ fun SearchItemInfoSeasonSection(
                                 trailing = {
                                     Surface(
                                         color = if (index == selectedSeason) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.surfaceBright,
-                                        shape = RoundedCornerShape(if (index == selectedSeason) Radius.Small else Radius.Full)
+                                        shape = RoundedCornerShape(if (index == selectedSeason) ShapeRadius.Small else ShapeRadius.Full)
                                     ) {
                                         Text(
                                             item.episode_count.toString() + " episodes ${if (seasonExists) "• Saved" else ""}",

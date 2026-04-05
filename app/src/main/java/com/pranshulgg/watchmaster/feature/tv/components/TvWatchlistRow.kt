@@ -37,7 +37,7 @@ import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.core.ui.components.Symbol
 import com.pranshulgg.watchmaster.core.ui.components.listItemShape
 import com.pranshulgg.watchmaster.core.ui.components.media.PosterBox
-import com.pranshulgg.watchmaster.core.ui.theme.Radius
+import com.pranshulgg.watchmaster.core.ui.theme.ShapeRadius
 import com.pranshulgg.watchmaster.data.local.entity.SeasonEntity
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 
@@ -93,7 +93,7 @@ fun TvWatchlistRow(
                 PosterBox(
                     posterUrl = "https://image.tmdb.org/t/p/w154${item.posterPath}",
                     apiPath = item.posterPath,
-                    cornerRadius = Radius.None
+                    cornerRadius = ShapeRadius.None
                 )
                 Column(
                     modifier = Modifier

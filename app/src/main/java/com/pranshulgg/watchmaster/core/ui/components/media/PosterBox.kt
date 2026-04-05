@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
-import com.pranshulgg.watchmaster.core.ui.theme.Radius
+import com.pranshulgg.watchmaster.core.ui.theme.ShapeRadius
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -26,7 +26,7 @@ fun PosterBox(
     modifier: Modifier = Modifier,
     width: Dp = 80.dp,
     height: Dp = 120.dp,
-    cornerRadius: Dp = Radius.Medium,
+    cornerRadius: Dp = ShapeRadius.Medium,
     circular: Boolean = false,
     placeholder: @Composable () -> Unit = { PosterPlaceholder() },
     progressIndicatorSize: Dp = 24.dp,
@@ -35,7 +35,7 @@ fun PosterBox(
     Box(
         modifier = modifier
             .size(width = width, height = height)
-            .clip(RoundedCornerShape(if (circular) Radius.Full else cornerRadius)),
+            .clip(RoundedCornerShape(if (circular) ShapeRadius.Full else cornerRadius)),
         contentAlignment = Alignment.Center
     ) {
         if (!apiPath.isNullOrBlank()) {

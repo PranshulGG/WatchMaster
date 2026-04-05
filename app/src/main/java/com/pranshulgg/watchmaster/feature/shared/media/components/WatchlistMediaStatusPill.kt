@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.sp
 import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.core.model.WatchStatus
 import com.pranshulgg.watchmaster.core.ui.components.Symbol
-import com.pranshulgg.watchmaster.core.ui.theme.Radius
+import com.pranshulgg.watchmaster.core.ui.theme.ShapeRadius
 
 
 @Composable
@@ -36,8 +36,8 @@ fun WatchListStatusPill(
         Surface(
             color = containerColor,
             shape = if (status == WatchStatus.FINISHED && showRating) RoundedCornerShape(
-                topStart = Radius.Full,
-                bottomStart = Radius.Full
+                topStart = ShapeRadius.Full,
+                bottomStart = ShapeRadius.Full
             ) else CircleShape
         ) {
             Text(
@@ -52,8 +52,8 @@ fun WatchListStatusPill(
             Surface(
                 color = MaterialTheme.colorScheme.primary,
                 shape = RoundedCornerShape(
-                    topEnd = Radius.Small,
-                    bottomEnd = Radius.Small
+                    topEnd = ShapeRadius.Small,
+                    bottomEnd = ShapeRadius.Small
                 )
             ) {
                 Row(
