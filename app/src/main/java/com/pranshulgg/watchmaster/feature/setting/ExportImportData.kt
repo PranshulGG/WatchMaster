@@ -13,7 +13,6 @@ import com.pranshulgg.watchmaster.core.ui.snackbar.SnackbarManager
 import com.pranshulgg.watchmaster.data.local.WatchMasterDatabase
 import com.pranshulgg.watchmaster.data.local.entity.MovieListsEntity
 import com.pranshulgg.watchmaster.data.local.entity.SeasonEntity
-import com.pranshulgg.watchmaster.data.local.entity.TvEpisodeEntity
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -24,8 +23,7 @@ private data class ExportData(
     val version: Int,
     val watchlist: List<WatchlistItemEntity>,
     val tvSeasons: List<SeasonEntity>,
-    val movieLists: List<MovieListsEntity>,
-    val tvEpisodes: List<TvEpisodeEntity>
+    val movieLists: List<MovieListsEntity>
 )
 
 @Composable
@@ -88,14 +86,11 @@ private suspend fun export(
     val tvSeasons = if (exportWatchlist) {
         db.seasonDao().getAllSeasons().first()
     } else emptyList()
-    val tvEpisodes = if (exportWatchlist) {
-        db.tvEpisodeDao().getAllEpisodes()
-    } else emptyList()
     val movieLists = if (exportMovieList) {
         db.movieListsDao().getMovieLists().first()
     } else emptyList()
 
-    val json = Gson().toJson(ExportData(1, watchlistData, tvSeasons, movieLists, tvEpisodes))
+    val json = Gson().toJson(ExportData(2, watchlistData, tvSeasons, movieLists))
 
     val file = context.contentResolver.openOutputStream(uri)
 
@@ -133,7 +128,6 @@ private suspend fun import(context: Context, uri: Uri) {
         if (data.watchlist.isNotEmpty()) {
             db.watchlistDao().clearAll()
             db.seasonDao().clearAll()
-            db.tvEpisodeDao().clearAll()
         }
 
         if (data.movieLists.isNotEmpty()) {
@@ -143,7 +137,6 @@ private suspend fun import(context: Context, uri: Uri) {
         if (data.watchlist.isNotEmpty()) {
             db.watchlistDao().insertAll(data.watchlist)
             db.seasonDao().insertSeasons(data.tvSeasons)
-            db.tvEpisodeDao().insertEpisodes(data.tvEpisodes)
         }
 
 
