@@ -73,4 +73,12 @@ class TvHomeViewModel @Inject constructor(
             seriesId = null
         )
     }
+
+    fun showDatePicker() {
+        _uiState.value = _uiState.value.copy(showDatePicker = true)
+    }
+
+    fun hideDatePicker() {
+        _uiState.value = _uiState.value.copy(showDatePicker = false)
+    }
 }
