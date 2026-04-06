@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
 import androidx.compose.material3.carousel.rememberCarouselState
@@ -26,6 +27,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.core.model.WatchStatus
+import com.pranshulgg.watchmaster.core.ui.components.LoadingPlaceholder
 import com.pranshulgg.watchmaster.core.ui.components.media.MediaChip
 import com.pranshulgg.watchmaster.core.ui.components.media.MediaSectionCard
 import com.pranshulgg.watchmaster.core.ui.snackbar.SnackbarManager
@@ -41,6 +43,7 @@ import kotlin.math.roundToInt
 fun EpisodesSection(
     episodes: List<TvEpisodeEntity>,
     viewModel: TvDetailsViewModel,
+    seasonId: Long,
     seasonStatus: WatchStatus
 ) {
 
@@ -60,10 +63,17 @@ fun EpisodesSection(
         (watchedItems.toFloat() / episodes.size) * 100
     }
 
+    LaunchedEffect(seasonStatus, episodes) {
+        if (seasonStatus == WatchStatus.FINISHED && episodes.all { !it.isWatched }) {
+            viewModel.markAllEpsWatched(seasonId)
+        }
+    }
+
+
     LaunchedEffect(watchedProgress) {
         if (episodes.isNotEmpty()) {
             viewModel.updateSeasonProgress(
-                episodes[0].seasonId,
+                seasonId,
                 watchedProgress.roundToInt()
             )
         }
@@ -81,6 +91,11 @@ fun EpisodesSection(
             )
         }
     ) {
+
+        if (episodes.isEmpty()) {
+            LoadingPlaceholder()
+        }
+
         HorizontalMultiBrowseCarousel(
             state = carouselState,
             modifier = Modifier
