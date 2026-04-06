@@ -12,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.pranshulgg.watchmaster.core.ui.components.media.DatePickerSheet
 import com.pranshulgg.watchmaster.data.local.entity.SeasonEntity
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 import com.pranshulgg.watchmaster.feature.movie.MovieHomeState
@@ -25,6 +26,7 @@ import com.pranshulgg.watchmaster.feature.tv.ui.TvStatusWatchlistConfirmationDia
 import com.pranshulgg.watchmaster.feature.tv.ui.TvWatchlistBottomSheet
 import com.pranshulgg.watchmaster.feature.tv.ui.TvWatchlistConfirmationDialog
 import com.pranshulgg.watchmaster.feature.tv.ui.TvWatchlistRatingDialog
+import java.time.Instant
 
 data class TvHomeUiState(
     val showConfirmationDialog: Boolean = false,
@@ -35,7 +37,8 @@ data class TvHomeUiState(
     val originalRating: Float = 0f,
     val isSheetOpen: Boolean = false,
     val showStatusConfirmationDialog: Boolean = false,
-    val seriesId: Long? = null
+    val seriesId: Long? = null,
+    val showDatePicker: Boolean = false
 )
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
@@ -101,4 +104,17 @@ fun TvHomeScreen(
         season = currentSeasonItem
     )
 
+    DatePickerSheet(
+        show = tvHomeViewModel.uiState.value.showDatePicker,
+        initialDate = currentSeasonItem?.seasonFinishedDate?.toEpochMilli(),
+        id = currentSeasonItem?.seasonId ?: -1L,
+        onDateSelected = { idIt, dateIt ->
+            if (dateIt != null) {
+                viewModel.updateSeasonFinishedDate(idIt, Instant.ofEpochMilli(dateIt))
+            }
+        },
+        onDismiss = {
+            tvHomeViewModel.hideDatePicker()
+        }
+    )
 }
