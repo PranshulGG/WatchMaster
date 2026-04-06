@@ -57,6 +57,8 @@ interface SeasonDao {
     @Query("UPDATE tv_seasons SET seasonProgress = :progress WHERE seasonId = :seasonId")
     suspend fun updateSeasonProgress(seasonId: Long, progress: Int)
 
+    @Query("UPDATE tv_seasons SET seasonFinishedDate = :finished WHERE seasonId = :seasonId")
+    suspend fun updateSeasonFinishedDate(seasonId: Long, finished: Instant)
 
     @Query("DELETE FROM tv_seasons")
     suspend fun clearAll()
