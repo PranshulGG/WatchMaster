@@ -63,7 +63,9 @@ fun TvWatchlistBottomSheet(
                 viewModel = viewModel,
                 isPinned = watchlistItem.isPinned,
                 mediaOptions = mediaOptions,
-                onChangeFinishData = {}
+                onChangeFinishData = {
+                    tvHomeViewModel.showDatePicker()
+                }
             )
         }
 }
