@@ -147,4 +147,8 @@ class WatchlistViewModel @Inject constructor(
     fun updateFinishedDate(id: Long, finished: Instant) = viewModelScope.launch {
         repository.updateFinishedDate(id, finished)
     }
+
+    fun updateSeasonFinishedDate(seasonId: Long, finished: Instant) = viewModelScope.launch {
+        repository.updateSeasonFinishedDate(seasonId, finished)
+    }
 }
