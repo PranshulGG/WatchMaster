@@ -16,7 +16,7 @@ interface WatchlistDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(item: WatchlistItemEntity)
 
-    @Query("SELECT * FROM watchlist ORDER BY id DESC")
+    @Query("SELECT * FROM watchlist ORDER BY finishedDate DESC")
     fun getAll(): Flow<List<WatchlistItemEntity>>
 
     @Query(
