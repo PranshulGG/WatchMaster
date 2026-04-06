@@ -9,7 +9,6 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import com.pranshulgg.watchmaster.core.ui.components.ActionBottomSheet
-import com.pranshulgg.watchmaster.core.ui.components.LoadingScreenPlaceholder
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -23,6 +22,7 @@ fun DatePickerSheet(
 
     if (show && initialDate != null && id != -1L) {
         val datePickerState = rememberDatePickerState(initialDate)
+
         val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
         ActionBottomSheet(
@@ -37,7 +37,7 @@ fun DatePickerSheet(
         ) {
             DatePicker(
                 state = datePickerState, colors = DatePickerDefaults.colors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
                 )
             )
         }
