@@ -32,6 +32,17 @@ interface TvEpisodeDao {
     @Query("SELECT * FROM tv_episodes")
     suspend fun getAllEpisodes(): List<TvEpisodeEntity>
 
+    @Query(
+        """
+            UPDATE tv_episodes 
+            SET isWatched = 1 
+            WHERE seasonId = :seasonId 
+            AND episode_number BETWEEN 1 AND :count
+            """
+    )
+    suspend fun markEpWatchedFromCount(seasonId: Long, count: Int)
+
+
     @Query("DELETE FROM tv_episodes")
     suspend fun clearAll()
 

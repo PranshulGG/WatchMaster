@@ -120,4 +120,8 @@ class TvRepository(
         return episodeDao.getEpisodesForSeason(seasonId)
     }
 
+    suspend fun markEpWatchedFromCount(seasonId: Long, count: Int) {
+        episodeDao.markEpWatchedFromCount(seasonId, count)
+    }
+
 }
