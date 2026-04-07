@@ -2,6 +2,8 @@ package com.pranshulgg.watchmaster.core.ui.components.media
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
@@ -23,9 +25,9 @@ import com.pranshulgg.watchmaster.core.ui.theme.ShapeRadius
 @Composable
 fun PosterBox(
     posterUrl: String?,
-    modifier: Modifier = Modifier,
     width: Dp = 80.dp,
     height: Dp = 120.dp,
+    fillMaxWidth: Boolean = false,
     cornerRadius: Dp = ShapeRadius.Medium,
     circular: Boolean = false,
     placeholder: @Composable () -> Unit = { PosterPlaceholder() },
@@ -33,7 +35,12 @@ fun PosterBox(
     apiPath: String? // to check if the API provided a valid image before loading
 ) {
     Box(
-        modifier = modifier
+        modifier = if (fillMaxWidth)
+            Modifier
+                .fillMaxWidth()
+                .height(height)
+                .clip(RoundedCornerShape(if (circular) ShapeRadius.Full else cornerRadius))
+        else Modifier
             .size(width = width, height = height)
             .clip(RoundedCornerShape(if (circular) ShapeRadius.Full else cornerRadius)),
         contentAlignment = Alignment.Center
