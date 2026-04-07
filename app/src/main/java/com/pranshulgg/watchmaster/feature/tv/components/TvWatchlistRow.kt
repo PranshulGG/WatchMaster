@@ -93,7 +93,8 @@ fun TvWatchlistRow(
                 PosterBox(
                     posterUrl = "https://image.tmdb.org/t/p/w154${item.posterPath}",
                     apiPath = item.posterPath,
-                    cornerRadius = ShapeRadius.None
+                    cornerRadius = ShapeRadius.None,
+                    progressIndicatorSize = 40.dp
                 )
                 Column(
                     modifier = Modifier

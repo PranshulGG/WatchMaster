@@ -35,6 +35,7 @@ import coil.compose.AsyncImage
 import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.core.ui.components.Symbol
 import com.pranshulgg.watchmaster.core.ui.components.media.MediaDetailsScreenHeader
+import com.pranshulgg.watchmaster.core.ui.components.media.PosterBox
 import com.pranshulgg.watchmaster.core.ui.theme.ShapeRadius
 import com.pranshulgg.watchmaster.data.getTvGenreNames
 import com.pranshulgg.watchmaster.data.local.entity.SeasonEntity
@@ -99,19 +100,29 @@ fun TvHeroHeader(
             verticalAlignment = Alignment.Bottom
         ) {
 
-            Box(
-                modifier = Modifier
-                    .height(180.dp)
-                    .width(120.dp)
-                    .clip(RoundedCornerShape(ShapeRadius.Large))
-            ) {
-                AsyncImage(
-                    model = "https://image.tmdb.org/t/p/w500${seasonItem.posterPath}",
-                    contentDescription = tv.name,
-                    modifier = Modifier.matchParentSize()
+//            Box(
+//                modifier = Modifier
+//                    .height(180.dp)
+//                    .width(120.dp)
+//                    .clip(RoundedCornerShape(ShapeRadius.Large))
+//            ) {
+//                AsyncImage(
+//                    model = "https://image.tmdb.org/t/p/w500${seasonItem.posterPath}",
+//                    contentDescription = tv.name,
+//                    modifier = Modifier.matchParentSize()
+//
+//                )
+//            }
 
-                )
-            }
+            PosterBox(
+                posterUrl = "https://image.tmdb.org/t/p/w500${seasonItem.posterPath}",
+                apiPath = seasonItem.posterPath,
+                width = 120.dp,
+                height = 180.dp,
+                cornerRadius = ShapeRadius.Large,
+                progressIndicatorSize = 40.dp
+            )
+
             Spacer(modifier = Modifier.width(16.dp))
 
             Column(
