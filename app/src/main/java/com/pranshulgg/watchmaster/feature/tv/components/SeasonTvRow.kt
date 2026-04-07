@@ -90,7 +90,8 @@ fun SeasonTvRow(
                     apiPath = season.posterPath,
                     cornerRadius = ShapeRadius.None,
                     height = 100.dp,
-                    width = 65.dp
+                    width = 65.dp,
+                    progressIndicatorSize = 40.dp
                 )
                 Column(
                     modifier = Modifier
