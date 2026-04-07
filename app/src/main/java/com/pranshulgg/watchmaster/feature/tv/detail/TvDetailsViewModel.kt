@@ -126,6 +126,12 @@ class TvDetailsViewModel @Inject constructor(
         }
     }
 
+    fun markEpWatchedFromCount(seasonId: Long, count: Int) {
+        viewModelScope.launch {
+            repo.markEpWatchedFromCount(seasonId, count)
+        }
+    }
+
     fun updateSeasonProgress(seasonId: Long, progress: Int) {
         viewModelScope.launch {
             repo.updateSeasonProgress(seasonId, progress)
