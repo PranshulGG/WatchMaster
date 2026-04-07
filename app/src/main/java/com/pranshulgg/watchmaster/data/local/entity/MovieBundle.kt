@@ -22,6 +22,7 @@ data class MovieBundle(
     val similar: MovieListDto,
     val recommendations: MovieListDto,
     val reviews: ReviewsDto,
+    val cachedAt: Long
 )
 
 // mapper extension
@@ -39,4 +40,5 @@ fun MovieBundleDto.toDomain(): MovieBundle = MovieBundle(
     similar = similar,
     recommendations = recommendations,
     reviews = reviews,
+    cachedAt = System.currentTimeMillis()
 )

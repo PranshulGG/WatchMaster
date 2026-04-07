@@ -46,4 +46,5 @@ fun MovieBundleEntity.toDomain(): MovieBundle =
         similar = gson.fromJson(similarJson, MovieListDto::class.java),
         recommendations = gson.fromJson(recommendationsJson, MovieListDto::class.java),
         reviews = gson.fromJson(reviewsJson, ReviewsDto::class.java),
+        cachedAt = cachedAt
     )
