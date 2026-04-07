@@ -90,6 +90,7 @@ data class MovieBundleDto(
     val similar: MovieListDto,
     val recommendations: MovieListDto,
     val reviews: ReviewsDto,
+    val cachedAt: Long
 )
 
 data class TvBundleDto(
