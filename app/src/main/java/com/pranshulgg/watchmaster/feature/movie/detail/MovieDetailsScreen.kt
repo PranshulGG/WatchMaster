@@ -37,7 +37,7 @@ fun MovieDetailPage(
     val watchlistViewModel: WatchlistViewModel = hiltViewModel()
 
     LaunchedEffect(id) {
-        viewModel.load(id)
+        viewModel.load(id, onBack = { navController.popBackStack() })
     }
 
 

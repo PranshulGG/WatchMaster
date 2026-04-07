@@ -1,5 +1,6 @@
 package com.pranshulgg.watchmaster.feature.movie.detail
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -24,12 +25,26 @@ class MovieDetailsViewModel @Inject constructor(
     var loading by mutableStateOf(false)
         private set
 
-    fun load(movieId: Long) {
-        if (state != null) return
+    fun load(movieId: Long, onBack: () -> Unit, forceFetch: Boolean = false) {
+        if (state != null && !forceFetch) return
+
+        if (forceFetch) {
+            state = null
+        }
 
         viewModelScope.launch {
+
+            val movie = repo.getWholeMovieData(movieId, forceFetch)
+
             loading = true
-            state = repo.getWholeMovieData(movieId)
+
+            if (movie == null) {
+                onBack()
+                return@launch
+            }
+
+            state = movie
+
             loading = false
         }
     }
