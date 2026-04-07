@@ -1,14 +1,19 @@
 package com.pranshulgg.watchmaster.feature.tv.detail.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Badge
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -26,8 +31,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.pranshulgg.watchmaster.R
+import com.pranshulgg.watchmaster.core.ui.components.Gap
 import com.pranshulgg.watchmaster.core.ui.components.Symbol
 import com.pranshulgg.watchmaster.core.ui.components.Tooltip
+import com.pranshulgg.watchmaster.core.ui.components.media.MediaChip
 import com.pranshulgg.watchmaster.core.ui.components.media.PosterBox
 import com.pranshulgg.watchmaster.core.ui.components.media.PosterPlaceholder
 import com.pranshulgg.watchmaster.core.ui.theme.ShapeRadius
@@ -39,7 +46,8 @@ fun EpisodeItem(
     item: TvEpisodeEntity,
     onTrailingAction: () -> Unit,
     carouselItemWidth: Dp,
-    onItemClick: () -> Unit
+    onItemClick: () -> Unit,
+    isActive: Boolean = false,
 ) {
 
     Box(
@@ -64,55 +72,64 @@ fun EpisodeItem(
         )
 
 
-        Box(
-            modifier = Modifier
-                .matchParentSize()
-                .background(
-                    color = Color.Black.copy(alpha = 0.5f)
-                )
-        )
-
-        Text(
-            item.name,
-            modifier = Modifier
-                .align(Alignment.BottomStart)
-                .padding(end = 12.dp, start = 12.dp, bottom = 12.dp),
-            style = MaterialTheme.typography.bodyMedium,
-            maxLines = 3,
-            overflow = TextOverflow.Ellipsis,
-            color = Color.White,
-        )
-
-        Box(
-            Modifier
-                .align(Alignment.TopStart)
-                .padding(12.dp)
-        ) { LeadingIcon(item.isWatched) }
-
-
-        Box(
-            Modifier
-                .align(Alignment.TopEnd)
-                .padding(12.dp)
+        AnimatedVisibility(
+            visible = isActive,
+            enter = fadeIn(),
+            exit = fadeOut(),
+            modifier = Modifier.matchParentSize()
         ) {
-            Tooltip(
-                "Episode options",
-                preferredPosition = TooltipAnchorPosition.Below,
-                spacing = 5.dp
-            ) {
-                IconButton(
-                    onClick = { onTrailingAction() },
+            Box(modifier = Modifier.matchParentSize()) {
+                Box(
                     modifier = Modifier
-                        .size(36.dp),
-                    shapes = IconButtonDefaults.shapes()
+                        .matchParentSize()
+                        .background(
+                            color = Color.Black.copy(alpha = 0.5f)
+                        )
+                )
+
+                Text(
+                    "${item.episode_number} • ${item.name}",
+                    modifier = Modifier
+                        .align(Alignment.BottomStart)
+                        .padding(end = 12.dp, start = 12.dp, bottom = 12.dp),
+                    style = MaterialTheme.typography.bodyMedium,
+                    maxLines = 3,
+                    overflow = TextOverflow.Ellipsis,
+                    color = Color.White,
+                )
+
+                Box(
+                    Modifier
+                        .align(Alignment.TopStart)
+                        .padding(12.dp),
                 ) {
-                    Symbol(R.drawable.more_vert_24px, color = Color.White)
+                    LeadingIcon(item.isWatched)
+                }
+
+
+                Box(
+                    Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(12.dp),
+                ) {
+                    Tooltip(
+                        "Episode options",
+                        preferredPosition = TooltipAnchorPosition.Below,
+                        spacing = 5.dp
+                    ) {
+                        IconButton(
+                            onClick = { onTrailingAction() },
+                            modifier = Modifier
+                                .size(36.dp),
+                            shapes = IconButtonDefaults.shapes()
+                        ) {
+                            Symbol(R.drawable.more_vert_24px, color = Color.White)
+                        }
+                    }
                 }
             }
         }
-
     }
-
 }
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)

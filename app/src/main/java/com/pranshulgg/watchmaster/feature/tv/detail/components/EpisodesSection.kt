@@ -1,5 +1,6 @@
 package com.pranshulgg.watchmaster.feature.tv.detail.components
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -44,6 +45,7 @@ fun EpisodesSection(
     episodes: List<TvEpisodeEntity>,
     viewModel: TvDetailsViewModel,
     seasonId: Long,
+    seasonProgress: Int,
     seasonStatus: WatchStatus
 ) {
 
@@ -66,17 +68,25 @@ fun EpisodesSection(
     LaunchedEffect(seasonStatus, episodes) {
         if (seasonStatus == WatchStatus.FINISHED && episodes.all { !it.isWatched }) {
             viewModel.markAllEpsWatched(seasonId)
+            Log.d("seasonProgress", "CALLED MARK ALL")
+
+        }
+
+        val progressToWatchedCount =
+            (episodes.size * (seasonProgress / 100f)).toInt()
+
+
+        if (seasonProgress > 0 && episodes.all { !it.isWatched }) {
+            viewModel.markEpWatchedFromCount(seasonId, progressToWatchedCount)
         }
     }
 
 
     LaunchedEffect(watchedProgress) {
-        if (episodes.isNotEmpty()) {
-            viewModel.updateSeasonProgress(
-                seasonId,
-                watchedProgress.roundToInt()
-            )
-        }
+        viewModel.updateSeasonProgress(
+            seasonId,
+            watchedProgress.roundToInt()
+        )
     }
 
 
@@ -87,14 +97,11 @@ fun EpisodesSection(
             MediaChip(
                 "$watchedItems / ${episodes.size} watched",
                 containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                contentColor = MaterialTheme.colorScheme.onTertiaryContainer
+                contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                shapeRadius = ShapeRadius.Small
             )
         }
     ) {
-
-        if (episodes.isEmpty()) {
-            LoadingPlaceholder()
-        }
 
         HorizontalMultiBrowseCarousel(
             state = carouselState,
@@ -130,7 +137,6 @@ fun EpisodesSection(
                     },
                     carouselItemWidth,
                     onItemClick = {
-
                         if (carouselState.currentItem != index) {
                             scope.launch {
                                 carouselState.animateScrollToItem(index)
@@ -153,7 +159,8 @@ fun EpisodesSection(
                         } else {
                             viewModel.markEpWatched(item.epId)
                         }
-                    }
+                    },
+                    isActive = index == carouselState.currentItem
                 )
             }
         }
