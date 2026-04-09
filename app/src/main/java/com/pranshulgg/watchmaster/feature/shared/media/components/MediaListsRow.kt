@@ -42,46 +42,6 @@ fun MediaListsRow(
         modifier = Modifier
             .fillMaxWidth()
     ) {
-//        Row(
-//            modifier = Modifier.padding(vertical = 10.dp, horizontal = 16.dp),
-//            verticalAlignment = if (description == "" && media == null) Alignment.CenterVertically else Alignment.CenterVertically,
-//        ) {
-//            if (leading != null) {
-//                leading()
-//                Gap(horizontal = 12.dp)
-//            }
-//
-//            Column(
-//            ) {
-//                Text(
-//                    headline,
-//                    fontSize = 17.sp,
-//                    fontWeight = FontWeight.W900,
-//                    color = MaterialTheme.colorScheme.onSurface
-//                )
-//                if (description != "") {
-//                    Text(
-//                        description,
-//                        style = MaterialTheme.typography.bodyMedium,
-//                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-//                        maxLines = 2,
-//                        overflow = TextOverflow.Ellipsis
-//                    )
-//                }
-//
-//
-//                if (media != null) {
-//                    media()
-//                }
-//
-//            }
-//            if (trailing != null) {
-//                Spacer(Modifier.weight(1f))
-//                Gap(horizontal = 12.dp)
-//                trailing()
-//            }
-//
-//        }
         ListItem(
             modifier = Modifier.clickable(
                 onClick = { onClick() }

@@ -58,10 +58,11 @@ fun MediaRatingDialogContent(
     onConfirm: (Double) -> Unit,
     isUpdateRating: Boolean = false,
     originalRating: Float = 0f,
+    isTv: Boolean = false,
 ) {
     DialogBasic(
         show = show,
-        title = "Rate this season",
+        title = if (isUpdateRating) "Update rating" else if (isTv) "Rate this season" else "Rate this movie",
         showDefaultActions = false,
         onDismiss = {
             onDismiss()
