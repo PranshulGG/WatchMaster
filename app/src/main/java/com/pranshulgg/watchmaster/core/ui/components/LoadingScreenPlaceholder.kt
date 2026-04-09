@@ -20,7 +20,7 @@ fun LoadingScreenPlaceholder(fraction: Float = 1f) {
     Box(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.surfaceContainer)
-            .zIndex(100f)
+            .zIndex(10000f)
             .fillMaxWidth()
             .fillMaxHeight(fraction = fraction),
         contentAlignment = Alignment.Center
