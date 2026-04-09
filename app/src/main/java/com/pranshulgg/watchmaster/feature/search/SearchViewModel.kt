@@ -12,6 +12,7 @@ import com.pranshulgg.watchmaster.core.network.TvSeasonDto
 import com.pranshulgg.watchmaster.core.ui.snackbar.SnackbarManager
 import com.pranshulgg.watchmaster.data.local.entity.SeasonEntity
 import com.pranshulgg.watchmaster.data.repository.SearchRepository
+import com.pranshulgg.watchmaster.data.repository.TvRepository
 import com.pranshulgg.watchmaster.feature.shared.WatchlistViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -156,7 +157,6 @@ class SearchViewModel @Inject constructor(
             } else if (item.mediaType == "tv") {
                 SnackbarManager.show("No season found")
             }
-            hideSheet()
         }
     }
 
@@ -182,6 +182,7 @@ class SearchViewModel @Inject constructor(
             showSheet()
         }
     }
+
 
     private val _uiState = mutableStateOf(SearchUiState())
     val uiState: MutableState<SearchUiState> = _uiState
