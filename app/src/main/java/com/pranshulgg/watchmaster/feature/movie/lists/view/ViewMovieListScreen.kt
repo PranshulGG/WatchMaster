@@ -177,7 +177,7 @@ private fun Actions(
             onConfirm = {},
             showActions = false,
             onCancel = { isSheetOpen = false }
-        ) {
+        ) { hide ->
             SettingSection(
                 isModalOption = true,
                 tiles = options.map { op ->
@@ -186,7 +186,7 @@ private fun Actions(
                         leading = { SettingsTileIcon(op.leading) },
                         onClick = {
                             op.action()
-                            isSheetOpen = false
+                            hide()
                         }
                     )
                 }
