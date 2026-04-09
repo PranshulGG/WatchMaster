@@ -107,6 +107,7 @@ data class TvBundleDto(
     val watchProviders: TvWatchProvidersDto?,
     val reviews: TvReviewsDto,
 //    val episodes: List<EpisodeItem>
+    val cachedAt: Long
 )
 
 data class TvSeasonsResponse(
