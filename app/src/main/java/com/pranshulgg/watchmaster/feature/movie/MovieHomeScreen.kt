@@ -12,7 +12,6 @@ import androidx.compose.runtime.remember
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.pranshulgg.watchmaster.core.ui.components.media.DatePickerSheet
-import com.pranshulgg.watchmaster.core.ui.snackbar.SnackbarManager
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 import com.pranshulgg.watchmaster.feature.movie.ui.MovieStatusWatchlistConfirmationDialog
 import com.pranshulgg.watchmaster.feature.movie.ui.MovieWatchlistBottomSheet

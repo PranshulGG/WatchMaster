@@ -18,10 +18,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.layout.ContentScale
@@ -58,6 +62,8 @@ fun MovieWatchlistRow(
 
     val titleMaxLines = 2
     val overviewMaxLines = remember { mutableIntStateOf(1) }
+    var isReady by remember { mutableStateOf(false) }
+
 
     val poster = item.posterPath?.let {
         "https://image.tmdb.org/t/p/w154$it"
@@ -73,6 +79,7 @@ fun MovieWatchlistRow(
         modifier = Modifier
             .fillMaxWidth()
             .clip(shape)
+            .alpha(if (isReady) 1f else 0f)
             .combinedClickable(
                 onClick = {
                     navController.navigate(NavRoutes.movieDetail(item.id))
@@ -125,6 +132,9 @@ fun MovieWatchlistRow(
                         val newLines = if (result.lineCount == 1) 2 else 1
                         if (overviewMaxLines.intValue != newLines) {
                             overviewMaxLines.intValue = newLines
+                            isReady = true
+                        } else {
+                            isReady = true
                         }
                     }
 

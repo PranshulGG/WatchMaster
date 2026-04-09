@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.pranshulgg.watchmaster.core.ui.snackbar.SnackbarManager
 import com.pranshulgg.watchmaster.data.CountryWatchProviders
 import com.pranshulgg.watchmaster.data.local.entity.MovieBundle
 import com.pranshulgg.watchmaster.data.repository.MovieRepository
@@ -33,12 +34,12 @@ class MovieDetailsViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-
-            val movie = repo.getWholeMovieData(movieId, forceFetch)
-
             loading = true
 
-            if (movie == null) {
+            val movie = try {
+                repo.getWholeMovieData(movieId, forceFetch)
+            } catch (e: Exception) {
+                SnackbarManager.show("Failed to fetch movie data")
                 onBack()
                 return@launch
             }

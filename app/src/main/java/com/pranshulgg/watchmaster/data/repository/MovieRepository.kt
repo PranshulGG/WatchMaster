@@ -16,7 +16,7 @@ class MovieRepository(
     private val dao: MovieBundleDao
 ) {
 
-    suspend fun getWholeMovieData(movieId: Long, forceFetch: Boolean = false): MovieBundle? {
+    suspend fun getWholeMovieData(movieId: Long, forceFetch: Boolean = false): MovieBundle {
 
         if (!forceFetch) {
             dao.getById(movieId)?.let {
@@ -24,13 +24,8 @@ class MovieRepository(
             }
         }
 
-        val response = try {
-            api.getWholeMovieData(movieId)
-        } catch (e: Exception) {
-            SnackbarManager.show("Something went wrong. Please try again")
-            return null
-        }
-        val body = response.body() ?: return null
+        val response = api.getWholeMovieData(movieId)
+        val body = response.body() ?: throw Exception("Movie not found")
 
         val domain = body.toDomain()
 
