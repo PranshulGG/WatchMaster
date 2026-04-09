@@ -35,7 +35,7 @@ fun TvWatchlistBottomSheet(
             sheetState = sheetState,
             onCancel = { onDismiss() },
             onConfirm = { },
-        ) {
+        ) { hide ->
             WatchlistMediaSheetContent(
                 id = seasonItem?.seasonId ?: watchlistItem.id,
                 mediaTitle = mediaTitle,
@@ -59,7 +59,7 @@ fun TvWatchlistBottomSheet(
                 onDeleteSeries = { id ->
                     tvHomeViewModel.showConfirmationDialog(id)
                 },
-                onDismiss = { onDismiss() },
+                onDismiss = { hide() },
                 viewModel = viewModel,
                 isPinned = watchlistItem.isPinned,
                 mediaOptions = mediaOptions,

@@ -47,7 +47,6 @@ fun MovieListSelectIconSheet(
             sheetState = sheetState,
             onConfirm = {
                 viewModel.updateListIcon(selectedIcon)
-                viewModel.hideSelectListIconSheet()
             },
             confirmBtnMaxWidth = true,
             onCancel = {

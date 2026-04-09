@@ -51,7 +51,6 @@ fun SearchItemInfoSeasonSection(
     var selectedSeason by remember { mutableIntStateOf(0) }
     val size = ButtonDefaults.MediumContainerHeight
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    val scope = rememberCoroutineScope()
     var seasonChanged by remember { mutableStateOf(false) }
     val totalSeasons = remember { mutableStateListOf<TvSeasonDto>() }
     var isSheetOpen by remember { mutableStateOf(false) }
@@ -127,10 +126,10 @@ fun SearchItemInfoSeasonSection(
                 isSheetOpen = false
             },
             onConfirm = {
-                isSheetOpen = false
+
             },
             showActions = false,
-        ) {
+        ) { hide ->
             LazyColumn() {
                 item {
                     SettingSection(
@@ -161,7 +160,7 @@ fun SearchItemInfoSeasonSection(
                                             totalSeasons.add(item)
                                         }
                                         onSelectedSeason(totalSeasons)
-                                        isSheetOpen = false
+                                        hide()
                                     }
                                 },
                                 trailing = {

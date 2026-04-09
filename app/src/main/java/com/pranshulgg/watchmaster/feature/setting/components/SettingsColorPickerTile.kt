@@ -62,7 +62,6 @@ fun ColorPickerBtn() {
             },
             onConfirm = {
                 prefs.setThemeColor(selectedColor)
-                isSheetOpen = false
             },
         ) {
             SelectableThemeColors(onThemeColorChanged = { color ->

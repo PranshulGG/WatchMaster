@@ -32,7 +32,6 @@ fun DatePickerSheet(
             },
             onConfirm = {
                 onDateSelected(id, datePickerState.selectedDateMillis)
-                onDismiss()
             }
         ) {
             DatePicker(

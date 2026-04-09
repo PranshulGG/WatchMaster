@@ -27,7 +27,7 @@ fun MovieWatchlistBottomSheet(
             sheetState = sheetState,
             onCancel = { onDismiss() },
             onConfirm = { },
-        ) {
+        ) { hide ->
             WatchlistMediaSheetContent(
                 id = watchlistItem.id,
                 mediaTitle = watchlistItem.title,
@@ -47,7 +47,7 @@ fun MovieWatchlistBottomSheet(
                 onDelete = {
                     movieHomeViewModel.showConfirmationDialog()
                 },
-                onDismiss = { onDismiss() },
+                onDismiss = { hide() },
                 viewModel = viewModel,
                 isPinned = watchlistItem.isPinned,
                 onChangeFinishData = {

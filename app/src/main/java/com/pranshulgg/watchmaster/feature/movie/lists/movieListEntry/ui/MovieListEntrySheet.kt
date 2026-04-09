@@ -74,7 +74,7 @@ fun MovieListEntrySheet(
             },
             showActions = false,
             removeBottomInset = true
-        ) {
+        ) { hide ->
 
             Column() {
                 if (!isLoading) {
@@ -89,13 +89,13 @@ fun MovieListEntrySheet(
                                 selectedMovies.add(it)
                             }
                         },
-                        uiState.listMoviesList,
+                        selectedMovies,
                         onConfirm = {
                             viewModel.updateList(selectedMovies)
-                            viewModel.hideMovieListSheet()
+                            hide()
                         },
                         onCancel = {
-                            viewModel.hideMovieListSheet()
+                            hide()
                         }
                     )
                 } else {

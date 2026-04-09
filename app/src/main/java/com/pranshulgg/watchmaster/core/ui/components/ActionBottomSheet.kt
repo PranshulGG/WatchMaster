@@ -28,10 +28,14 @@ import androidx.compose.material3.SheetState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -47,8 +51,20 @@ fun ActionBottomSheet(
     enableHandle: Boolean = true,
     hideConfirmBtn: Boolean = false,
     removeBottomInset: Boolean = false,
-    content: @Composable ColumnScope.() -> Unit,
+    content: @Composable (hide: () -> Unit) -> Unit
 ) {
+    val scope = rememberCoroutineScope()
+
+    fun hide() {
+        scope.launch {
+            sheetState.hide()
+        }.invokeOnCompletion {
+            if (!sheetState.isVisible) {
+                onCancel()
+            }
+        }
+    }
+
     ModalBottomSheet(
         sheetState = sheetState,
         onDismissRequest = onCancel,
@@ -78,7 +94,7 @@ fun ActionBottomSheet(
                 .heightIn(max = 800.dp)
         ) {
 
-            content()
+            content { hide() }
 
             if (showActions) {
                 Spacer(Modifier.height(12.dp))
@@ -92,7 +108,7 @@ fun ActionBottomSheet(
                         modifier = Modifier.defaultMinSize(minWidth = 90.dp, minHeight = 45.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.errorContainer),
                         onClick = {
-                            onCancel()
+                            hide()
                         },
                         shapes = ButtonDefaults.shapes(),
                     ) {
@@ -109,6 +125,7 @@ fun ActionBottomSheet(
                         Button(
                             onClick = {
                                 onConfirm()
+                                hide()
                             },
                             enabled = !isConfirmDisabled,
                             shapes = ButtonDefaults.shapes(),
@@ -127,3 +144,4 @@ fun ActionBottomSheet(
         }
     }
 }
+
