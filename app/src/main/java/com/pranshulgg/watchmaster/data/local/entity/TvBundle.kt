@@ -20,6 +20,7 @@ data class TvBundle(
 //    val similar: TvListDto,
 //    val recommendations: TvListDto,
     val reviews: TvReviewsDto,
+    val cachedAt: Long
 )
 
 // mapper extension
@@ -38,4 +39,5 @@ fun TvBundleDto.toDomain(): TvBundle = TvBundle(
 //    similar = similar,
 //    recommendations = recommendations,
     reviews = reviews,
+    cachedAt = System.currentTimeMillis()
 )

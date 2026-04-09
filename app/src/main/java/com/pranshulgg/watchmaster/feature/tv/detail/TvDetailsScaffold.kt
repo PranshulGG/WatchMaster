@@ -86,8 +86,6 @@ fun TvDetailsScaffold(
                 tvItem,
                 navController,
                 scrollBehavior,
-                seasons,
-                seasonNumber,
                 season,
                 viewModel,
                 watchlistViewModel,

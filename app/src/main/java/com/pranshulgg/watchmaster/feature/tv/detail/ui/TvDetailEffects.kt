@@ -13,7 +13,7 @@ fun TvDetailEffects(
     viewModel: TvDetailsViewModel,
     seasonId: Long
 ) {
-    LaunchedEffect(id) { viewModel.load(id) }
+    LaunchedEffect(id) { viewModel.load(id, onBack = {}) }
     LaunchedEffect(seasonNumber) { viewModel.loadEpisodes(id, seasonId, seasonNumber) }
     LaunchedEffect(Unit) { viewModel.loading }
 

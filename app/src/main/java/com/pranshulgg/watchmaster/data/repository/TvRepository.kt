@@ -7,8 +7,10 @@ import com.pranshulgg.watchmaster.data.local.entity.toDomain
 import com.pranshulgg.watchmaster.data.local.mapper.toDomain
 import com.pranshulgg.watchmaster.data.local.mapper.toEntity
 import com.pranshulgg.watchmaster.core.network.TmdbApi
+import com.pranshulgg.watchmaster.core.network.TvSeasonDto
 import com.pranshulgg.watchmaster.core.network.TvSeasonEpisodeDto
 import com.pranshulgg.watchmaster.core.network.TvSeasonEpisodesResponse
+import com.pranshulgg.watchmaster.core.ui.snackbar.SnackbarManager
 import com.pranshulgg.watchmaster.data.local.dao.SeasonDao
 import com.pranshulgg.watchmaster.data.local.dao.TvEpisodeDao
 import com.pranshulgg.watchmaster.data.local.entity.SeasonEntity
@@ -33,7 +35,8 @@ class TvRepository(
         }
 
         val response = api.getWholeTvData(tvId)
-        val body = response.body() ?: error("TV season not found")
+
+        val body = response.body() ?: throw Exception("TV not found")
 
         val domain = body.toDomain()
         dao.insert(domain.toEntity())
@@ -53,8 +56,8 @@ class TvRepository(
         seasonNumber: Int
     ) {
 
-
         val response = api.getTvSeasonEpisodes(tvId, seasonNumber)
+
         val body = response.body() ?: error("TV episodes not found")
 
         val domain = body.episodes
@@ -106,12 +109,14 @@ class TvRepository(
     suspend fun ensureEpisodesFetched(
         tvId: Long,
         seasonId: Long,
-        seasonNumber: Int
+        seasonNumber: Int,
     ) {
         if (!episodeDao.hasEpisodes(seasonId) && !loadingSeasons.contains(seasonId)) {
             loadingSeasons.add(seasonId)
             fetchEpisodes(tvId, seasonId, seasonNumber)
             loadingSeasons.remove(seasonId)
+        } else {
+            Log.d("TvRepository", "Episodes already fetched for season $seasonId")
         }
     }
 
@@ -122,6 +127,39 @@ class TvRepository(
 
     suspend fun markEpWatchedFromCount(seasonId: Long, count: Int) {
         episodeDao.markEpWatchedFromCount(seasonId, count)
+    }
+
+    suspend fun refreshSeasonData(season: SeasonEntity): SeasonEntity {
+
+        val response = api.getTvSeasons(season.showId)
+
+        val body = response.body() ?: throw Exception("Response body is null")
+
+        val filteredSeason = body.seasons.firstOrNull { it.season_number == season.seasonNumber }
+
+        val seasonEntity = SeasonEntity(
+            seasonId = season.seasonId,
+            showId = season.showId,
+            seasonNumber = season.seasonNumber,
+            name = season.name,
+            episodeCount = filteredSeason?.episode_count ?: season.episodeCount,
+            airDate = season.airDate,
+            posterPath = season.posterPath,
+            seasonAddedDate = season.seasonAddedDate,
+            seasonStartedDate = season.seasonStartedDate,
+            seasonInterruptedAt = season.seasonInterruptedAt,
+            seasonFinishedDate = season.seasonFinishedDate,
+            seasonNotes = season.seasonNotes,
+            seasonAvgRating = season.seasonAvgRating,
+            seasonUserRating = season.seasonUserRating,
+            status = season.status,
+            seasonProgress = season.seasonProgress,
+            cachedAt = System.currentTimeMillis()
+        )
+
+        seasonDao.insertSeason(seasonEntity)
+
+        return seasonEntity
     }
 
 }

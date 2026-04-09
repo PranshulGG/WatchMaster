@@ -6,7 +6,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.pranshulgg.watchmaster.core.ui.snackbar.SnackbarManager
 import com.pranshulgg.watchmaster.data.CountryWatchProviders
+import com.pranshulgg.watchmaster.data.local.entity.SeasonEntity
 import com.pranshulgg.watchmaster.data.local.entity.TvBundle
 import com.pranshulgg.watchmaster.data.local.entity.TvEpisodeEntity
 import com.pranshulgg.watchmaster.data.repository.TvRepository
@@ -19,6 +21,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.collections.emptyList
+import kotlin.coroutines.cancellation.CancellationException
 
 
 @HiltViewModel
@@ -32,16 +35,27 @@ class TvDetailsViewModel @Inject constructor(
     var loading by mutableStateOf(false)
         private set
 
-    fun load(tvId: Long) {
+
+    fun load(tvId: Long, onBack: () -> Unit) {
         if (state != null) return
 
         viewModelScope.launch {
             loading = true
-            state = repo.getWholeTvData(tvId)
+
+            val tv = try {
+                repo.getWholeTvData(tvId)
+            } catch (e: Exception) {
+                if (e is CancellationException) throw e
+                SnackbarManager.show("Failed to fetch season data")
+                onBack()
+                return@launch
+            }
+
+            state = tv
+
             loading = false
         }
     }
-
 
     fun loadEpisodes(
         tvId: Long,
@@ -49,7 +63,34 @@ class TvDetailsViewModel @Inject constructor(
         seasonNumber: Int
     ) {
         viewModelScope.launch {
-            repo.ensureEpisodesFetched(tvId, seasonId, seasonNumber)
+            try {
+                repo.ensureEpisodesFetched(tvId, seasonId, seasonNumber)
+            } catch (e: Exception) {
+                if (e is CancellationException) throw e
+                SnackbarManager.show(
+                    "Failed to fetch season data",
+                    actionLabel = "Retry",
+                    onAction = {
+                        loadEpisodes(tvId, seasonId, seasonNumber)
+                    }
+                )
+            }
+        }
+    }
+
+    fun refreshSeasonData(season: SeasonEntity) {
+        loading = true
+        viewModelScope.launch {
+            try {
+                repo.refreshSeasonData(season)
+            } catch (e: Exception) {
+                if (e is CancellationException) throw e
+                SnackbarManager.show(
+                    "Refresh failed",
+                )
+            }
+            loading = false
+            loadEpisodes(season.showId, season.seasonId, season.seasonNumber)
         }
     }
 

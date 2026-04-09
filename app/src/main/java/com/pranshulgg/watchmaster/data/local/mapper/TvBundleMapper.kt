@@ -55,5 +55,6 @@ fun TvBundleEntity.toDomain(): TvBundle =
 //        similar = gson.fromJson(similarJson, TvListDto::class.java),
 //        recommendations = gson.fromJson(recommendationsJson, TvListDto::class.java),
         reviews = gson.fromJson(reviewsJson, TvReviewsDto::class.java),
+        cachedAt = cachedAt
 
-        )
+    )
