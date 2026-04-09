@@ -44,7 +44,8 @@ class WatchlistRepository(
                 posterPath = it.poster_path,
                 showId = showId,
                 seasonAddedDate = Instant.now(),
-                seasonAvgRating = it.vote_average
+                seasonAvgRating = it.vote_average,
+                cachedAt = System.currentTimeMillis()
             )
         }
 
