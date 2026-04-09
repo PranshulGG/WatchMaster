@@ -62,4 +62,9 @@ interface SeasonDao {
 
     @Query("DELETE FROM tv_seasons")
     suspend fun clearAll()
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertSeason(season: SeasonEntity)
+
+
 }

@@ -36,7 +36,8 @@ data class SeasonEntity(
     val seasonUserRating: Double? = null,
     val seasonAvgRating: Double? = null,
     val seasonNotes: String? = null,
-    val seasonProgress: Int? = null
+    val seasonProgress: Int? = null,
+    val cachedAt: Long,
 )
 
 
