@@ -186,7 +186,6 @@ fun EpisodesSection(
                     viewModel.markEpWatched(it.epId)
                 }
             }
-            showSheet = false
         },
         sheetState = sheetState
     )

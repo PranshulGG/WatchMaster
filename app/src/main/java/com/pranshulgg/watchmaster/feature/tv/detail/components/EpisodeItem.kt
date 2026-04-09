@@ -67,7 +67,12 @@ fun EpisodeItem(
             width = carouselItemWidth,
             height = 130.dp,
             cornerRadius = ShapeRadius.ExtraLarge,
-            placeholder = { PosterPlaceholder(iconSize = 38.dp) },
+            placeholder = {
+                PosterPlaceholder(
+                    iconSize = 38.dp,
+                    bgColor = MaterialTheme.colorScheme.surfaceBright
+                )
+            },
             progressIndicatorSize = 34.dp
         )
 
