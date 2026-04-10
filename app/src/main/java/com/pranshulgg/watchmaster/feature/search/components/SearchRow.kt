@@ -36,7 +36,9 @@ import coil.compose.rememberAsyncImagePainter
 import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.feature.search.SearchItem
 import com.pranshulgg.watchmaster.core.ui.components.Symbol
+import com.pranshulgg.watchmaster.core.ui.components.media.PosterBox
 import com.pranshulgg.watchmaster.core.ui.components.media.PosterPlaceholder
+import com.pranshulgg.watchmaster.core.ui.theme.ShapeRadius
 
 @Composable
 fun SearchRow(
@@ -96,31 +98,14 @@ fun SearchRow(
             ),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Box(
-                modifier = Modifier
-                    .size(80.dp, height = 120.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                if (!poster.isNullOrBlank()) {
-                    val painter = rememberAsyncImagePainter(model = poster)
-
-                    Image(
-                        painter = painter,
-                        contentDescription = null,
-                        modifier = Modifier.matchParentSize(),
-                        contentScale = ContentScale.Crop
-                    )
-
-                    if (painter.state is AsyncImagePainter.State.Loading) {
-                        CircularProgressIndicator(
-                            strokeWidth = 2.dp,
-                            modifier = Modifier.size(24.dp)
-                        )
-                    }
-                } else {
-                    PosterPlaceholder(iconSize = 25.dp)
-                }
-            }
+            PosterBox(
+                posterUrl = poster,
+                apiPath = item.posterPath,
+                width = 80.dp,
+                height = 120.dp,
+                cornerRadius = ShapeRadius.None,
+                placeholder = { PosterPlaceholder(size = 0.6f) }
+            )
             Column(
                 modifier = Modifier
                     .fillMaxWidth()

@@ -33,6 +33,7 @@ import com.pranshulgg.watchmaster.feature.search.SearchItem
 import com.pranshulgg.watchmaster.core.network.TvSeasonDto
 import com.pranshulgg.watchmaster.core.ui.theme.ShapeRadius
 import com.pranshulgg.watchmaster.core.ui.components.media.MediaChip
+import com.pranshulgg.watchmaster.core.ui.components.media.PosterBox
 import com.pranshulgg.watchmaster.core.ui.components.media.PosterPlaceholder
 import com.pranshulgg.watchmaster.data.getMovieGenreNames
 import com.pranshulgg.watchmaster.feature.search.ui.SearchItemInfoSeasonSection
@@ -62,32 +63,14 @@ fun SearchItemInfoSheetContent(
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Box(
-                modifier = Modifier
-                    .size(width = 80.dp, height = 120.dp)
-                    .clip(RoundedCornerShape(16.dp)),
-                contentAlignment = Alignment.Center
-            ) {
-                if (!poster.isNullOrBlank()) {
-                    val painter = rememberAsyncImagePainter(model = poster)
-
-                    Image(
-                        painter = painter,
-                        contentDescription = null,
-                        modifier = Modifier.matchParentSize(),
-                        contentScale = ContentScale.Crop
-                    )
-
-                    if (painter.state is AsyncImagePainter.State.Loading) {
-                        CircularProgressIndicator(
-                            strokeWidth = 2.dp,
-                            modifier = Modifier.size(24.dp)
-                        )
-                    }
-                } else {
-                    PosterPlaceholder(bgColor = MaterialTheme.colorScheme.surface, iconSize = 30.dp)
-                }
-            }
+            PosterBox(
+                posterUrl = poster,
+                apiPath = item.posterPath,
+                width = 80.dp,
+                height = 120.dp,
+                cornerRadius = ShapeRadius.Large,
+                placeholder = { PosterPlaceholder(size = 0.6f) }
+            )
             Spacer(Modifier.width(12.dp))
 
             Column(
