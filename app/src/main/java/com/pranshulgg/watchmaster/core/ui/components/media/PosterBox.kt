@@ -59,6 +59,8 @@ fun PosterBox(
                 CircularWavyProgressIndicator(
                     modifier = Modifier.size(progressIndicatorSize),
                 )
+            } else if (painter.state is AsyncImagePainter.State.Error || painter.state is AsyncImagePainter.State.Empty) {
+                placeholder()
             }
         } else {
             placeholder()

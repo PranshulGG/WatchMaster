@@ -25,32 +25,37 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun PosterPlaceholder(
     bgColor: Color = MaterialTheme.colorScheme.surfaceContainerHighest,
-    iconSize: Dp = 40.dp
+    size: Float = 1f,
+    hasPadding: Boolean = true
 ) {
+
+    val sizeIcon = 40.dp * size
+    val spacing = 6.dp * size
+
     Surface(
         color = bgColor,
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(10.dp),
+                .padding(if (hasPadding) 10.dp else 0.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
             Surface(
-                modifier = Modifier.size(iconSize),
+                modifier = Modifier.size(sizeIcon),
                 shape = MaterialShapes.Arrow.toShape(),
                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f)
             ) { }
             Row {
                 Surface(
-                    modifier = Modifier.size(iconSize),
+                    modifier = Modifier.size(sizeIcon),
                     shape = MaterialShapes.VerySunny.toShape(),
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f)
                 ) { }
-                Spacer(Modifier.width(5.dp))
+                Spacer(Modifier.width(spacing))
                 Surface(
-                    modifier = Modifier.size(iconSize),
+                    modifier = Modifier.size(sizeIcon),
                     shape = MaterialShapes.Pill.toShape(),
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f)
                 ) { }
