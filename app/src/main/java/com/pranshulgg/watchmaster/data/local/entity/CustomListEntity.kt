@@ -4,8 +4,8 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.pranshulgg.watchmaster.core.model.MediaListsIcons
 
-@Entity(tableName = "movie_lists")
-data class MovieListsEntity(
+@Entity(tableName = "custom_lists")
+data class CustomListEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
 
@@ -14,7 +14,7 @@ data class MovieListsEntity(
 
     val icon: MediaListsIcons? = null,
 
-    val movieIds: List<Long>,
+    val ids: List<Long>,
 
     val isPinned: Boolean = false
 )
