@@ -23,6 +23,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pranshulgg.watchmaster.core.ui.components.media.PosterBox
+import com.pranshulgg.watchmaster.core.ui.components.media.PosterPlaceholder
 import com.pranshulgg.watchmaster.core.ui.theme.ShapeRadius
 import com.pranshulgg.watchmaster.data.Provider
 
@@ -62,7 +63,8 @@ fun WatchProviderItem(title: String, providers: List<Provider>) {
                             apiPath = it.logo_path,
                             cornerRadius = ShapeRadius.Small,
                             width = 30.dp,
-                            height = 30.dp
+                            height = 30.dp,
+                            placeholder = { PosterPlaceholder(size = 0.2f, hasPadding = false) }
                         )
                         Spacer(Modifier.width(8.dp))
                         Text(
