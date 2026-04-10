@@ -36,7 +36,9 @@ data class SeasonEntity(
     val seasonUserRating: Double? = null,
     val seasonAvgRating: Double? = null,
     val seasonNotes: String? = null,
+    @Deprecated("Use lastEpWatched instead")
     val seasonProgress: Int? = null,
+    val lastEpWatched: Int? = null,
     val cachedAt: Long,
 )
 

@@ -54,9 +54,6 @@ interface SeasonDao {
     @Query("SELECT * FROM tv_seasons")
     fun getAllSeasons(): Flow<List<SeasonEntity>>
 
-    @Query("UPDATE tv_seasons SET seasonProgress = :progress WHERE seasonId = :seasonId")
-    suspend fun updateSeasonProgress(seasonId: Long, progress: Int)
-
     @Query("UPDATE tv_seasons SET seasonFinishedDate = :finished WHERE seasonId = :seasonId")
     suspend fun updateSeasonFinishedDate(seasonId: Long, finished: Instant)
 
@@ -66,5 +63,7 @@ interface SeasonDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSeason(season: SeasonEntity)
 
+    @Query("UPDATE tv_seasons SET lastEpWatched = :epNumber WHERE seasonId = :seasonId")
+    suspend fun updateLastEpWatched(seasonId: Long, epNumber: Int?)
 
 }
