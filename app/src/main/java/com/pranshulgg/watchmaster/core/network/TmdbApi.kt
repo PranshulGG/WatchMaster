@@ -106,7 +106,6 @@ data class TvBundleDto(
     @SerializedName("watch/providers")
     val watchProviders: TvWatchProvidersDto?,
     val reviews: TvReviewsDto,
-//    val episodes: List<EpisodeItem>
     val cachedAt: Long
 )
 
