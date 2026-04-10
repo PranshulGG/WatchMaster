@@ -1,13 +1,11 @@
-package com.pranshulgg.watchmaster.feature.movie.lists
+package com.pranshulgg.watchmaster.feature.lists
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -16,28 +14,35 @@ import androidx.navigation.NavController
 import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.core.ui.components.EmptyContainerPlaceholder
 import com.pranshulgg.watchmaster.core.ui.components.LargeTopBarScaffold
+import com.pranshulgg.watchmaster.core.ui.components.LoadingScreenPlaceholder
 import com.pranshulgg.watchmaster.core.ui.components.NavigateUpBtn
 import com.pranshulgg.watchmaster.core.ui.components.Symbol
 import com.pranshulgg.watchmaster.core.ui.navigation.NavRoutes
 import com.pranshulgg.watchmaster.feature.shared.WatchlistViewModel
 
 @Composable
-fun MovieListsScaffold(
+fun ListsScreenScaffold(
     navController: NavController,
-    viewModel: MovieListsViewModel,
+    viewModel: ListsViewModel,
     watchlistViewModel: WatchlistViewModel
 ) {
 
-    val movieLists by viewModel.movieLists.collectAsStateWithLifecycle(initialValue = emptyList())
+    val customLists by viewModel.customLists.collectAsStateWithLifecycle(initialValue = emptyList())
+    val customListsLoading by viewModel.isLoading.collectAsStateWithLifecycle(initialValue = true)
     val watchlistItems by watchlistViewModel.watchlist.collectAsStateWithLifecycle()
-    val movies = watchlistItems.filter { it.mediaType == "movie" }
+
+
+    if (customListsLoading) {
+        LoadingScreenPlaceholder()
+        return
+    }
 
     LargeTopBarScaffold(
-        title = "Movie lists",
+        title = "Lists",
         navigationIcon = { NavigateUpBtn(navController) },
         fab = {
             ExtendedFloatingActionButton(
-                onClick = { navController.navigate(NavRoutes.movieListEntry(-1L)) },
+                onClick = { navController.navigate(NavRoutes.listEntryScreen(-1L)) },
                 text = { Text("Create list", style = MaterialTheme.typography.titleMedium) },
                 icon = {
                     Symbol(
@@ -52,17 +57,17 @@ fun MovieListsScaffold(
                 .fillMaxWidth()
                 .padding(innerPadding)
         ) {
-            if (movieLists.isEmpty()) {
+            if (customLists.isEmpty()) {
                 EmptyContainerPlaceholder(
                     text = "No lists found",
                     description = "Create a list to get started",
                     icon = R.drawable.lists_24px
                 )
             }
-            MovieListsContent(
-                movieLists,
-                onClick = { navController.navigate(NavRoutes.viewMovieList(it)) },
-                movies = movies
+            ListsScreenContent(
+                customLists,
+                onClick = { navController.navigate(NavRoutes.viewListScreen(it)) },
+                watchlistItems
             )
         }
 

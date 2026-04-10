@@ -1,37 +1,44 @@
-package com.pranshulgg.watchmaster.feature.movie.lists
+package com.pranshulgg.watchmaster.feature.lists
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pranshulgg.watchmaster.core.model.MediaListsIcons
-import com.pranshulgg.watchmaster.core.ui.snackbar.SnackbarManager
-import com.pranshulgg.watchmaster.data.local.entity.MovieListsEntity
+import com.pranshulgg.watchmaster.data.local.entity.CustomListEntity
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
-import com.pranshulgg.watchmaster.data.repository.MovieListsRepository
-import com.pranshulgg.watchmaster.feature.movie.lists.movieListEntry.MovieListEntryUiState
+import com.pranshulgg.watchmaster.data.repository.CustomListsRepository
+import com.pranshulgg.watchmaster.feature.lists.listEntry.ListEntryScreenUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MovieListsViewModel @Inject constructor(
-    private val repo: MovieListsRepository
+class ListsViewModel @Inject constructor(
+    private val repo: CustomListsRepository
 ) : ViewModel() {
 
-    private val _uiState = mutableStateOf(MovieListEntryUiState())
-    val uiState: State<MovieListEntryUiState> = _uiState
 
-    private val _currentMovieList = MutableStateFlow<MovieListsEntity?>(null)
-    val currentMovieList: StateFlow<MovieListsEntity?> = _currentMovieList
+    private val _isLoading = MutableStateFlow(true)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+    private val _uiState = mutableStateOf(ListEntryScreenUiState())
+    val uiState: State<ListEntryScreenUiState> = _uiState
+
+    private val _currentList = MutableStateFlow<CustomListEntity?>(null)
+    val currentList: StateFlow<CustomListEntity?> = _currentList
 
 
-    val movieLists = repo
-        .getMovieLists()
+    val customLists = repo
+        .getAllCustomLists()
+        .onEach {
+            _isLoading.value = false
+        }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
@@ -41,29 +48,29 @@ class MovieListsViewModel @Inject constructor(
 
     fun saveList(updatingList: Boolean = false, id: Long = -1L) = viewModelScope.launch {
 
-        val item = MovieListsEntity(
+        val item = CustomListEntity(
             name = uiState.value.listName,
             description = uiState.value.listDescription,
-            movieIds = uiState.value.listMoviesList.map { it.id },
+            ids = uiState.value.selectedMediaItems.map { it.id },
             icon = uiState.value.listIcon
         )
 
         if (!updatingList) {
-            repo.insertMovieListsItem(item)
+            repo.insertCustomListItem(item)
         } else if (id != -1L) {
-            repo.updateList(
+            repo.updateCustomList(
                 id,
                 item.name,
                 item.description,
-                item.movieIds,
+                item.ids,
                 item.icon ?: MediaListsIcons.FOLDER
             )
         }
     }
 
-    fun getMovieListById(id: Long) {
+    fun getCustomListById(id: Long) {
         viewModelScope.launch {
-            _currentMovieList.value = repo.getMovieListById(id)
+            _currentList.value = repo.getCustomListById(id)
         }
     }
 
@@ -74,14 +81,14 @@ class MovieListsViewModel @Inject constructor(
     }
 
     fun delete(id: Long) = viewModelScope.launch {
-        repo.deleteMovieListsItem(id)
+        repo.deleteCustomList(id)
     }
 
-    fun showMovieListSheet() {
+    fun showCustomListScreenSheet() {
         _uiState.value = _uiState.value.copy(isSheetOpen = true)
     }
 
-    fun hideMovieListSheet() {
+    fun hideCustomListScreenSheet() {
         _uiState.value = _uiState.value.copy(isSheetOpen = false)
     }
 
@@ -99,7 +106,7 @@ class MovieListsViewModel @Inject constructor(
 
 
     fun updateList(list: List<WatchlistItemEntity>) {
-        _uiState.value = _uiState.value.copy(listMoviesList = list)
+        _uiState.value = _uiState.value.copy(selectedMediaItems = list)
     }
 
     fun showSelectListIconSheet() {
