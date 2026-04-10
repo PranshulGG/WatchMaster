@@ -63,7 +63,7 @@ fun TvDetailsContent(
     val currentHrs = TimeUnit.MILLISECONDS.toHours(System.currentTimeMillis())
 
     val refreshUnlocked = currentHrs.minus(cachedHrs) > 24
-
+    
     var isRefreshing by remember { mutableStateOf(false) }
     val pullToRefreshState = rememberPullToRefreshState()
 
@@ -73,7 +73,7 @@ fun TvDetailsContent(
         state = pullToRefreshState,
         onRefresh = {
             isRefreshing = true
-            
+
             if (refreshUnlocked && season != null) {
                 SnackbarManager.show("Fetching...")
                 viewModel.refreshSeasonData(season)
@@ -128,9 +128,7 @@ fun TvDetailsContent(
                         EpisodesSection(
                             episodes,
                             viewModel,
-                            season.seasonId,
-                            season.seasonProgress ?: 0,
-                            season.status
+                            season
                         )
                     }
                     CastTvSection(tvItem)

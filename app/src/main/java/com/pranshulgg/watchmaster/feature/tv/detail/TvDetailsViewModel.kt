@@ -149,21 +149,29 @@ class TvDetailsViewModel @Inject constructor(
             _uiState.value.copy(isWatchProviderSheetOpen = false)
     }
 
-    fun markEpWatched(epId: Long) {
+    fun markEpWatched(
+        epId: Long,
+        seasonId: Long,
+        episodeNumber: Int
+    ) {
         viewModelScope.launch {
-            repo.markEpWatched(epId)
+            repo.markEpWatched(epId, seasonId, episodeNumber)
         }
     }
 
-    fun markEpUnWatched(epId: Long) {
+    fun markEpUnWatched(
+        epId: Long,
+        seasonId: Long,
+        episodeNumber: Int
+    ) {
         viewModelScope.launch {
-            repo.markEpUnWatched(epId)
+            repo.markEpUnWatched(epId, seasonId, episodeNumber)
         }
     }
 
-    fun markAllEpsWatched(seasonId: Long) {
+    fun markAllEpsWatched(seasonId: Long, lastEpNumber: Int) {
         viewModelScope.launch {
-            repo.markAllEpWatched(seasonId)
+            repo.markAllEpWatched(seasonId, lastEpNumber)
         }
     }
 
@@ -173,9 +181,4 @@ class TvDetailsViewModel @Inject constructor(
         }
     }
 
-    fun updateSeasonProgress(seasonId: Long, progress: Int) {
-        viewModelScope.launch {
-            repo.updateSeasonProgress(seasonId, progress)
-        }
-    }
 }

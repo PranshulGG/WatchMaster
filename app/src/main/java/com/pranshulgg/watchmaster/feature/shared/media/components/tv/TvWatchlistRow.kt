@@ -1,4 +1,4 @@
-package com.pranshulgg.watchmaster.feature.tv.components
+package com.pranshulgg.watchmaster.feature.shared.media.components.tv
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
@@ -151,7 +151,7 @@ fun TvWatchlistRow(
 
                         val shapeSeasonRow = listItemShape(isOnly, isFirst, isLast)
 
-                        SeasonTvRow(
+                        TvWatchlistSeasonRow(
                             season,
                             shapeSeasonRow,
                             navController,

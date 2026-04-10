@@ -1,6 +1,7 @@
 package com.pranshulgg.watchmaster.data.repository
 
 import android.util.Log
+import androidx.room.Transaction
 import com.pranshulgg.watchmaster.data.local.dao.TvBundleDao
 import com.pranshulgg.watchmaster.data.local.entity.TvBundle
 import com.pranshulgg.watchmaster.data.local.entity.toDomain
@@ -82,26 +83,39 @@ class TvRepository(
 
     }
 
-    suspend fun markEpWatched(epId: Long) {
+    @Transaction
+    suspend fun markEpWatched(
+        epId: Long,
+        seasonId: Long,
+        episodeNumber: Int
+    ) {
         episodeDao.updateEpisodeStatus(epId, true)
+        seasonDao.updateLastEpWatched(seasonId, episodeNumber)
     }
 
-    suspend fun markEpUnWatched(epId: Long) {
+    @Transaction
+    suspend fun markEpUnWatched(
+        epId: Long,
+        seasonId: Long,
+        episodeNumber: Int
+    ) {
         episodeDao.updateEpisodeStatus(epId, false)
+        seasonDao.updateLastEpWatched(seasonId, episodeNumber.minus(1))
     }
 
-    suspend fun updateSeasonProgress(seasonId: Long, progress: Int) {
-        seasonDao.updateSeasonProgress(seasonId, progress)
+
+    suspend fun updateLastEpWatched(seasonId: Long, epNumber: Int) {
+        seasonDao.updateLastEpWatched(seasonId, epNumber)
     }
 
-    suspend fun markAllEpWatched(seasonId: Long) {
+    suspend fun markAllEpWatched(seasonId: Long, lastEpNumber: Int) {
         episodeDao.markAllEpWatched(seasonId)
-        seasonDao.updateSeasonProgress(seasonId, 100)
+        seasonDao.updateLastEpWatched(seasonId, lastEpNumber)
     }
 
     suspend fun markAllEpUnWatched(seasonId: Long) {
         episodeDao.markAllEpUnWatched(seasonId)
-        seasonDao.updateSeasonProgress(seasonId, 0)
+        seasonDao.updateLastEpWatched(seasonId, null)
     }
 
     private val loadingSeasons = mutableSetOf<Long>()
@@ -153,7 +167,7 @@ class TvRepository(
             seasonAvgRating = season.seasonAvgRating,
             seasonUserRating = season.seasonUserRating,
             status = season.status,
-            seasonProgress = season.seasonProgress,
+            lastEpWatched = season.lastEpWatched,
             cachedAt = System.currentTimeMillis()
         )
 

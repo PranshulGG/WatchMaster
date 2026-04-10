@@ -1,9 +1,7 @@
-package com.pranshulgg.watchmaster.feature.tv.components
+package com.pranshulgg.watchmaster.feature.shared.media.components.tv
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,9 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularWavyProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -23,7 +19,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -31,7 +26,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.pranshulgg.watchmaster.core.model.WatchStatus
-import com.pranshulgg.watchmaster.core.ui.components.media.MediaChip
 import com.pranshulgg.watchmaster.core.ui.components.media.PosterBox
 import com.pranshulgg.watchmaster.core.ui.navigation.NavRoutes
 import com.pranshulgg.watchmaster.core.ui.theme.ShapeRadius
@@ -41,7 +35,7 @@ import com.pranshulgg.watchmaster.feature.shared.media.ui.watchstatus.asStatusDa
 import com.pranshulgg.watchmaster.feature.shared.media.ui.watchstatus.toWatchListItemStatusUiPill
 
 @Composable
-fun SeasonTvRow(
+fun TvWatchlistSeasonRow(
     season: SeasonEntity,
     shape: Shape,
     navController: NavController,
@@ -49,6 +43,8 @@ fun SeasonTvRow(
 ) {
 
     val status = season.status.toWatchListItemStatusUiPill(season.asStatusDates())
+    val seasonProgress = (season.lastEpWatched ?: 0) * 100 / season.episodeCount
+
 
 
     Surface(
@@ -125,7 +121,7 @@ fun SeasonTvRow(
 
                         if (season.status != WatchStatus.FINISHED) {
                             Spacer(Modifier.width(3.dp))
-                            SeasonProgress(season.seasonProgress ?: 0)
+                            SeasonProgress(seasonProgress)
                         }
                     }
                 }

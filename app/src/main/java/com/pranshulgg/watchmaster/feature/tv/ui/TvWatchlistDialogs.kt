@@ -56,7 +56,7 @@ fun TvWatchlistRatingDialog(
             originalRating = uiState.originalRating,
             onConfirm = { rating ->
                 watchlistViewModel.setSeasonUserRating(item.seasonId, rating)
-                watchlistViewModel.finishSeason(item.seasonId)
+                watchlistViewModel.finishSeason(item.seasonId, item.seasonNumber)
                 if (uiState.isUpdateRating) SnackbarManager.show("User rating updated")
             }
         )
