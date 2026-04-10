@@ -2,10 +2,10 @@ import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
-//    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("com.google.devtools.ksp") version "2.3.4"
     id("com.google.dagger.hilt.android")
+    id("androidx.room")
 }
 val localProps = Properties().apply {
     val f = rootProject.file("local.properties")
@@ -48,12 +48,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
         isCoreLibraryDesugaringEnabled = true
     }
-//
-//    kotlin {
-//        compilerOptions {
-//            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
-//        }
-//    }
+
 
     buildFeatures {
         compose = true
@@ -64,7 +59,13 @@ android {
         includeInBundle = false
     }
 
+
 }
+
+room {
+    schemaDirectory("$projectDir/schemas")
+}
+
 
 dependencies {
 
