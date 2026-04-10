@@ -174,9 +174,7 @@ fun MainFloatingToolbar(
                         }
                     }
                 }
-
             },
         )
     }
-
 }

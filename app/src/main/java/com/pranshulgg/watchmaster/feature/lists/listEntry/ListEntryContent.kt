@@ -1,73 +1,93 @@
-package com.pranshulgg.watchmaster.feature.movie.lists.movieListEntry
+package com.pranshulgg.watchmaster.feature.lists.listEntry
 
-import android.util.Log
+import android.app.ActionBar
+import android.view.Display
+import android.view.WindowInsetsAnimation
+import android.view.WindowManager
+import android.widget.Space
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalGridApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Grid
+import androidx.compose.foundation.layout.GridConfigurationScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FloatingToolbarDefaults.ScreenOffset
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TooltipAnchorPosition
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.IntSize.Companion
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.graphics.Insets
 import com.pranshulgg.watchmaster.R
-import com.pranshulgg.watchmaster.core.model.MediaListsIcons
 import com.pranshulgg.watchmaster.core.ui.components.Gap
 import com.pranshulgg.watchmaster.core.ui.components.Symbol
 import com.pranshulgg.watchmaster.core.ui.components.Tooltip
 import com.pranshulgg.watchmaster.core.ui.components.media.MediaChip
+import com.pranshulgg.watchmaster.core.ui.components.media.MediaSectionCard
+import com.pranshulgg.watchmaster.core.ui.components.media.PosterBox
+import com.pranshulgg.watchmaster.core.ui.components.media.PosterPlaceholder
 import com.pranshulgg.watchmaster.core.ui.theme.ShapeRadius
-import com.pranshulgg.watchmaster.data.local.entity.MovieListsEntity
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun MovieListEntryContent(
+fun ListEntryContent(
     paddingValues: PaddingValues,
     listNameText: String,
     listDescriptionText: String,
     onNameChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
-    onAddMovie: () -> Unit,
-    onSave: (updatingList: Boolean) -> Unit,
     selectedMovieList: List<WatchlistItemEntity> = emptyList(),
     onSelectIcon: () -> Unit,
     selectedListIcon: Int,
-    isEditingList: Boolean = false,
 ) {
-
-    val size = ButtonDefaults.MediumContainerHeight
-    val colorScheme = MaterialTheme.colorScheme
 
 
     Column(
-        Modifier.padding(
-            top = paddingValues.calculateTopPadding() + 8.dp,
-            bottom = paddingValues.calculateBottomPadding()
-        )
+        Modifier
+            .padding(
+                top = paddingValues.calculateTopPadding() + 8.dp,
+                bottom = paddingValues.calculateBottomPadding()
+            )
+            .verticalScroll(rememberScrollState())
     ) {
 
         Field(
@@ -88,58 +108,11 @@ fun MovieListEntryContent(
             title = "Description (optional)",
             supportingText = "Add a short description to explain what this list is about"
         )
-        Gap(15.dp)
-        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-            OutlinedButton(
-                onClick = {
-                    onAddMovie()
-                },
-                shapes = ButtonDefaults.shapes(),
-                contentPadding =
-                    ButtonDefaults.contentPaddingFor(ButtonDefaults.MinHeight, hasStartIcon = true),
-            ) {
-                Symbol(
-                    R.drawable.add_24px,
-                    size = ButtonDefaults.iconSizeFor(ButtonDefaults.MinHeight),
-                    color = colorScheme.onSurfaceVariant
-                )
-                Gap(horizontal = ButtonDefaults.iconSpacingFor(ButtonDefaults.MinHeight))
-
-                Text("Add movies", style = MaterialTheme.typography.labelLarge)
-            }
-        }
-
 
         if (selectedMovieList.isNotEmpty()) {
             AddedMovieChips(selectedMovieList)
         }
-        Spacer(Modifier.weight(1f))
-        Button(
-            onClick = {
-                onSave(isEditingList)
-            },
-            enabled = listNameText.isNotEmpty(),
-            modifier = Modifier
-                .heightIn(size)
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            contentPadding = ButtonDefaults.contentPaddingFor(size, hasStartIcon = true),
-            shapes = ButtonDefaults.shapes(),
-        ) {
-            Symbol(
-                R.drawable.check_24px,
-                size = ButtonDefaults.iconSizeFor(size),
-                color = if (listNameText.isNotEmpty()) colorScheme.onPrimary else colorScheme.onSurfaceVariant.copy(
-                    alpha = 0.38f
-                )
-            )
-            Gap(horizontal = ButtonDefaults.iconSpacingFor(size))
-            Text(
-                if (isEditingList) "Update list" else "Save list",
-                style = MaterialTheme.typography.titleMedium
-            )
-        }
-        Gap(15.dp)
+
     }
 
 }
@@ -218,33 +191,65 @@ private fun Field(
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
+
+
     }
 
 }
 
 
+@OptIn(ExperimentalGridApi::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-private fun AddedMovieChips(selectedMovieList: List<WatchlistItemEntity>) {
+private fun AddedMovieChips(selectedItems: List<WatchlistItemEntity>) {
     Gap(15.dp)
-    Text(
-        text = "Selected",
-        modifier = Modifier.padding(bottom = 5.dp, top = 5.dp, start = 16.dp + 3.dp),
-        fontSize = 16.sp,
-        color = MaterialTheme.colorScheme.primary,
-        fontWeight = FontWeight.W700
-    )
 
-    FlowRow(
-        modifier = Modifier.padding(horizontal = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(5.dp),
-        horizontalArrangement = Arrangement.spacedBy(5.dp)
+    MediaSectionCard(
+        title = "Selected",
+        titleIcon = R.drawable.lists_24px
     ) {
-        selectedMovieList.forEach { mov ->
-            MediaChip(
-                mov.title,
-                containerColor = MaterialTheme.colorScheme.surfaceBright,
-                contentColor = MaterialTheme.colorScheme.onSurface
-            )
+
+        FlowRow(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(5.dp),
+            horizontalArrangement = Arrangement.spacedBy(5.dp)
+        ) {
+            selectedItems.forEach { item ->
+
+
+                Surface(
+                    shape = RoundedCornerShape(ShapeRadius.Full),
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .padding(
+                                top = 6.dp,
+                                bottom = 6.dp,
+                                start = 6.dp,
+                                end = 10.dp
+                            )
+                            .fillMaxWidth(fraction = 0.462f)
+                    ) {
+                        PosterBox(
+                            posterUrl = "https://image.tmdb.org/t/p/original${item.posterPath}",
+                            apiPath = item.posterPath,
+                            cornerRadius = ShapeRadius.Full,
+                            width = 30.dp,
+                            height = 30.dp,
+                            placeholder = { PosterPlaceholder(size = 0.2f, hasPadding = false) }
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        Text(
+                            item.title,
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                }
+            }
         }
     }
 }
