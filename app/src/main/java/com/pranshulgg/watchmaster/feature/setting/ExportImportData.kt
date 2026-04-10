@@ -11,7 +11,7 @@ import androidx.room.withTransaction
 import com.google.gson.Gson
 import com.pranshulgg.watchmaster.core.ui.snackbar.SnackbarManager
 import com.pranshulgg.watchmaster.data.local.WatchMasterDatabase
-import com.pranshulgg.watchmaster.data.local.entity.MovieListsEntity
+import com.pranshulgg.watchmaster.data.local.entity.CustomListEntity
 import com.pranshulgg.watchmaster.data.local.entity.SeasonEntity
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 import kotlinx.coroutines.Dispatchers
@@ -23,7 +23,7 @@ private data class ExportData(
     val version: Int,
     val watchlist: List<WatchlistItemEntity>,
     val tvSeasons: List<SeasonEntity>,
-    val movieLists: List<MovieListsEntity>
+    val movieLists: List<CustomListEntity>
 )
 
 @Composable
@@ -87,10 +87,10 @@ private suspend fun export(
         db.seasonDao().getAllSeasons().first()
     } else emptyList()
     val movieLists = if (exportMovieList) {
-        db.movieListsDao().getMovieLists().first()
+        db.movieListsDao().getAllCustomLists().first()
     } else emptyList()
 
-    val json = Gson().toJson(ExportData(2, watchlistData, tvSeasons, movieLists))
+    val json = Gson().toJson(ExportData(4, watchlistData, tvSeasons, movieLists))
 
     val file = context.contentResolver.openOutputStream(uri)
 
@@ -118,8 +118,9 @@ private suspend fun import(context: Context, uri: Uri) {
         return
     }
 
+    val unsupportedVersions = listOf(0, 1, 2, 3)
 
-    if (data.version != 2) {
+    if (unsupportedVersions.contains(data.version)) {
         SnackbarManager.show("Unsupported version")
         return
     }
