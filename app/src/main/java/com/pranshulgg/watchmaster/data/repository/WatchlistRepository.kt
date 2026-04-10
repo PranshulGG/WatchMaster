@@ -128,13 +128,13 @@ class WatchlistRepository(
         )
     }
 
-    suspend fun markSeasonFinished(seasonId: Long) {
+    suspend fun markSeasonFinished(seasonId: Long, lastEpNumber: Int) {
         seasonDao.updateSeasonStatus(
             seasonId = seasonId,
             status = WatchStatus.FINISHED,
             finished = Instant.now()
         )
-        tvRepository.markAllEpWatched(seasonId)
+        tvRepository.markAllEpWatched(seasonId, lastEpNumber)
     }
 
     suspend fun markSeasonInterrupted(seasonId: Long) {

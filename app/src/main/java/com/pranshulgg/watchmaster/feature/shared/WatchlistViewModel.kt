@@ -118,8 +118,8 @@ class WatchlistViewModel @Inject constructor(
         repository.markSeasonStarted(seasonId)
     }
 
-    fun finishSeason(seasonId: Long) = viewModelScope.launch {
-        repository.markSeasonFinished(seasonId)
+    fun finishSeason(seasonId: Long, lastEpNumber: Int) = viewModelScope.launch {
+        repository.markSeasonFinished(seasonId, lastEpNumber)
     }
 
     fun interruptSeason(seasonId: Long) = viewModelScope.launch {
