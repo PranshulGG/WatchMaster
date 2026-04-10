@@ -69,7 +69,6 @@ fun EpisodeItem(
             cornerRadius = ShapeRadius.ExtraLarge,
             placeholder = {
                 PosterPlaceholder(
-                    iconSize = 38.dp,
                     bgColor = MaterialTheme.colorScheme.surfaceBright
                 )
             },

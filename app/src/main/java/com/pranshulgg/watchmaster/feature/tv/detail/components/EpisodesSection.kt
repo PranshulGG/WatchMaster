@@ -1,6 +1,5 @@
 package com.pranshulgg.watchmaster.feature.tv.detail.components
 
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
 import androidx.compose.material3.carousel.rememberCarouselState
@@ -24,29 +22,25 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.core.model.WatchStatus
-import com.pranshulgg.watchmaster.core.ui.components.LoadingPlaceholder
 import com.pranshulgg.watchmaster.core.ui.components.media.MediaChip
 import com.pranshulgg.watchmaster.core.ui.components.media.MediaSectionCard
 import com.pranshulgg.watchmaster.core.ui.snackbar.SnackbarManager
 import com.pranshulgg.watchmaster.core.ui.theme.ShapeRadius
+import com.pranshulgg.watchmaster.data.local.entity.SeasonEntity
 import com.pranshulgg.watchmaster.data.local.entity.TvEpisodeEntity
 import com.pranshulgg.watchmaster.feature.tv.detail.TvDetailsViewModel
 import com.pranshulgg.watchmaster.feature.tv.detail.ui.TvDetailsEpisodeInfoSheet
 import kotlinx.coroutines.launch
-import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun EpisodesSection(
     episodes: List<TvEpisodeEntity>,
     viewModel: TvDetailsViewModel,
-    seasonId: Long,
-    seasonProgress: Int,
-    seasonStatus: WatchStatus
+    season: SeasonEntity
 ) {
 
     var showSheet by remember { mutableStateOf(false) }
@@ -55,38 +49,21 @@ fun EpisodesSection(
     val carouselItemWidth = 512.dp
     val carouselState = rememberCarouselState(
         itemCount = { episodes.count() },
-        initialItem = episodes.indexOfLast { it.isWatched }.coerceAtLeast(0)
+        initialItem = season.lastEpWatched?.minus(1) ?: 0
     )
     val scope = rememberCoroutineScope()
     val watchedItems = episodes.count { it.isWatched }
 
-
-    val watchedProgress = remember(episodes) {
-        (watchedItems.toFloat() / episodes.size) * 100
-    }
-
-    LaunchedEffect(seasonStatus, episodes) {
-        if (seasonStatus == WatchStatus.FINISHED && episodes.all { !it.isWatched }) {
-            viewModel.markAllEpsWatched(seasonId)
-            Log.d("seasonProgress", "CALLED MARK ALL")
+    LaunchedEffect(season.status, episodes) {
+        if (season.status == WatchStatus.FINISHED && episodes.all { !it.isWatched }) {
+            viewModel.markAllEpsWatched(season.seasonId, episodes.size)
 
         }
 
-        val progressToWatchedCount =
-            (episodes.size * (seasonProgress / 100f)).toInt()
-
-
-        if (seasonProgress > 0 && episodes.all { !it.isWatched }) {
-            viewModel.markEpWatchedFromCount(seasonId, progressToWatchedCount)
+        if (season.lastEpWatched != null && season.lastEpWatched > 0 && episodes.all { !it.isWatched }) {
+            viewModel.markEpWatchedFromCount(season.seasonId, season.lastEpWatched)
+            carouselState.scrollToItem(season.lastEpWatched.minus(1))
         }
-    }
-
-
-    LaunchedEffect(watchedProgress) {
-        viewModel.updateSeasonProgress(
-            seasonId,
-            watchedProgress.roundToInt()
-        )
     }
 
 
@@ -121,7 +98,14 @@ fun EpisodesSection(
                     else -> episodes[index - 1].isWatched
                 }
 
+            val isPreviousUnlocked = when (index) {
+                index -> episodes.getOrNull(index + 1)?.isWatched == false
+                else -> true
+            }
+
+
             val item = episodes[index]
+
 
             Box(
                 modifier = Modifier
@@ -144,20 +128,29 @@ fun EpisodesSection(
                             return@EpisodeItem
                         }
 
+                        if (season.status == WatchStatus.WANT_TO_WATCH || season.status == WatchStatus.FINISHED) {
+                            SnackbarManager.show("Please mark the season as 'Watching' to track episodes")
+                            return@EpisodeItem
+                        }
+
                         if (!isUnlocked) {
                             SnackbarManager.show("Previous episode not watched")
                             return@EpisodeItem
                         }
 
-                        if (seasonStatus == WatchStatus.WANT_TO_WATCH || seasonStatus == WatchStatus.FINISHED) {
-                            SnackbarManager.show("Please mark the season as 'Watching' to track episodes")
+                        if (!isPreviousUnlocked) {
                             return@EpisodeItem
                         }
 
+
                         if (item.isWatched) {
-                            viewModel.markEpUnWatched(item.epId)
+                            viewModel.markEpUnWatched(
+                                item.epId,
+                                season.seasonId,
+                                item.episode_number
+                            )
                         } else {
-                            viewModel.markEpWatched(item.epId)
+                            viewModel.markEpWatched(item.epId, season.seasonId, item.episode_number)
                         }
                     },
                     isActive = index == carouselState.currentItem
@@ -176,15 +169,16 @@ fun EpisodesSection(
         },
         onConfirm = {
             currentEp?.let {
-                if (seasonStatus == WatchStatus.WANT_TO_WATCH || seasonStatus == WatchStatus.FINISHED) {
+                if (season.status == WatchStatus.WANT_TO_WATCH || season.status == WatchStatus.FINISHED) {
                     SnackbarManager.show("Please mark the season as 'Watching' to track episodes")
                     return@let
                 }
                 if (it.isWatched) {
-                    viewModel.markEpUnWatched(it.epId)
+                    viewModel.markEpUnWatched(it.epId, season.seasonId, it.episode_number)
                 } else {
-                    viewModel.markEpWatched(it.epId)
+                    viewModel.markEpWatched(it.epId, season.seasonId, it.episode_number)
                 }
+
             }
         },
         sheetState = sheetState
