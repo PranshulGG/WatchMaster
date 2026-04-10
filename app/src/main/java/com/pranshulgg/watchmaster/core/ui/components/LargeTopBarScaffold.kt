@@ -22,10 +22,10 @@ fun LargeTopBarScaffold(
     navigationIcon: @Composable () -> Unit,
     actions: @Composable RowScope.() -> Unit = {},
     fab: @Composable () -> Unit = {},
+    bottomBar: @Composable (() -> Unit) = {},
     content: @Composable (PaddingValues) -> Unit,
 ) {
-    val scrollBehavior =
-        TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         containerColor = MaterialTheme.colorScheme.surfaceContainer,
@@ -42,6 +42,7 @@ fun LargeTopBarScaffold(
                     ),
             )
         },
+        bottomBar = bottomBar,
         content = content,
     )
 }
