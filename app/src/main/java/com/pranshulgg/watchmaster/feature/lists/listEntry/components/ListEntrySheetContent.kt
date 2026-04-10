@@ -1,4 +1,4 @@
-package com.pranshulgg.watchmaster.feature.movie.lists.movieListEntry.components
+package com.pranshulgg.watchmaster.feature.lists.listEntry.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,7 +32,7 @@ import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun MovieListEntrySheetContent(
+fun ListEntrySheetContent(
     items: List<WatchlistItemEntity>,
     onMovieSelect: (WatchlistItemEntity) -> Unit,
     selectedMovies: List<WatchlistItemEntity>,
@@ -45,7 +45,7 @@ fun MovieListEntrySheetContent(
             Column {
                 Gap(15.dp)
                 EmptyContainerPlaceholder(
-                    text = "No movies found",
+                    text = "No media found",
                     icon = R.drawable.movie_info_24px,
                     size = 0.8f
                 )
@@ -59,7 +59,13 @@ fun MovieListEntrySheetContent(
             ) {
                 item { Gap(16.dp) }
                 itemsIndexed(items, key = { _, item -> item.id }) { index, item ->
-                    MovieListEntrySelectableItem(item, index, items, onMovieSelect, selectedMovies)
+                    ListEntrySelectableMediaItem(
+                        item,
+                        index,
+                        items,
+                        onMovieSelect,
+                        selectedMovies
+                    )
                 }
                 item {
                     Gap(WindowInsets.systemBars.asPaddingValues().calculateBottomPadding() + 100.dp)

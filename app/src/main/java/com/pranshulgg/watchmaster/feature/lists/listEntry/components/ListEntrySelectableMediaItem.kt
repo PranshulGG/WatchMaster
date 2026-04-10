@@ -1,27 +1,19 @@
-package com.pranshulgg.watchmaster.feature.movie.lists.movieListEntry.components
+package com.pranshulgg.watchmaster.feature.lists.listEntry.components
 
-import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.FilledIconToggleButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -33,29 +25,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImagePainter
-import coil.compose.rememberAsyncImagePainter
 import com.pranshulgg.watchmaster.R
-import com.pranshulgg.watchmaster.core.ui.components.Symbol
+import com.pranshulgg.watchmaster.core.ui.components.Gap
 import com.pranshulgg.watchmaster.core.ui.components.listItemShape
+import com.pranshulgg.watchmaster.core.ui.components.media.MediaChip
 import com.pranshulgg.watchmaster.core.ui.components.media.PosterBox
-import com.pranshulgg.watchmaster.core.ui.components.media.PosterPlaceholder
-import com.pranshulgg.watchmaster.core.ui.navigation.NavRoutes
 import com.pranshulgg.watchmaster.core.ui.theme.ShapeRadius
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
-import com.pranshulgg.watchmaster.feature.shared.media.components.MovieWatchlistRow
-import com.pranshulgg.watchmaster.feature.shared.media.components.WatchListStatusPill
-import com.pranshulgg.watchmaster.feature.shared.media.ui.watchstatus.asStatusDates
-import com.pranshulgg.watchmaster.feature.shared.media.ui.watchstatus.toWatchListItemStatusUiPill
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun MovieListEntrySelectableItem(
+fun ListEntrySelectableMediaItem(
     item: WatchlistItemEntity,
     index: Int,
     items: List<WatchlistItemEntity>,
@@ -77,10 +61,7 @@ fun MovieListEntrySelectableItem(
         "https://image.tmdb.org/t/p/w154$it"
     }
 
-
-    val status = item.status.toWatchListItemStatusUiPill(item.asStatusDates())
-
-    val shape = if (selected) RoundedCornerShape(ShapeRadius.Large) else listItemShape(
+    val shape = listItemShape(
         isOnly,
         isFirst,
         isLast
@@ -97,7 +78,7 @@ fun MovieListEntrySelectableItem(
                     onMovieSelect(item)
                 }
             ),
-        color = if (selected) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh
+        color = MaterialTheme.colorScheme.surfaceContainerHigh
     ) {
         Row(
             modifier = Modifier
@@ -130,10 +111,12 @@ fun MovieListEntrySelectableItem(
                     .padding(vertical = 10.dp),
                 horizontalAlignment = Alignment.Start,
             ) {
+                SelectedStatusPill(selected)
+                Gap(5.dp)
                 Text(
                     text = item.title,
                     fontWeight = FontWeight.W900,
-                    color = if (selected) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.onSurface,
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontSize = 17.sp,
                     maxLines = titleMaxLines,
                     overflow = TextOverflow.Ellipsis,
@@ -152,20 +135,21 @@ fun MovieListEntrySelectableItem(
                     maxLines = overviewMaxLines.intValue,
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = if (selected) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-                Spacer(Modifier.height(5.dp))
-                WatchListStatusPill(
-                    status.containerColor,
-                    status.contentColor,
-                    status.statusLabel,
-                    item.status,
-                    item.userRating,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
         }
     }
-
-
 }
 
+
+@Composable
+private fun SelectedStatusPill(selected: Boolean = false) {
+    MediaChip(
+        text = if (selected) "Selected" else "Add",
+        containerColor = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceContainerLowest,
+        contentColor = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
+        icon = if (selected) R.drawable.check_24px else R.drawable.add_24px,
+        shapeRadius = if (selected) ShapeRadius.Small else ShapeRadius.Full
+    )
+}

@@ -1,6 +1,5 @@
-package com.pranshulgg.watchmaster.feature.movie.lists.movieListEntry.ui
+package com.pranshulgg.watchmaster.feature.lists.listEntry.ui
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.FlowRow
@@ -13,9 +12,7 @@ import androidx.compose.material3.FilledTonalIconToggleButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SheetState
-import androidx.compose.material3.ToggleButtonDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,12 +24,12 @@ import com.pranshulgg.watchmaster.core.model.MediaListsIcons
 import com.pranshulgg.watchmaster.core.ui.components.ActionBottomSheet
 import com.pranshulgg.watchmaster.core.ui.components.Symbol
 import com.pranshulgg.watchmaster.data.local.mapper.toIcon
-import com.pranshulgg.watchmaster.feature.movie.lists.MovieListsViewModel
+import com.pranshulgg.watchmaster.feature.lists.ListsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun MovieListSelectIconSheet(
-    viewModel: MovieListsViewModel,
+fun ListEntrySelectIconSheet(
+    viewModel: ListsViewModel,
     sheetState: SheetState,
 ) {
 
