@@ -26,8 +26,8 @@ android {
         applicationId = "com.pranshulgg.watchmaster"
         minSdk = 24
         targetSdk = 36
-        versionCode = 13
-        versionName = "1.6.0"
+        versionCode = 14
+        versionName = "1.7.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -82,6 +82,7 @@ dependencies {
     implementation(libs.materialKolor)
     implementation(libs.androidx.foundation.layout)
     implementation(libs.androidx.animation.core)
+    implementation(libs.core.splashscreen)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
