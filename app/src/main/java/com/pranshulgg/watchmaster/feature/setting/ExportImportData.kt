@@ -18,6 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.Date
 
 private data class ExportData(
     val version: Int,
@@ -151,11 +152,11 @@ private suspend fun import(context: Context, uri: Uri) {
 
 
 fun createNewDocumentIntent(): Intent {
-
+    val randomId = (100000..999999).random()
     val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
         addCategory(Intent.CATEGORY_OPENABLE)
         type = "application/json"
-        putExtra(Intent.EXTRA_TITLE, "watchmaster_backup-${System.currentTimeMillis()}.json")
+        putExtra(Intent.EXTRA_TITLE, "watchmaster_backup-${randomId}-v4.json")
     }
 
     intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or
