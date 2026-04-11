@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.pranshulgg.watchmaster.core.prefs.AppPrefs.initPrefs
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -15,6 +16,8 @@ class MainActivity : ComponentActivity() {
         initPrefs(this)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        installSplashScreen()
+        
         setContent {
             WatchMasterApp()
         }
