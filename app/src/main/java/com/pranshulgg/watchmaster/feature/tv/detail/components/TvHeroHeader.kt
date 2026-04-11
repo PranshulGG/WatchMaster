@@ -100,20 +100,6 @@ fun TvHeroHeader(
             verticalAlignment = Alignment.Bottom
         ) {
 
-//            Box(
-//                modifier = Modifier
-//                    .height(180.dp)
-//                    .width(120.dp)
-//                    .clip(RoundedCornerShape(ShapeRadius.Large))
-//            ) {
-//                AsyncImage(
-//                    model = "https://image.tmdb.org/t/p/w500${seasonItem.posterPath}",
-//                    contentDescription = tv.name,
-//                    modifier = Modifier.matchParentSize()
-//
-//                )
-//            }
-
             PosterBox(
                 posterUrl = "https://image.tmdb.org/t/p/w500${seasonItem.posterPath}",
                 apiPath = seasonItem.posterPath,

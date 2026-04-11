@@ -12,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.pranshulgg.watchmaster.core.ui.components.ErrorContainer
 import com.pranshulgg.watchmaster.core.ui.components.media.DatePickerSheet
 import com.pranshulgg.watchmaster.data.local.entity.SeasonEntity
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
@@ -62,7 +63,6 @@ fun TvHomeScreen(
     val state = remember(items, isLoading, seasonItems) {
         filterTvItems(items, isLoading, seasonItems)
     }
-
 
     TvTabsContent(
         navController,

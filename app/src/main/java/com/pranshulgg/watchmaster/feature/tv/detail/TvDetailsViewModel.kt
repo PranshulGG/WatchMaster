@@ -36,7 +36,7 @@ class TvDetailsViewModel @Inject constructor(
         private set
 
 
-    fun load(tvId: Long, onBack: () -> Unit) {
+    fun load(tvId: Long, onError: () -> Unit) {
         if (state != null) return
 
         viewModelScope.launch {
@@ -46,8 +46,7 @@ class TvDetailsViewModel @Inject constructor(
                 repo.getWholeTvData(tvId)
             } catch (e: Exception) {
                 if (e is CancellationException) throw e
-                SnackbarManager.show("Failed to fetch season data")
-                onBack()
+                onError()
                 return@launch
             }
 
@@ -57,28 +56,33 @@ class TvDetailsViewModel @Inject constructor(
         }
     }
 
+    private var isLoadingEps = false
     fun loadEpisodes(
         tvId: Long,
         seasonId: Long,
         seasonNumber: Int
     ) {
+        if (isLoadingEps) return
+
+        isLoadingEps = true
+
         viewModelScope.launch {
             try {
                 repo.ensureEpisodesFetched(tvId, seasonId, seasonNumber)
             } catch (e: Exception) {
                 if (e is CancellationException) throw e
                 SnackbarManager.show(
-                    "Failed to fetch season data",
-                    actionLabel = "Retry",
-                    onAction = {
-                        loadEpisodes(tvId, seasonId, seasonNumber)
-                    }
+                    "Failed to fetch season data"
                 )
+            } finally {
+                isLoadingEps = false
             }
         }
     }
 
     fun refreshSeasonData(season: SeasonEntity) {
+        if (loading) return
+        SnackbarManager.show("Refreshing...")
         loading = true
         viewModelScope.launch {
             try {
@@ -88,8 +92,9 @@ class TvDetailsViewModel @Inject constructor(
                 SnackbarManager.show(
                     "Refresh failed",
                 )
+            } finally {
+                loading = false
             }
-            loading = false
             loadEpisodes(season.showId, season.seasonId, season.seasonNumber)
         }
     }

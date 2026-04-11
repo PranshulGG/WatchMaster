@@ -5,8 +5,13 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingToolbarDefaults
 import androidx.compose.material3.FloatingToolbarExitDirection.Companion.Bottom
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.pranshulgg.watchmaster.core.ui.components.ErrorContainer
 import com.pranshulgg.watchmaster.data.CountryWatchProviders
 import com.pranshulgg.watchmaster.feature.shared.WatchlistViewModel
 import com.pranshulgg.watchmaster.feature.tv.detail.ui.TvDetailEffects
@@ -26,10 +31,19 @@ fun TvDetailsScreen(id: Long, seasonNumber: Int, navController: NavController, s
 
     val viewModel: TvDetailsViewModel = hiltViewModel()
     val watchlistViewModel: WatchlistViewModel = hiltViewModel()
+    var showError by remember { mutableStateOf(false) }
 
-    TvDetailEffects(id, seasonNumber, viewModel, seasonId)
+
+    TvDetailEffects(id, seasonNumber, viewModel, seasonId, onError = { showError = true })
 
     val scrollBehavior = FloatingToolbarDefaults.exitAlwaysScrollBehavior(exitDirection = Bottom)
+
+    if (showError) {
+        ErrorContainer(onRetry = {
+            showError = false
+            viewModel.load(id, onError = { showError = true })
+        }, errorDescription = "Failed to load series details. Please try again")
+    }
 
 
     TvDetailsScaffold(

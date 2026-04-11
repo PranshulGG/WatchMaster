@@ -127,8 +127,11 @@ class TvRepository(
     ) {
         if (!episodeDao.hasEpisodes(seasonId) && !loadingSeasons.contains(seasonId)) {
             loadingSeasons.add(seasonId)
-            fetchEpisodes(tvId, seasonId, seasonNumber)
-            loadingSeasons.remove(seasonId)
+            try {
+                fetchEpisodes(tvId, seasonId, seasonNumber)
+            } finally {
+                loadingSeasons.remove(seasonId)
+            }
         } else {
             Log.d("TvRepository", "Episodes already fetched for season $seasonId")
         }

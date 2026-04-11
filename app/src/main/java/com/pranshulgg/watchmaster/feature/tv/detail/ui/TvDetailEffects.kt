@@ -11,9 +11,10 @@ fun TvDetailEffects(
     id: Long,
     seasonNumber: Int,
     viewModel: TvDetailsViewModel,
-    seasonId: Long
+    seasonId: Long,
+    onError: () -> Unit
 ) {
-    LaunchedEffect(id) { viewModel.load(id, onBack = {}) }
+    LaunchedEffect(id) { viewModel.load(id, onError = { onError() }) }
     LaunchedEffect(seasonNumber) { viewModel.loadEpisodes(id, seasonId, seasonNumber) }
     LaunchedEffect(Unit) { viewModel.loading }
 
