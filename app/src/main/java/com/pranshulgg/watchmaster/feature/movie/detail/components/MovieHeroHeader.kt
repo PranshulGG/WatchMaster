@@ -33,6 +33,7 @@ import coil.compose.AsyncImage
 import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.core.ui.components.media.MediaChip
 import com.pranshulgg.watchmaster.core.ui.components.media.MediaDetailsScreenHeader
+import com.pranshulgg.watchmaster.core.ui.components.media.PosterBox
 import com.pranshulgg.watchmaster.core.ui.theme.ShapeRadius
 import com.pranshulgg.watchmaster.data.local.entity.MovieBundle
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
@@ -88,19 +89,15 @@ fun MovieHeroHeader(
             verticalAlignment = Alignment.Bottom
         ) {
 
-            Box(
-                modifier = Modifier
-                    .height(180.dp)
-                    .width(120.dp)
-                    .clip(RoundedCornerShape(ShapeRadius.Large))
-            ) {
-                AsyncImage(
-                    model = posterUrl(movie),
-                    contentDescription = movie.title,
-                    modifier = Modifier.matchParentSize()
+            PosterBox(
+                posterUrl = "https://image.tmdb.org/t/p/w500${movie.poster_path}",
+                apiPath = movie.poster_path,
+                width = 120.dp,
+                height = 180.dp,
+                cornerRadius = ShapeRadius.Large,
+                progressIndicatorSize = 40.dp
+            )
 
-                )
-            }
             Spacer(modifier = Modifier.width(16.dp))
 
             Column(
@@ -160,18 +157,6 @@ private fun formatRuntime(minutes: Int?): String {
 
     return if (h > 0) "${h}h ${m}m" else "${m}m"
 }
-
-
-private fun posterUrl(movie: MovieBundle): String? =
-    when {
-        movie.poster_path != null ->
-            "https://image.tmdb.org/t/p/w500${movie.poster_path}"
-
-        movie.images.posters.isNotEmpty() ->
-            "https://image.tmdb.org/t/p/w500${movie.images.posters.first().file_path}"
-
-        else -> null
-    }
 
 private fun backdropUrl(movie: MovieBundle): String? =
     when {

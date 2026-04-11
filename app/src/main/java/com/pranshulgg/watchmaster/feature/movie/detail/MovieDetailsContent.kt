@@ -64,7 +64,9 @@ fun MovieDetailsContent(
                 viewModel.load(
                     movieItem.id,
                     forceFetch = true,
-                    onBack = { navController.popBackStack() })
+                    onError = {
+                        SnackbarManager.show("Failed to fetch movie data")
+                    })
                 isRefreshing = false
             } else {
                 SnackbarManager.show("Data is already up to date")

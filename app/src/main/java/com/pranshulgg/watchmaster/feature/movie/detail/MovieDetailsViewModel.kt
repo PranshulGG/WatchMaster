@@ -14,6 +14,7 @@ import com.pranshulgg.watchmaster.data.repository.MovieRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.coroutines.cancellation.CancellationException
 
 @HiltViewModel
 class MovieDetailsViewModel @Inject constructor(
@@ -26,21 +27,22 @@ class MovieDetailsViewModel @Inject constructor(
     var loading by mutableStateOf(false)
         private set
 
-    fun load(movieId: Long, onBack: () -> Unit, forceFetch: Boolean = false) {
+    fun load(movieId: Long, onError: () -> Unit, forceFetch: Boolean = false) {
         if (state != null && !forceFetch) return
 
-        if (forceFetch) {
-            state = null
-        }
 
         viewModelScope.launch {
             loading = true
 
             val movie = try {
                 repo.getWholeMovieData(movieId, forceFetch)
+
             } catch (e: Exception) {
-                SnackbarManager.show("Failed to fetch movie data")
-                onBack()
+                if (e is CancellationException) throw e
+                if (forceFetch) {
+                    loading = false
+                }
+                onError()
                 return@launch
             }
 
