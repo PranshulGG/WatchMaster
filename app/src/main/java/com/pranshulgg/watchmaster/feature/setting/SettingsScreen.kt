@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -38,7 +40,7 @@ fun SettingsScreen(navController: NavController) {
     val context = LocalContext.current
 
 
-    var exportWatchlistChecked by remember { mutableStateOf(false) }
+    var exportWatchlistChecked by remember { mutableStateOf(true) }
     var exportMovieListChecked by remember { mutableStateOf(false) }
 
     val exportLauncher = exportLauncher(context, exportWatchlistChecked, exportMovieListChecked)
@@ -164,15 +166,18 @@ fun SettingsScreen(navController: NavController) {
         confirmBtnDisabled = !exportWatchlistChecked && !exportMovieListChecked,
     ) {
         Column() {
+
             CheckboxRow(
-                label = "Export watchlist",
-                checked = exportWatchlistChecked
-            ) { exportWatchlistChecked = it }
-            CheckboxRow(
-                label = "Export movie lists",
+                label = "Include movie lists",
                 checked = exportMovieListChecked
             ) { exportMovieListChecked = it }
 
+            Text(
+                "Always make sure to create a data export after updating the app to a new version; there’s a high chance that older backups won’t work.",
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(top = 10.dp, start = 16.dp, end = 16.dp)
+            )
         }
     }
 
