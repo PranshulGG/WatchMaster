@@ -49,10 +49,10 @@ fun ViewListContent(
         seasonItems.groupBy { it.showId }
     }
 
-    if (movies.isEmpty() && tv.isEmpty()) {
+    if ((selectedTab == 0 && movies.isEmpty()) || (selectedTab == 1 && tv.isEmpty())) {
         EmptyContainerPlaceholder(
-            text = "No items found",
-            description = "Add items to this list to get started",
+            text = if (selectedTab == 0) "No movies found" else "No series found",
+            description = "Add ${if (selectedTab == 0) "movies" else "series"} to this list to get started",
             icon = R.drawable.lists_24px
         )
     }

@@ -54,6 +54,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.pranshulgg.watchmaster.R
 import com.pranshulgg.watchmaster.core.ui.components.ActionBottomSheet
+import com.pranshulgg.watchmaster.core.ui.components.AvatarIcon
+import com.pranshulgg.watchmaster.core.ui.components.Gap
 import com.pranshulgg.watchmaster.core.ui.components.LargeTopBarScaffold
 import com.pranshulgg.watchmaster.core.ui.components.LoadingScreenPlaceholder
 import com.pranshulgg.watchmaster.core.ui.components.NavigateUpBtn
@@ -112,21 +114,25 @@ fun ViewListScreen(navController: NavController, id: Long) {
         title = customListEntity?.name ?: "List",
         navigationIcon = { NavigateUpBtn(navController) },
         actions = {
-            Actions(
+            AvatarIcon(
                 customListEntity?.icon?.toIcon() ?: R.drawable.folder_24px,
-                { navController.navigate(NavRoutes.listEntryScreen(id)) },
-                {
-                    isConfirmationDialogOpen = true
-                },
-                { viewModel.setPinned(id, isPinned) },
-                !isPinned
+                MaterialTheme.colorScheme.tertiaryContainer,
+                MaterialTheme.colorScheme.onTertiaryContainer
             )
+            Gap(horizontal = 8.dp)
         },
         bottomBar = {
             ViewListFloatingToolbar(
                 selectedTab,
                 { selectedTab = it },
-                floatingToolbarScrollBehavior
+                floatingToolbarScrollBehavior,
+                onAction = { action ->
+                    when (action) {
+                        "EDIT_ACTION" -> navController.navigate(NavRoutes.listEntryScreen(id))
+                        "DELETE_ACTION" -> isConfirmationDialogOpen = true
+                        "PIN_ACTION" -> viewModel.setPinned(id, isPinned)
+                    }
+                }
             )
         }
     ) { pad ->
@@ -162,95 +168,3 @@ fun ViewListScreen(navController: NavController, id: Long) {
     )
 }
 
-
-// Edit list action
-@OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
-@Composable
-private fun Actions(
-    icon: Int,
-    onEdit: () -> Unit,
-    onDelete: () -> Unit,
-    onPin: () -> Unit,
-    isPinned: Boolean = false
-) {
-
-    data class Option(
-        val title: String,
-        val leading: Int,
-        val action: () -> Unit,
-    )
-
-    var isSheetOpen by remember { mutableStateOf(false) }
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-
-    val options = listOf(
-        Option("Edit", R.drawable.edit_24px) { onEdit() },
-        Option("Delete", R.drawable.delete_24px) { onDelete() },
-        Option(if (isPinned) "Unpin" else "Pin", R.drawable.keep_24px) { onPin() }
-    )
-
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(end = 8.dp)
-    ) {
-
-        Box(
-            modifier = Modifier
-                .size(40.dp)
-                .background(MaterialTheme.colorScheme.tertiaryContainer, shape = CircleShape),
-            contentAlignment = Alignment.Center
-        ) {
-            Symbol(
-                icon,
-                size = 24.dp,
-                color = MaterialTheme.colorScheme.onTertiaryContainer
-            )
-        }
-        Spacer(Modifier.width(5.dp))
-
-        Tooltip(
-            tooltipText = "More options",
-            spacing = 10.dp,
-            preferredPosition = TooltipAnchorPosition.Below
-        ) {
-            OutlinedIconButton(
-                modifier = Modifier.width(52.dp),
-                border = BorderStroke(
-                    width = 1.dp,
-                    color = MaterialTheme.colorScheme.outlineVariant
-                ),
-                onClick = {
-                    isSheetOpen = true
-                }, shapes = IconButtonDefaults.shapes()
-            ) {
-                Symbol(
-                    R.drawable.more_vert_24px,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-        }
-    }
-
-
-    if (isSheetOpen)
-        ActionBottomSheet(
-            sheetState,
-            onConfirm = {},
-            showActions = false,
-            onCancel = { isSheetOpen = false }
-        ) { hide ->
-            SettingSection(
-                isModalOption = true,
-                tiles = options.map { op ->
-                    SettingTile.ActionTile(
-                        title = op.title,
-                        leading = { SettingsTileIcon(op.leading) },
-                        onClick = {
-                            op.action()
-                            hide()
-                        }
-                    )
-                }
-            )
-        }
-}
