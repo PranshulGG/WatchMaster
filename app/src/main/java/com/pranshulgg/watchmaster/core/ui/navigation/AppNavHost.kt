@@ -24,9 +24,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.pranshulgg.watchmaster.feature.main.MainScreen
 import com.pranshulgg.watchmaster.feature.movie.detail.MovieDetailPage
-import com.pranshulgg.watchmaster.feature.movie.lists.MovieListsScreen
-import com.pranshulgg.watchmaster.feature.movie.lists.movieListEntry.MovieListEntryScreen
-import com.pranshulgg.watchmaster.feature.movie.lists.view.ViewMovieListScreen
+import com.pranshulgg.watchmaster.feature.lists.MovieListsScreen
+import com.pranshulgg.watchmaster.feature.lists.listEntry.ListEntryScreen
+import com.pranshulgg.watchmaster.feature.lists.view.ViewListScreen
 import com.pranshulgg.watchmaster.feature.search.SearchScreen
 import com.pranshulgg.watchmaster.feature.search.SearchType
 import com.pranshulgg.watchmaster.feature.setting.SettingsScreen
@@ -57,7 +57,6 @@ fun AppNavHost(
         NavHost(
             navController = navController,
             startDestination = NavRoutes.MAIN,
-//            startDestination = NavRoutes.viewMovieList(20),
             modifier = Modifier.background(MaterialTheme.colorScheme.surfaceContainer),
             enterTransition = { NavTransitions.enter(motionScheme) },
             exitTransition = { NavTransitions.exit(motionScheme) },
@@ -126,12 +125,12 @@ fun AppNavHost(
                 )
             }
             composable(
-                NavRoutes.MOVIE_LISTS_SCREEN
+                NavRoutes.LISTS_SCREEN
             ) {
                 MovieListsScreen(navController)
             }
             composable(
-                route = "${NavRoutes.MOVIE_LISTS_ENTRY_SCREEN}/{id}",
+                route = "${NavRoutes.LISTS_ENTRY_SCREEN}/{id}",
                 arguments = listOf(
                     navArgument("id") {
                         type = NavType.LongType
@@ -140,17 +139,17 @@ fun AppNavHost(
                 )
             ) { backStackEntry ->
                 val id = backStackEntry.arguments?.getLong("id") ?: -1L
-                MovieListEntryScreen(id, navController)
+                ListEntryScreen(id, navController)
 
             }
             composable(
-                route = "${NavRoutes.MOVIE_LISTS_VIEW_SCREEN}/{id}",
+                route = "${NavRoutes.LISTS_VIEW_SCREEN}/{id}",
                 arguments = listOf(
                     navArgument("id") { type = NavType.LongType }
                 )
             ) { backStackEntry ->
                 val id = backStackEntry.arguments!!.getLong("id")
-                ViewMovieListScreen(navController, id)
+                ViewListScreen(navController, id)
 
             }
         }
