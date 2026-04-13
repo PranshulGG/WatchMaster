@@ -22,12 +22,14 @@ import com.pranshulgg.watchmaster.data.local.entity.TvBundle
 
 
 @Composable
-fun CastTvSection(tvItem: TvBundle) {
+fun CastTvSection(tvItem: TvBundle, onCastClick: (Long) -> Unit) {
     MediaSectionCard(
         title = "Cast",
         titleIcon = R.drawable.groups_2_24px,
     ) {
-        val mainCast = tvItem.credits.cast.take(8)
+
+
+        val mainCast = tvItem.credits.cast.take(10)
 
         if (mainCast.isEmpty()) {
             Text("No cast found", modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
@@ -41,7 +43,8 @@ fun CastTvSection(tvItem: TvBundle) {
                 CastItem(
                     character = castMember.character ?: "",
                     name = castMember.name,
-                    profilePath = castMember.profile_path
+                    profilePath = castMember.profile_path,
+                    onCastClick = { onCastClick(castMember.id) }
                 )
             }
             item {
@@ -61,7 +64,7 @@ fun CastTvSection(tvItem: TvBundle) {
 
 
 @Composable
-fun CastMovieSection(movieItem: MovieBundle) {
+fun CastMovieSection(movieItem: MovieBundle, onCastClick: (Long) -> Unit) {
     MediaSectionCard(
         title = "Cast",
         titleIcon = R.drawable.groups_2_24px,
@@ -70,7 +73,7 @@ fun CastMovieSection(movieItem: MovieBundle) {
             crew.job == "Director"
         }
 
-        val mainCast = movieItem.credits.cast.take(8)
+        val mainCast = movieItem.credits.cast.take(10)
 
 
         LazyRow {
@@ -82,7 +85,8 @@ fun CastMovieSection(movieItem: MovieBundle) {
                     CastItem(
                         character = "Director",
                         name = director.name,
-                        profilePath = director.profile_path
+                        profilePath = director.profile_path,
+                        onCastClick = { onCastClick(director.id) }
                     )
 
                 }
@@ -91,7 +95,8 @@ fun CastMovieSection(movieItem: MovieBundle) {
                 CastItem(
                     character = castMember.character ?: "",
                     name = castMember.name,
-                    profilePath = castMember.profile_path
+                    profilePath = castMember.profile_path,
+                    onCastClick = { onCastClick(castMember.id) }
                 )
             }
             item {
