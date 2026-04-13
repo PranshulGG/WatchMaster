@@ -24,6 +24,7 @@ import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import com.pranshulgg.watchmaster.core.model.WatchStatus
 import com.pranshulgg.watchmaster.core.ui.components.media.MediaStatusSection
+import com.pranshulgg.watchmaster.core.ui.navigation.NavRoutes
 import com.pranshulgg.watchmaster.core.ui.snackbar.SnackbarManager
 import com.pranshulgg.watchmaster.data.local.entity.MovieBundle
 import com.pranshulgg.watchmaster.data.local.entity.WatchlistItemEntity
@@ -113,7 +114,11 @@ fun MovieDetailsContent(
                         { viewModel.showNoteDialog(watchlistItem.notes ?: "") },
                         watchlistItem.notes ?: ""
                     )
-                    CastMovieSection(movieItem)
+                    CastMovieSection(movieItem, onCastClick = { personId ->
+                        navController.navigate(
+                            NavRoutes.personScreen(personId)
+                        )
+                    })
                     Spacer(modifier = Modifier.height(56.dp))
                 }
             }
