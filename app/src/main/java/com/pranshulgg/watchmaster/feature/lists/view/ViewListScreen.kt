@@ -130,9 +130,13 @@ fun ViewListScreen(navController: NavController, id: Long) {
                     when (action) {
                         "EDIT_ACTION" -> navController.navigate(NavRoutes.listEntryScreen(id))
                         "DELETE_ACTION" -> isConfirmationDialogOpen = true
-                        "PIN_ACTION" -> viewModel.setPinned(id, isPinned)
+                        "PIN_ACTION" -> {
+                            viewModel.setPinned(id, isPinned)
+                            SnackbarManager.show("${if (isPinned) "Pinned" else "Unpinned"} list")
+                        }
                     }
-                }
+                },
+                !isPinned
             )
         }
     ) { pad ->

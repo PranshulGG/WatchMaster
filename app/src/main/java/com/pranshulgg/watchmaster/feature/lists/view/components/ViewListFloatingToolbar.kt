@@ -1,5 +1,6 @@
 package com.pranshulgg.watchmaster.feature.lists.view.components
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.expandHorizontally
@@ -57,8 +58,11 @@ fun ViewListFloatingToolbar(
     selectedTab: Int,
     onItemSelected: (Int) -> Unit,
     scrollBehavior: FloatingToolbarScrollBehavior,
-    onAction: (String) -> Unit
+    onAction: (String) -> Unit,
+    isPinned: Boolean = false
 ) {
+
+
     val labelList = listOf("Movies", "TV series")
     val unSelectedIcons = listOf(
         R.drawable.movie_24px,
@@ -151,7 +155,8 @@ fun ViewListFloatingToolbar(
                     ListActions(
                         isExpanded = menuExpanded,
                         onExpand = { menuExpanded = it },
-                        onAction = { onAction(it) }
+                        onAction = { onAction(it) },
+                        isPinned
                     )
                 }
             },
@@ -164,13 +169,14 @@ fun ViewListFloatingToolbar(
 private fun ListActions(
     isExpanded: Boolean = false,
     onExpand: (Boolean) -> Unit,
-    onAction: (String) -> Unit
+    onAction: (String) -> Unit,
+    isPinned: Boolean = false
 ) {
 
     val menuItemOptionList = listOf(
         Triple(R.drawable.edit_24px, "Edit", "EDIT_ACTION"),
         Triple(R.drawable.delete_24px, "Delete", "DELETE_ACTION"),
-        Triple(R.drawable.keep_24px, "Pin", "PIN_ACTION")
+        Triple(R.drawable.keep_24px, if (isPinned) "Unpin" else "Pin", "PIN_ACTION")
     )
     val menuItemContentColor = MaterialTheme.colorScheme.onTertiaryContainer
     val menuItemContentTextStyle = MaterialTheme.typography.labelLarge
