@@ -10,8 +10,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarState
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 
@@ -23,9 +25,22 @@ fun LargeTopBarScaffold(
     actions: @Composable RowScope.() -> Unit = {},
     fab: @Composable () -> Unit = {},
     bottomBar: @Composable (() -> Unit) = {},
+    defaultCollapsed: Boolean = false,
     content: @Composable (PaddingValues) -> Unit,
 ) {
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+
+    val topAppBarState = rememberTopAppBarState()
+
+    LaunchedEffect(defaultCollapsed) {
+        if (defaultCollapsed) {
+            topAppBarState.heightOffset = topAppBarState.heightOffsetLimit
+        }
+    }
+
+    val scrollBehavior =
+        TopAppBarDefaults.exitUntilCollapsedScrollBehavior(topAppBarState)
+
+    
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         containerColor = MaterialTheme.colorScheme.surfaceContainer,
