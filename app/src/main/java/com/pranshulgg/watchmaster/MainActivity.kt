@@ -13,11 +13,10 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3ExpressiveApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
         initPrefs(this)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        installSplashScreen()
-        
         setContent {
             WatchMasterApp()
         }
