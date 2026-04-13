@@ -20,6 +20,7 @@ import com.pranshulgg.watchmaster.data.TvGenre
 import com.pranshulgg.watchmaster.data.TvReviewsDto
 import com.pranshulgg.watchmaster.data.TvWatchProvidersDto
 import com.pranshulgg.watchmaster.data.WatchProvidersDto
+import com.pranshulgg.watchmaster.feature.person.PersonEntity
 import retrofit2.http.Path
 import retrofit2.http.Url
 import java.util.concurrent.TimeUnit
@@ -141,6 +142,7 @@ data class TvSeasonEpisodeDto(
     val isWatched: Boolean = false
 )
 
+
 interface TmdbApi {
     @GET
     suspend fun search(
@@ -180,6 +182,11 @@ interface TmdbApi {
             "credits,videos,images,watch/providers,similar,recommendations,reviews,content_ratings,external_ids",
         @Query("language") language: String = "en-US"
     ): Response<TvBundleDto>
+
+    @GET("person/{person_id}")
+    suspend fun getPersonData(
+        @Path("person_id") personId: Long
+    ): Response<PersonEntity>
 
     companion object {
         private const val BASE = "https://api.themoviedb.org/3/"
