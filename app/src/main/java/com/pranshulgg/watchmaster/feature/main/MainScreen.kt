@@ -7,7 +7,6 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingToolbarDefaults
 import androidx.compose.material3.FloatingToolbarExitDirection.Companion.Bottom
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MotionScheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -17,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.pranshulgg.watchmaster.R
-import com.pranshulgg.watchmaster.core.prefs.LocalAppPrefs
 import com.pranshulgg.watchmaster.core.ui.components.TooltipIconBtn
 import com.pranshulgg.watchmaster.core.ui.navigation.NavRoutes
 import com.pranshulgg.watchmaster.feature.home.HomeScreen
@@ -31,8 +29,7 @@ import com.pranshulgg.watchmaster.feature.tv.TvHomeScreen
 )
 @Composable
 fun MainScreen(
-    navController: NavController,
-    motionScheme: MotionScheme
+    navController: NavController
 ) {
 
     val viewModel: MainScreenNavViewModel = viewModel()
