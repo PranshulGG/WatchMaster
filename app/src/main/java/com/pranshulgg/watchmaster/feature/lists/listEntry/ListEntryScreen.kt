@@ -68,19 +68,19 @@ fun ListEntryScreen(id: Long = -1L, navController: NavController) {
     val isLoading by watchlistViewModel.isLoading.collectAsState()
     val currentMovieList by viewModel.currentList.collectAsState(initial = null)
 
-    val currentListMoviesFiltered = remember(currentMovieList, items) {
+    val currentListItemsFiltered = remember(currentMovieList, items) {
         val list = currentMovieList
         if (list == null) emptyList()
         else items.filter { list.ids.contains(it.id) }
     }
 
 
-    LaunchedEffect(currentListMoviesFiltered) {
+    LaunchedEffect(currentMovieList) {
         val item = currentMovieList
         if (item != null) {
             viewModel.updateListName(item.name)
             viewModel.updateListDescription(item.description)
-            viewModel.updateList(currentListMoviesFiltered)
+            viewModel.updateList(currentListItemsFiltered)
             viewModel.updateListIcon(item.icon ?: MediaListsIcons.FOLDER)
         }
     }
