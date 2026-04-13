@@ -27,6 +27,7 @@ import com.pranshulgg.watchmaster.feature.movie.detail.MovieDetailPage
 import com.pranshulgg.watchmaster.feature.lists.MovieListsScreen
 import com.pranshulgg.watchmaster.feature.lists.listEntry.ListEntryScreen
 import com.pranshulgg.watchmaster.feature.lists.view.ViewListScreen
+import com.pranshulgg.watchmaster.feature.person.PersonScreen
 import com.pranshulgg.watchmaster.feature.search.SearchScreen
 import com.pranshulgg.watchmaster.feature.search.SearchType
 import com.pranshulgg.watchmaster.feature.setting.SettingsScreen
@@ -57,19 +58,17 @@ fun AppNavHost(
         NavHost(
             navController = navController,
             startDestination = NavRoutes.MAIN,
+//            startDestination = NavRoutes.personScreen(287),
             modifier = Modifier.background(MaterialTheme.colorScheme.surfaceContainer),
-            enterTransition = { NavTransitions.enter(motionScheme) },
-            exitTransition = { NavTransitions.exit(motionScheme) },
-            popEnterTransition = { NavTransitions.popEnter(motionScheme) },
-            popExitTransition = { NavTransitions.popExit(motionScheme) }
+            enterTransition = { NavTransitions.enter() },
+            exitTransition = { NavTransitions.exit() },
+            popEnterTransition = { NavTransitions.popEnter() },
+            popExitTransition = { NavTransitions.popExit() }
         ) {
             composable(
                 NavRoutes.MAIN
             ) {
-                MainScreen(
-                    navController,
-                    motionScheme = MaterialTheme.motionScheme,
-                )
+                MainScreen(navController)
             }
             composable(
                 NavRoutes.SETTINGS
@@ -151,6 +150,15 @@ fun AppNavHost(
                 val id = backStackEntry.arguments!!.getLong("id")
                 ViewListScreen(navController, id)
 
+            }
+            composable(
+                route = "${NavRoutes.PERSON_SCREEN}/{id}",
+                arguments = listOf(
+                    navArgument("id") { type = NavType.LongType }
+                )
+            ) { backStackEntry ->
+                val id = backStackEntry.arguments!!.getLong("id")
+                PersonScreen(id = id, navController)
             }
         }
     }

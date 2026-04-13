@@ -12,6 +12,7 @@ import com.pranshulgg.watchmaster.data.local.dao.SeasonDao
 import com.pranshulgg.watchmaster.data.local.dao.TvBundleDao
 import com.pranshulgg.watchmaster.data.local.dao.TvEpisodeDao
 import com.pranshulgg.watchmaster.data.repository.CustomListsRepository
+import com.pranshulgg.watchmaster.data.repository.PersonRepository
 import com.pranshulgg.watchmaster.data.repository.SearchRepository
 import dagger.Module
 import dagger.Provides
@@ -100,5 +101,11 @@ object AppModule {
     fun provideCustomListsRepository(
         movieListsDao: CustomListsDao
     ): CustomListsRepository = CustomListsRepository(movieListsDao)
+
+    @Provides
+    @Singleton
+    fun providePersonRepository(
+        api: TmdbApi
+    ): PersonRepository = PersonRepository(api)
 
 }
