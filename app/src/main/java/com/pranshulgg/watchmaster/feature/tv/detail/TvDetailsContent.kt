@@ -26,6 +26,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.pranshulgg.watchmaster.core.model.WatchStatus
 import com.pranshulgg.watchmaster.core.ui.components.media.MediaStatusSection
+import com.pranshulgg.watchmaster.core.ui.navigation.NavRoutes
 import com.pranshulgg.watchmaster.core.ui.snackbar.SnackbarManager
 import com.pranshulgg.watchmaster.data.local.entity.SeasonEntity
 import com.pranshulgg.watchmaster.data.local.entity.TvBundle
@@ -131,7 +132,11 @@ fun TvDetailsContent(
                             season
                         )
                     }
-                    CastTvSection(tvItem)
+                    CastTvSection(tvItem, onCastClick = { personId ->
+                        navController.navigate(
+                            NavRoutes.personScreen(personId)
+                        )
+                    })
                     Spacer(modifier = Modifier.height(56.dp))
                 } else {
                     Text("No season found")
