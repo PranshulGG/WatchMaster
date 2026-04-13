@@ -168,7 +168,7 @@ fun SettingsScreen(navController: NavController) {
         Column() {
 
             CheckboxRow(
-                label = "Include movie lists",
+                label = "Include lists",
                 checked = exportMovieListChecked
             ) { exportMovieListChecked = it }
 
