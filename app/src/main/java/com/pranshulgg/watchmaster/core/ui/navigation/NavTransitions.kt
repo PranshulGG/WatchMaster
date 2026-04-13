@@ -16,30 +16,21 @@ object NavTransitions {
     private const val FADE_IN = 350
     private const val FADE_OUT = 200
 
-    fun enter(motionScheme: MotionScheme): EnterTransition =
+    fun enter(): EnterTransition =
         slideInHorizontally(
-            animationSpec = motionScheme.defaultEffectsSpec(),
-            initialOffsetX = { it }
+            initialOffsetX = { 1 * it }
         ) + fadeIn(tween(FADE_IN))
 
-    fun exit(motionScheme: MotionScheme): ExitTransition =
+    fun exit(): ExitTransition =
         slideOutHorizontally(
-            animationSpec = motionScheme.defaultEffectsSpec(),
-            targetOffsetX = { -it }
+            targetOffsetX = { 1 * -it / 4 }
         ) + fadeOut(tween(FADE_OUT))
 
+    @OptIn(ExperimentalMaterial3ExpressiveApi::class)
+    fun popEnter(): EnterTransition =
+        slideInHorizontally(initialOffsetX = { 1 * -it / 4 }) + fadeIn(tween(FADE_IN))
 
     @OptIn(ExperimentalMaterial3ExpressiveApi::class)
-    fun popEnter(motionScheme: MotionScheme): EnterTransition =
-        slideInHorizontally(
-            animationSpec = motionScheme.defaultEffectsSpec(),
-            initialOffsetX = { -it }
-        ) + fadeIn(tween(FADE_IN))
-
-    @OptIn(ExperimentalMaterial3ExpressiveApi::class)
-    fun popExit(motionScheme: MotionScheme): ExitTransition =
-        slideOutHorizontally(
-            animationSpec = motionScheme.defaultEffectsSpec(),
-            targetOffsetX = { it }
-        ) + fadeOut(tween(FADE_OUT))
+    fun popExit(): ExitTransition =
+        slideOutHorizontally(targetOffsetX = { 1 * it }) + fadeOut(tween(FADE_OUT))
 }

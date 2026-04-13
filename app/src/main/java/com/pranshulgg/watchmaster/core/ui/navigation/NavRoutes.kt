@@ -16,6 +16,8 @@ object NavRoutes {
     const val MOVIE_DETAIL_SCREEN = "movie_detail"
     const val TV_DETAIL_SCREEN = "tv_screen"
 
+    const val PERSON_SCREEN = "person_screen"
+
     fun movieDetail(id: Long): String {
         return "$MOVIE_DETAIL_SCREEN/$id"
     }
@@ -34,5 +36,9 @@ object NavRoutes {
 
     fun listEntryScreen(id: Long): String {
         return "$LISTS_ENTRY_SCREEN/$id"
+    }
+
+    fun personScreen(id: Long): String {
+        return "$PERSON_SCREEN/$id"
     }
 }
