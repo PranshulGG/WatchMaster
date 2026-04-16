@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 34,
-    "identityHash": "a3e31f3cbcd0b8efb51095fa8f9534f1",
+    "identityHash": "768e44bee8c51c651d4067ce71453212",
     "entities": [
       {
         "tableName": "watchlist",
@@ -292,7 +292,7 @@
       },
       {
         "tableName": "tv_seasons",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`seasonId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `showId` INTEGER NOT NULL, `seasonNumber` INTEGER NOT NULL, `name` TEXT NOT NULL, `episodeCount` INTEGER NOT NULL, `airDate` TEXT, `posterPath` TEXT, `status` TEXT NOT NULL, `seasonStartedDate` INTEGER, `seasonFinishedDate` INTEGER, `seasonInterruptedAt` INTEGER, `seasonAddedDate` INTEGER NOT NULL, `seasonUserRating` REAL, `seasonAvgRating` REAL, `seasonNotes` TEXT, `lastEpWatched` INTEGER, `cachedAt` INTEGER NOT NULL, FOREIGN KEY(`showId`) REFERENCES `watchlist`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`seasonId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `showId` INTEGER NOT NULL, `seasonNumber` INTEGER NOT NULL, `name` TEXT NOT NULL, `episodeCount` INTEGER NOT NULL, `airDate` TEXT, `posterPath` TEXT, `status` TEXT NOT NULL, `seasonStartedDate` INTEGER, `seasonFinishedDate` INTEGER, `seasonInterruptedAt` INTEGER, `seasonAddedDate` INTEGER NOT NULL, `seasonUserRating` REAL, `seasonAvgRating` REAL, `seasonNotes` TEXT, `seasonProgress` INTEGER, `lastEpWatched` INTEGER, `cachedAt` INTEGER NOT NULL, FOREIGN KEY(`showId`) REFERENCES `watchlist`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "seasonId",
@@ -375,6 +375,11 @@
             "fieldPath": "seasonNotes",
             "columnName": "seasonNotes",
             "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "seasonProgress",
+            "columnName": "seasonProgress",
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "lastEpWatched",
@@ -557,11 +562,101 @@
             "id"
           ]
         }
+      },
+      {
+        "tableName": "trending_data",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`mainUuid` TEXT NOT NULL, `id` INTEGER NOT NULL, `title` TEXT, `name` TEXT, `backdropPath` TEXT NOT NULL, `posterPath` TEXT NOT NULL, `mediaType` TEXT NOT NULL, `releaseDate` TEXT, `firstAirDate` TEXT, `avgRating` REAL, `overview` TEXT NOT NULL, `genreIds` TEXT, `cachedAt` INTEGER NOT NULL, `trendingType` TEXT NOT NULL, PRIMARY KEY(`mainUuid`))",
+        "fields": [
+          {
+            "fieldPath": "mainUuid",
+            "columnName": "mainUuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "backdropPath",
+            "columnName": "backdropPath",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "posterPath",
+            "columnName": "posterPath",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "mediaType",
+            "columnName": "mediaType",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "releaseDate",
+            "columnName": "releaseDate",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "firstAirDate",
+            "columnName": "firstAirDate",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "avgRating",
+            "columnName": "avgRating",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "overview",
+            "columnName": "overview",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "genreIds",
+            "columnName": "genreIds",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "cachedAt",
+            "columnName": "cachedAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "trendingType",
+            "columnName": "trendingType",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "mainUuid"
+          ]
+        }
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a3e31f3cbcd0b8efb51095fa8f9534f1')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '768e44bee8c51c651d4067ce71453212')"
     ]
   }
 }
