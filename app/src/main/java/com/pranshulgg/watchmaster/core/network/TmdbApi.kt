@@ -25,6 +25,9 @@ import retrofit2.http.Path
 import retrofit2.http.Url
 import java.util.concurrent.TimeUnit
 
+
+// TODO: REFACTOR LATER...
+
 data class MultiSearchResponse(
     val page: Int,
     val results: List<TmdbResult>,
@@ -187,6 +190,14 @@ interface TmdbApi {
     suspend fun getPersonData(
         @Path("person_id") personId: Long
     ): Response<PersonEntity>
+
+    @GET("trending/{media}/day")
+    suspend fun getTrendingDay(
+        @Path("media") media: String,
+        @Query("page") page: Int = 1,
+        @Query("language") language: String = "en-US"
+    ): Response<TrendingDayDto>
+
 
     companion object {
         private const val BASE = "https://api.themoviedb.org/3/"
