@@ -9,11 +9,13 @@ import com.pranshulgg.watchmaster.data.repository.WatchlistRepository
 import com.pranshulgg.watchmaster.core.network.TmdbApi
 import com.pranshulgg.watchmaster.data.local.dao.CustomListsDao
 import com.pranshulgg.watchmaster.data.local.dao.SeasonDao
+import com.pranshulgg.watchmaster.data.local.dao.TrendingDao
 import com.pranshulgg.watchmaster.data.local.dao.TvBundleDao
 import com.pranshulgg.watchmaster.data.local.dao.TvEpisodeDao
 import com.pranshulgg.watchmaster.data.repository.CustomListsRepository
 import com.pranshulgg.watchmaster.data.repository.PersonRepository
 import com.pranshulgg.watchmaster.data.repository.SearchRepository
+import com.pranshulgg.watchmaster.data.repository.TrendingRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,6 +26,7 @@ import com.pranshulgg.watchmaster.data.repository.TvRepository
 
 @Module
 @InstallIn(SingletonComponent::class)
+@OptIn(kotlin.uuid.ExperimentalUuidApi::class)
 object AppModule {
 
     @Provides
@@ -56,6 +59,11 @@ object AppModule {
     @Provides
     fun provideMovieListsDao(db: WatchMasterDatabase) =
         db.movieListsDao()
+
+    @Provides
+    fun provideTrendingDao(db: WatchMasterDatabase) =
+        db.trendingDao()
+
 
     @Provides
     @Singleton
@@ -108,4 +116,10 @@ object AppModule {
         api: TmdbApi
     ): PersonRepository = PersonRepository(api)
 
+    @Provides
+    @Singleton
+    fun provideTrendingRepository(
+        api: TmdbApi,
+        dao: TrendingDao
+    ): TrendingRepository = TrendingRepository(api, dao)
 }
