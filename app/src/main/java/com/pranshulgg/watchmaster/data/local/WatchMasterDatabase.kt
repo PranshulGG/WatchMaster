@@ -18,17 +18,19 @@ import com.pranshulgg.watchmaster.data.local.converters.WatchStatusConverter
 import com.pranshulgg.watchmaster.data.local.dao.CustomListsDao
 import com.pranshulgg.watchmaster.data.local.dao.MovieBundleDao
 import com.pranshulgg.watchmaster.data.local.dao.SeasonDao
+import com.pranshulgg.watchmaster.data.local.dao.TrendingDao
 import com.pranshulgg.watchmaster.data.local.dao.TvBundleDao
 import com.pranshulgg.watchmaster.data.local.dao.TvEpisodeDao
 import com.pranshulgg.watchmaster.data.local.entity.CustomListEntity
 import com.pranshulgg.watchmaster.data.local.entity.MovieBundleEntity
 import com.pranshulgg.watchmaster.data.local.entity.SeasonEntity
+import com.pranshulgg.watchmaster.data.local.entity.TrendingEntity
 import com.pranshulgg.watchmaster.data.local.entity.TvBundleEntity
 import com.pranshulgg.watchmaster.data.local.entity.TvEpisodeEntity
 
 @Database(
-    entities = [WatchlistItemEntity::class, MovieBundleEntity::class, TvBundleEntity::class, SeasonEntity::class, TvEpisodeEntity::class, CustomListEntity::class],
-    version = 33
+    entities = [WatchlistItemEntity::class, MovieBundleEntity::class, TvBundleEntity::class, SeasonEntity::class, TvEpisodeEntity::class, CustomListEntity::class, TrendingEntity::class],
+    version = 34
 )
 @TypeConverters(
     GenreIdsConverter::class,
@@ -51,6 +53,8 @@ abstract class WatchMasterDatabase : RoomDatabase() {
 
     abstract fun movieListsDao(): CustomListsDao
 
+    abstract fun trendingDao(): TrendingDao
+
     companion object {
         @Volatile
         private var INSTANCE: WatchMasterDatabase? = null
@@ -69,7 +73,8 @@ abstract class WatchMasterDatabase : RoomDatabase() {
                     MIGRATION_29_30,
                     MIGRATION_30_31,
                     MIGRATION_31_32,
-                    MIGRATION_32_33
+                    MIGRATION_32_33,
+                    MIGRATION_33_34
                 )
                     .build()
                     .also { INSTANCE = it }
@@ -223,5 +228,42 @@ val MIGRATION_32_33 = object : Migration(32, 33) {
             ALTER TABLE tv_seasons ADD COLUMN lastEpWatched INTEGER
         """.trimIndent()
         )
+    }
+}
+
+val MIGRATION_33_34 = object : Migration(33, 34) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+
+        db.execSQL(
+            """
+            CREATE TABLE trending_data_new (
+                mainUuid TEXT PRIMARY KEY NOT NULL,
+                id INTEGER NOT NULL,
+                name TEXT,
+                title TEXT,
+                backdropPath TEXT NOT NULL,
+                posterPath TEXT NOT NULL,
+                mediaType TEXT NOT NULL,
+                releaseDate TEXT,
+                firstAirDate TEXT,
+                avgRating REAL,
+                overview TEXT NOT NULL,
+                genreIds TEXT,
+                cachedAt INTEGER NOT NULL,
+                trendingType TEXT NOT NULL
+            )
+        """.trimIndent()
+        )
+
+        db.execSQL(
+            """
+            INSERT INTO trending_data_new (mainUuid, id, name, title, backdropPath, posterPath, mediaType, releaseDate, firstAirDate, avgRating, overview, genreIds, cachedAt, trendingType)
+            SELECT mainUuid, id, name, title, backdropPath, posterPath, mediaType, releaseDate, firstAirDate, avgRating, overview, genreIds, cachedAt, 'day'
+            FROM trending_data
+        """.trimIndent()
+        )
+
+        db.execSQL("DROP TABLE trending_data")
+        db.execSQL("ALTER TABLE trending_data_new RENAME TO trending_data")
     }
 }
